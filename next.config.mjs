@@ -3,6 +3,7 @@
 const nextConfig = {
   sassOptions: {
     includePaths: ['styles'],
+    additionalData: '@import "@/styles/main.scss";',
   },
 };
 

@@ -1,5 +1,10 @@
 import type { Metadata } from 'next';
-import '@/service/';
+import '@/styles/base/common.scss';
+import classNames from 'classnames/bind';
+import React from 'react';
+import styles from './layout.module.scss';
+
+const cx = classNames.bind(styles);
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -13,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body>{children}</body>
+      <body className={cx('layout')}>{children}</body>
     </html>
   );
 }

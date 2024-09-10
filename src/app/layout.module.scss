@@ -1,0 +1,14 @@
+// layout.module.scss
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0 auto;
+  border: 0.1rem solid $black;
+  width: 45.4rem;
+
+  @include responsive(M) {
+    width: 100%;
+  }
+}

@@ -4,8 +4,10 @@
     "airbnb",
     "airbnb-typescript",
     "eslint:recommended",
-    "prettier"
+    "prettier",
+    "plugin:prettier/recommended"
   ],
+  "plugins": ["prettier"],
   "parserOptions": {
     "project": "./tsconfig.json"
   },
