@@ -1,7 +1,28 @@
 /* stylelint-disable */
+
+@font-face {
+  font-family: 'Pretendard';
+  src:
+    url('/font/Pretendard-Regular.otf') format('opentype'),
+    url('/font/woff/Pretendard-Regular.woff') format('woff'),
+    url('/font/woff2/Pretendard-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  src:
+    url('/font/Pretendard-Bold.otf') format('opentype'),
+    url('/font/woff/Pretendard-Bold.woff') format('woff'),
+    url('/font/woff2/Pretendard-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+
 $font-main:
+  'Pretendard',
   'Pretendard Variable',
-  Pretendard,
   -apple-system,
   BlinkMacSystemFont,
   system-ui,
@@ -24,3 +45,4 @@ $font-size-16: 1.6rem;
 $font-size-18: 1.8rem;
 $font-size-20: 2rem;
 $font-size-24: 2.4rem;
+$font-size-30: 3rem;
