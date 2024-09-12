@@ -1,0 +1,50 @@
+.container {
+  @include column-flexbox(center, start, 4rem);
+
+  width: 100%;
+  padding: 10.5rem 2.4rem 0;
+  transition: $base-transition;
+}
+
+.introduction {
+  @include text-style(24);
+
+  margin-bottom: 1.2rem;
+
+  .bold {
+    @include text-style(24, $black, bold);
+  }
+}
+.input-group {
+  @include column-flexbox(center, start, 0.6rem);
+
+  width: 100%;
+
+  .title {
+    @include text-style(18, $black, bolder);
+  }
+
+  .description {
+    @include text-style(14, $black, light);
+
+    margin-bottom: 0.4rem;
+  }
+
+  .input {
+    @include text-style(14);
+
+    transition: $base-transition;
+    width: 100%;
+    border-radius: 0.6rem;
+    border: 0.05rem solid $gray;
+    padding: 1.4rem 1.5rem;
+    &::placeholder {
+      @include text-style(14, $gray, light);
+    }
+
+    &:focus {
+      border-color: $primary;
+      outline: none;
+    }
+  }
+}

@@ -1,0 +1,17 @@
+.button {
+  @include flexbox;
+  @include text-style(16, $white, light);
+
+  padding: 1.5rem 0;
+  width: 100%;
+  background-color: $gray;
+  border: none;
+  border-radius: 0.6rem;
+  cursor: not-allowed;
+  transition: $base-transition;
+
+  &.enabled {
+    background-color: $primary; /* 버튼 활성화 색상 */
+    cursor: pointer;
+  }
+}
