@@ -1,0 +1,87 @@
+.container {
+  @include flexbox;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.image-container {
+  margin-bottom: 6.3rem;
+}
+
+.introduce-text {
+  text-align: center;
+  font-size: 2.4rem;
+  line-height: 3rem;
+  margin-bottom: 2.3rem;
+}
+
+.character-placeholder {
+  background-color: #e0e0e0;
+  color: #666;
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.title {
+  margin-top: 4.2rem;
+  margin-bottom: 10.6rem;
+}
+
+.description {
+  font-size: 16px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.pagination {
+  @include flexbox($ai: none);
+  margin-bottom: 6.6rem;
+
+  .dot {
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 50%;
+    background-color: #d9d9d9;
+    margin: 0 1rem;
+
+    &.purple-active {
+      background-color: $primary;
+    }
+
+    &.yellow-active {
+      background-color: #f7ed00;
+    }
+  }
+}
+
+.button {
+  @include flexbox;
+  width: 40.8rem;
+  padding: 1.5rem 0;
+
+  border-radius: 0.6rem;
+  cursor: pointer;
+}
+
+.next-button {
+  color: $white;
+  background-color: $primary;
+  &hover {
+    background-color: #3700b3;
+  }
+}
+
+.kakao-button {
+  @extend .button;
+  background-color: #fee500;
+  color: #000000;
+}
+
+.kakao-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
