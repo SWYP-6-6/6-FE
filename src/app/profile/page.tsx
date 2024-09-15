@@ -1,9 +1,8 @@
-'use client';
-
-import React, { useState } from 'react';
+import React from 'react';
 import classNames from 'classnames/bind';
 import Image from 'next/image';
 import styles from './ProfilePage.module.scss';
+import ProfileToggles from '../_components/profile/ProfileToggles';
 
 const cx = classNames.bind(styles);
 
@@ -11,18 +10,6 @@ const NICKNAME = '해바라기';
 const EMAIL = 'johndoe@kakao.com';
 
 export default function ProfilePage() {
-  const [toggles, setToggles] = useState({
-    alarm: false,
-    anotherAlarm: false,
-  });
-
-  const handleToggle = (key: 'alarm' | 'anotherAlarm') => {
-    setToggles((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
-  };
-
   return (
     <div className={cx('container')}>
       <div className={cx('title')}>개인 프로필</div>
@@ -42,35 +29,7 @@ export default function ProfilePage() {
           <span>{EMAIL}</span>
         </div>
       </div>
-      <div className={cx('alarm')}>
-        <p className={cx('alarm-title')}>알림</p>
-        <div className={cx('alarm-toggle-container')}>
-          <div className={cx('alarm-labels')}>공유 피드 좋아요 알림</div>
-          <button
-            type="button"
-            className={cx('toggle', { on: toggles.alarm })}
-            onClick={() => handleToggle('alarm')}
-            aria-label={toggles.alarm ? 'Turn off alarm' : 'Turn on alarm'}
-          >
-            <div className={cx('circle')} />
-          </button>
-        </div>
-        <div className={cx('alarm-toggle-container')}>
-          <div className={cx('alarm-labels')}>공유 피드 좋아요 알림</div>
-          <button
-            type="button"
-            className={cx('toggle', { on: toggles.anotherAlarm })}
-            onClick={() => handleToggle('anotherAlarm')}
-            aria-label={
-              toggles.anotherAlarm
-                ? 'Turn off another alarm'
-                : 'Turn on another alarm'
-            }
-          >
-            <div className={cx('circle')} />
-          </button>
-        </div>
-      </div>
+      <ProfileToggles />
     </div>
   );
 }
