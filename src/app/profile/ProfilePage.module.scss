@@ -49,67 +49,13 @@
   width: 27.7rem;
   height: 27.7rem;
   border-radius: 50%;
-  position: relative;
   margin-bottom: 2.9rem;
-
-  &-camera {
-    z-index: 10;
-    position: absolute;
-    right: 0;
-    bottom: 1.73rem;
-  }
-}
-
-.grid-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.9rem;
-  width: 40.7rem;
-  height: 19.4rem;
-  align-items: center;
-  justify-content: center;
-}
-
-.character-container {
-  @include flexbox;
-  background-color: $white;
-  border: 0.1px solid $primary;
-  border-radius: 1.5rem;
-  width: 19.4rem;
-  height: 19.4rem;
-  font-size: 2rem;
-  font-weight: 300;
-}
-
-.settings-container {
-  display: grid;
-  grid-template-rows: 1fr 1fr;
-  gap: 1.6rem;
-  height: 100%;
-}
-
-.setting-card {
-  @include column-flexbox(center, start, 2.1rem);
-  @include text-style(16);
-  background-color: $gray30;
-  border-radius: 1.5rem;
-  padding: 1.4rem 1.9rem;
-  gap: 2.1rem;
-  height: 100%;
-}
-
-.anniversary-setting-card {
-  grid-row: 1;
-}
-
-.family-member-setting-card {
-  grid-row: 2;
 }
 
 .profile-info-container {
   @include column-flexbox(center, center, 1.1rem);
 
-  padding-bottom: 2rem;
+  padding-bottom: 6.1rem;
 
   .nickname {
     @include flexbox($gap: 0.7rem);
