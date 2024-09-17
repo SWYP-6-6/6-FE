@@ -15,7 +15,7 @@ html {
 body {
   color: $black;
   background-color: $white;
-  @include text-style(16, 400);
+  @include text-style(16, $black, light);
 }
 
 h1 {
