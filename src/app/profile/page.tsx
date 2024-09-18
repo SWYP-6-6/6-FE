@@ -29,7 +29,7 @@ export default function ProfilePage() {
       <div className={cx('image-container')}>
         <div className={cx('image-container-camera')}>
           <Image
-            src="/svg/camera_icon.svg"
+            src="/svgs/camera_icon.svg"
             alt="Camera Icon"
             width={87}
             height={87}
@@ -41,7 +41,7 @@ export default function ProfilePage() {
         <div className={cx('nickname')}>
           <span>{NICKNAME}</span>
           <Image
-            src="/svg/revise_icon.svg"
+            src="/svgs/revise_icon.svg"
             alt="Revise Icon"
             width={17}
             height={17}
@@ -59,7 +59,7 @@ export default function ProfilePage() {
         <div className={cx('settings-container')}>
           <div className={cx('setting-card', 'anniversary-setting-card')}>
             <Image
-              src="/svg/aniversary_icon.svg"
+              src="/svgs/aniversary_icon.svg"
               alt="Calender Icon"
               width={19}
               height={22}
@@ -69,7 +69,7 @@ export default function ProfilePage() {
           </div>
           <div className={cx('setting-card', 'family-member-setting-card')}>
             <Image
-              src="/svg/family_icon.svg"
+              src="/svgs/family_icon.svg"
               alt="Family Icon"
               width={20}
               height={23}
