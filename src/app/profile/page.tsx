@@ -18,7 +18,7 @@ export default function ProfilePage() {
         <div className={cx('nickname')}>
           <span>{NICKNAME}</span>
           <Image
-            src="/svg/revise_icon.svg"
+            src="/svgs/revise_icon.svg"
             alt="Revise Icon"
             width={17}
             height={17}
