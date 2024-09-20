@@ -1,23 +1,6 @@
 .mainform {
   overflow: hidden;
 }
-.title-container {
-  @include flexbox(center, center);
-  margin-top: 6.1rem;
-  width: 100%;
-  position: relative;
-}
-
-.return-button {
-  position: absolute;
-  top: 0;
-  left: 2.6rem;
-  @include pos-center-y($type: absolute);
-}
-
-.create-post {
-  @include text-style(24, black, bolder);
-}
 
 .form-container {
   padding: 8.7rem 2.3rem 3.5rem 2.3rem;

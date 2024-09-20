@@ -2,9 +2,9 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import classNames from 'classnames/bind';
 import { FaX } from 'react-icons/fa6';
+import Header from '@/_components/common/Header';
 import styles from './MainFormPage.module.scss';
 
 const cx = classNames.bind(styles);
@@ -12,11 +12,6 @@ const cx = classNames.bind(styles);
 export default function MainFormPage() {
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [visibility, setVisibility] = useState<string>('whole ');
-  const router = useRouter();
-
-  const handleBackClick = () => {
-    router.back(); // 이전 페이지로 이동
-  };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -46,20 +41,9 @@ export default function MainFormPage() {
 
   return (
     <div className={cx('mainform')}>
-      <button
-        type="button"
-        onClick={handleBackClick}
-        className={cx('title-container')}
-      >
-        <Image
-          src="/svgs/return-button.svg"
-          alt=""
-          width={13}
-          height={20}
-          className={cx('return-button')}
-        />
-        <p className={cx('create-post')}>게시글 작성</p>
-      </button>
+      <Header isShowButton isShowProfile={false}>
+        게시글작성
+      </Header>
       <form onSubmit={handleSubmit} className={cx('form-container')}>
         <div className={cx('image-container')}>
           <div className={cx('image-form-section')}>
