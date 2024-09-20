@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import classNames from 'classnames/bind';
-import CommonButton from '../_components/common/CommonButton'; // 공용 버튼 컴포넌트 경로
+import CommonButton from '@/_components/common/CommonButton'; // 공용 버튼 컴포넌트 경로
 import styles from './NicknamePage.module.scss';
 
 const cx = classNames.bind(styles);
