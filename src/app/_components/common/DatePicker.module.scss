@@ -1,0 +1,12 @@
+.container {
+  @include text-style(14, $gray10, light);
+
+  border: 0.1rem solid $primary;
+  border-radius: 0.6rem;
+  width: 19rem;
+  overflow: hidden;
+}
+
+.selected {
+  @include text-style(14, $black);
+}
