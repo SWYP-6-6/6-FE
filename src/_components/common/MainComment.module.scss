@@ -1,0 +1,17 @@
+.content {
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* 두 줄까지만 표시 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @include text-style($size: 14, $weight: light);
+  margin-top: 1.4rem;
+  &.expanded {
+    -webkit-line-clamp: unset; /* 더보기 버튼을 클릭했을 때 전체 표시 */
+  }
+}
+.more {
+  @include text-style(12, $gray, light);
+  cursor: pointer;
+}
