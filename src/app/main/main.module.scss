@@ -1,0 +1,109 @@
+.card {
+  // width: 45.4rem;
+  // background-color: pink;
+  padding: 2rem 2.4rem 0rem 2.4rem;
+  border-top: 0.1rem solid $gray20;
+  margin-top: 2.3rem;
+}
+
+.profile {
+  @include flexbox($jc: between, $ai: center);
+  margin-bottom: 12px;
+}
+
+.avatar {
+  width: 4.9rem;
+  height: 4.9rem;
+  border-radius: 50%;
+  background-color: $gray20;
+  margin-right: 1.2rem;
+}
+
+.profileInfo {
+  flex-grow: 1;
+}
+
+.userName {
+  @include text-style($size: 14, $weight: bolder);
+}
+
+.location {
+  @include text-style($size: 12, $weight: light);
+  margin-top: 0.7rem;
+}
+
+.date {
+  @include text-style($size: 12, $weight: light);
+  align-self: flex-start; /* 해당 요소만 상단에 배치 */
+  margin-top: 0.5rem;
+}
+
+.title {
+  @include text-style($size: 16, $weight: bolder);
+  margin-top: 2.2rem;
+}
+
+.content {
+  @include text-style($size: 14, $weight: light);
+  margin-top: 1.4rem;
+  color: #333;
+}
+
+.more {
+  color: #999;
+  cursor: pointer;
+}
+
+.imagePlaceholder {
+  width: 100%;
+  // height: 150px;
+  background-color: $gray20;
+  margin-top: 1.4rem;
+  margin-right: 1.5rem;
+  .image {
+    width: 15rem;
+    height: 15rem;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 1.4rem;
+  margin-left: 0.2rem;
+  margin-top: 0.8rem;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  stroke: #666;
+  cursor: pointer;
+
+  &:hover {
+    stroke: #000;
+  }
+}
+
+.write-button {
+  @include text-style($size: 16, $weight: bolder);
+  position: fixed;
+  bottom: 8.4rem;
+  /* 화면의 전체 너비가 100vw일 때, 45.5rem이 전체 화면에서 차지하는 비율을 계산, 화면 전체 너비에서 반으로 나누고 약간의 여백 추가 */
+  right: calc((100vw - 45.5rem) / 2 + 2.3rem);
+  background-color: $primary;
+  border-radius: 3rem;
+  padding: 1.2rem 2.7rem 1.1rem 1.9rem;
+  color: $white;
+  display: flex;
+  align-items: center;
+  box-shadow: 0rem 0.4rem 0.4rem 0rem rgba(0, 0, 0, 0.25);
+  .plus-icon {
+    margin-right: 1.8rem;
+  }
+}
+@include responsive(M) {
+  .write-button {
+    bottom: 8.4rem;
+    right: 2.3rem;
+  }
+}
