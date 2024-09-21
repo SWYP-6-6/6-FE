@@ -41,9 +41,10 @@
 }
 
 .addSchedule {
-  @include column-flexbox(start, center, 3.1rem);
+  @include column-flexbox(start, center, 3rem);
+  @include text-style(16, $black, bold);
 
-  filter: drop-shadow(0px -4px 4px rgba(0, 0, 0, 0.25));
+  filter: drop-shadow(0 -0.4rem 0.4rem rgba(0, 0, 0, 0.25));
   background: $white;
   border-radius: 1rem;
   padding: 2rem;
@@ -58,4 +59,101 @@
     transform: translateY(0);
     z-index: 2;
   }
+
+  &-name {
+    @include text-style(16, $black, bold);
+    @include column-flexbox(center, start, 1rem);
+
+    width: 100%;
+
+    &-input {
+      @include text-style(14, $black, light);
+
+      width: 100%;
+      transition: $base-transition;
+      padding: 1.5rem 1.7rem 1.6rem;
+      border-radius: 0.6rem;
+      border: 0.05rem solid $gray;
+
+      &::placeholder {
+        @include text-style(14, $gray, light);
+      }
+      &:focus {
+        border-color: $primary;
+        outline: none;
+      }
+    }
+  }
+
+  &-date {
+    @include text-style(16, $black, bold);
+    @include column-flexbox(center, start, 1rem);
+
+    width: 100%;
+
+    &-inputs {
+      @include flexbox(center, center, 1rem);
+      @include text-style(14, $black, light);
+
+      width: 100%;
+    }
+
+    &-input {
+      @include text-style(14, $black, light);
+      @include flexbox(start, center);
+
+      position: relative;
+      width: 100%;
+      padding: 1.5rem 2rem 1.7rem;
+      border-radius: 0.6rem;
+      border: 0.05rem solid $gray;
+      transition: border 0.3s ease;
+
+      &.invisible {
+        border: none;
+      }
+
+      .text-content {
+        opacity: 1;
+        visibility: visible;
+        transition:
+          opacity 0.3s ease,
+          visibility 0.3s ease;
+
+        &.invisible {
+          opacity: 0;
+          visibility: hidden;
+        }
+      }
+
+      .picker-overlay {
+        animation: slideIn 0.3s ease-out;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        visibility: visible; // Ensure the picker is always visible when displayed
+        background-color: $white;
+        border-radius: 0.6rem;
+      }
+    }
+  }
+}
+
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-1rem);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.error-message {
+  @include text-style(14, red);
+  margin-top: 0.3rem;
+
+  animation: slideIn 0.3s ease-out;
 }

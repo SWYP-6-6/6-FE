@@ -1,10 +1,12 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import classNames from 'classnames/bind';
+import DatePicker from '@/app/_components/common/DatePicker';
+import CommonButton from '@/app/_components/common/CommonButton';
 import styles from './CalendarPage.module.scss';
 import './Calendar.scss';
 
@@ -20,6 +22,28 @@ type EventType = {
 export default function CalendarPage() {
   const [events, setEvents] = useState<EventType[]>([]);
   const [isAddScheduleVisible, setIsAddScheduleVisible] = useState(false);
+  const [isStartPickerVisible, setIsStartPickerVisible] = useState(false);
+  const [isEndPickerVisible, setIsEndPickerVisible] = useState(false);
+  const [isButtonEnabled, setIsButtonEnabled] = useState(false);
+  const [destination, setDestination] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [touched, setTouched] = useState(false); // Track if the form has been touched
+
+  const startPickerRef = useRef<HTMLDivElement>(null);
+  const endPickerRef = useRef<HTMLDivElement>(null);
+
+  // 시작 날짜와 종료 날짜의 상태 관리
+  const [startPickerValue, setStartPickerValue] = useState({
+    year: '',
+    month: '',
+    day: '',
+  });
+
+  const [endPickerValue, setEndPickerValue] = useState({
+    year: '',
+    month: '',
+    day: '',
+  });
 
   useEffect(() => {
     setEvents([
@@ -44,6 +68,77 @@ export default function CalendarPage() {
     ]);
   }, []);
 
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      startPickerRef.current &&
+      !startPickerRef.current.contains(event.target as Node)
+    ) {
+      setIsStartPickerVisible(false);
+    }
+    if (
+      endPickerRef.current &&
+      !endPickerRef.current.contains(event.target as Node)
+    ) {
+      setIsEndPickerVisible(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // Function to validate if the button should be enabled
+  const validateButton = () => {
+    setErrorMessage(''); // Reset error message before validation
+
+    // Check if the destination is empty
+    if (destination.trim() === '') {
+      setErrorMessage('여행지를 입력하세요.');
+      setIsButtonEnabled(false);
+      return;
+    }
+
+    // Check if both dates are set
+    if (
+      !startPickerValue.year ||
+      !startPickerValue.month ||
+      !startPickerValue.day ||
+      !endPickerValue.year ||
+      !endPickerValue.month ||
+      !endPickerValue.day
+    ) {
+      setErrorMessage('시작 날짜와 종료 날짜를 모두 선택하세요.');
+      setIsButtonEnabled(false);
+      return;
+    }
+
+    // Convert dates to comparable formats (e.g., YYYY-MM-DD)
+    const startDate = new Date(
+      `${startPickerValue.year}-${startPickerValue.month}-${startPickerValue.day}`,
+    );
+    const endDate = new Date(
+      `${endPickerValue.year}-${endPickerValue.month}-${endPickerValue.day}`,
+    );
+
+    // Check if end date is before start date
+    if (endDate < startDate) {
+      setErrorMessage('종료 날짜는 시작 날짜와 같거나 이후여야 합니다.');
+      setIsButtonEnabled(false);
+      return;
+    }
+
+    // Enable the button if all validations pass
+    setIsButtonEnabled(true);
+  };
+
+  // Use effects to validate whenever inputs change
+  useEffect(() => {
+    if (touched) validateButton();
+  }, [destination, startPickerValue, endPickerValue, touched]);
+
   const renderDayCellContent = (renderProps: any) => {
     const dayNumber = renderProps.dayNumberText.replace('일', '');
     return <span>{dayNumber}</span>;
@@ -55,6 +150,12 @@ export default function CalendarPage() {
 
   const handleClose = () => {
     setIsAddScheduleVisible(false);
+  };
+
+  // Handle form interaction to set touched state
+  const handleInteraction = () => {
+    setTouched(true);
+    validateButton();
   };
 
   return (
@@ -87,17 +188,14 @@ export default function CalendarPage() {
         className={cx('button')}
         onClick={handleAddClick}
       />
-
-      {/* Add Schedule Modal */}
       <div
         className={cx('overlay', { show: isAddScheduleVisible })}
         onClick={handleClose}
-        role="button" // 접근성 향상: 버튼 역할 지정
-        tabIndex={0} // 키보드 포커스 가능하도록 설정
+        role="button"
+        tabIndex={0}
         onKeyDown={(e) => {
-          // 키보드 이벤트 핸들러 추가
           if (e.key === 'Enter' || e.key === ' ') {
-            handleClose(); // Enter 또는 스페이스바로도 닫기 가능
+            handleClose();
           }
         }}
       >
@@ -105,36 +203,105 @@ export default function CalendarPage() {
           className={cx('addSchedule', { show: isAddScheduleVisible })}
           onClick={(e) => e.stopPropagation()}
           onKeyDown={(e) => {
-            // 키보드 이벤트 처리: Enter 또는 Space 키로 클릭 동작과 동일하게 설정
             if (e.key === 'Enter' || e.key === ' ') {
               e.stopPropagation();
               e.currentTarget.click();
             }
           }}
-          role="button" // 대화형 역할을 명시하여 접근성 향상
-          tabIndex={0} // 키보드 포커스를 받을 수 있도록 설정
-          aria-label="여행일정 추가" // 접근성을 위한 설명 추가
+          role="button"
+          tabIndex={0}
+          aria-label="여행일정 추가"
         >
-          <h2>여행일정 추가</h2>
-          <div>
+          <p>여행일정 추가</p>
+          <div className={cx('addSchedule-name')}>
             여행지 설정
-            <input type="text" placeholder="여행지를 입력하세요" />
+            <input
+              className={cx('addSchedule-name-input')}
+              type="text"
+              placeholder="여행지를 입력하세요"
+              value={destination}
+              onChange={(e) => {
+                setDestination(e.target.value);
+                handleInteraction();
+              }}
+            />
           </div>
-          <div>
+          <div className={cx('addSchedule-date')}>
             여행 일정
-            <div>
-              <input type="date" id="startDate" />
+            <div className={cx('addSchedule-date-inputs')}>
+              <button
+                type="button"
+                className={cx('addSchedule-date-input', {
+                  invisible: isStartPickerVisible,
+                })}
+                onClick={() => {
+                  setIsStartPickerVisible(true);
+                  handleInteraction();
+                }}
+              >
+                <span
+                  className={cx('text-content', {
+                    invisible: isStartPickerVisible,
+                  })}
+                >
+                  {`${startPickerValue.year}-${startPickerValue.month}-${startPickerValue.day}` ||
+                    '시작 날짜'}
+                </span>
+                {isStartPickerVisible && (
+                  <div className={cx('picker-overlay')} ref={startPickerRef}>
+                    <DatePicker
+                      pickerValue={startPickerValue}
+                      setPickerValue={setStartPickerValue}
+                    />
+                  </div>
+                )}
+              </button>
               <span>-</span>
-              <input type="date" id="endDate" />
+              <button
+                type="button"
+                className={cx('addSchedule-date-input', {
+                  invisible: isEndPickerVisible,
+                })}
+                onClick={() => {
+                  setIsEndPickerVisible(true);
+                  handleInteraction();
+                }}
+              >
+                <span
+                  className={cx('text-content', {
+                    invisible: isEndPickerVisible,
+                  })}
+                >
+                  {`${endPickerValue.year}-${endPickerValue.month}-${endPickerValue.day}` ||
+                    '종료 날짜'}
+                </span>
+                {isEndPickerVisible && (
+                  <div className={cx('picker-overlay')} ref={endPickerRef}>
+                    <DatePicker
+                      pickerValue={endPickerValue}
+                      setPickerValue={setEndPickerValue}
+                    />
+                  </div>
+                )}
+              </button>
             </div>
           </div>
-          <button
-            type="button"
-            className={cx('completeButton')}
-            onClick={handleClose}
-          >
-            완료
-          </button>
+          <CommonButton
+            isEnabled={isButtonEnabled}
+            onClick={() => {
+              console.log(
+                '시작 날짜:',
+                startPickerValue,
+                '끝나는 날짜:',
+                endPickerValue,
+              );
+              handleClose();
+            }}
+            text="완료"
+          />
+          {touched && errorMessage && (
+            <p className={cx('error-message')}>{errorMessage}</p>
+          )}
         </div>
       </div>
     </div>
