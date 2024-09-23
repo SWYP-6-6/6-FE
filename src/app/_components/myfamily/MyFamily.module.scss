@@ -1,11 +1,12 @@
 .container {
   @include column-flexbox(start, start, 1.2rem);
 
-  padding: 8rem 0 0 2.4rem;
+  // padding: 8rem 0 0 2.4rem;
   width: 100%;
 }
 .calander-container {
-  padding-right: 2.4rem;
+  margin-top: 2.6rem;
+  padding: 0 2.4rem;
 }
 
 .upcoming {
@@ -13,7 +14,7 @@
 
   width: 100%;
   margin-top: 0.6rem;
-  padding-right: 2.4rem;
+  padding: 0 2.4rem;
 
   &-title {
     @include text-style(18, $black, bolder);
@@ -36,7 +37,7 @@
 
 .checklist {
   @include column-flexbox(center, start, 1rem);
-  padding-right: 2.4rem;
+  padding: 0 2.4rem;
 
   width: 100%;
 
@@ -83,6 +84,7 @@
 
   width: 100%;
   margin-top: 0.3rem;
+  padding-left: 2.4rem;
 
   &-title {
     @include text-style(18, $black, bolder);

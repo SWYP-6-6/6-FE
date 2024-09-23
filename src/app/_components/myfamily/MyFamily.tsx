@@ -7,6 +7,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import classNames from 'classnames/bind';
+import Header from '@/_components/common/Header';
 import styles from './MyFamily.module.scss';
 import './MainCalendar.scss';
 
@@ -107,6 +108,9 @@ export default function MyFamily() {
 
   return (
     <div className={cx('container')}>
+      <Header isShowButton isShowProfile>
+        MY FAMILY
+      </Header>
       <div className={cx('calander-container')}>
         <FullCalendar
           plugins={[dayGridPlugin, interactionPlugin]}

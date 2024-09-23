@@ -5,8 +5,9 @@ import Image from 'next/image';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import classNames from 'classnames/bind';
-import DatePicker from '@/app/_components/common/DatePicker';
-import CommonButton from '@/app/_components/common/CommonButton';
+import DatePicker from '@/_components/common/DatePicker';
+import CommonButton from '@/_components/common/CommonButton';
+import Header from '@/_components/common/Header';
 import styles from './CalendarPage.module.scss';
 import './Calendar.scss';
 
@@ -160,6 +161,9 @@ export default function CalendarPage() {
 
   return (
     <div className={cx('container')}>
+      <Header isShowButton isShowProfile>
+        MY FAMILY
+      </Header>
       <div className={cx('calendar-container')}>
         <FullCalendar
           plugins={[dayGridPlugin]}
