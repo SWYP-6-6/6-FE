@@ -8,8 +8,8 @@ import classNames from 'classnames/bind';
 import DatePicker from '@/_components/common/DatePicker';
 import CommonButton from '@/_components/common/CommonButton';
 import Header from '@/_components/common/Header';
-import styles from './CalendarPage.module.scss';
 import './Calendar.scss';
+import styles from './CalendarPage.module.scss';
 
 const cx = classNames.bind(styles);
 
