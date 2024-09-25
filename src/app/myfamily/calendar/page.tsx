@@ -5,32 +5,34 @@ import Image from 'next/image';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import classNames from 'classnames/bind';
-import DatePicker from '@/app/_components/common/DatePicker';
-import CommonButton from '@/app/_components/common/CommonButton';
-import styles from './CalendarPage.module.scss';
+import DatePicker from '@/_components/common/DatePicker';
+import CommonButton from '@/_components/common/CommonButton';
+import Header from '@/_components/common/Header';
 import './Calendar.scss';
+import styles from './CalendarPage.module.scss';
 
 const cx = classNames.bind(styles);
 
+// 이벤트 타입 정의
 type EventType = {
-  title: string;
-  start: string;
-  end: string;
-  color: string;
+  title: string; // 이벤트 제목
+  start: string; // 시작 날짜
+  end: string; // 종료 날짜
+  color: string; // 이벤트 색상
 };
 
 export default function CalendarPage() {
-  const [events, setEvents] = useState<EventType[]>([]);
-  const [isAddScheduleVisible, setIsAddScheduleVisible] = useState(false);
-  const [isStartPickerVisible, setIsStartPickerVisible] = useState(false);
-  const [isEndPickerVisible, setIsEndPickerVisible] = useState(false);
-  const [isButtonEnabled, setIsButtonEnabled] = useState(false);
-  const [destination, setDestination] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [touched, setTouched] = useState(false); // Track if the form has been touched
+  const [events, setEvents] = useState<EventType[]>([]); // 이벤트 목록 상태 관리
+  const [isAddScheduleVisible, setIsAddScheduleVisible] = useState(false); // 일정 추가 모달 표시 여부 상태 관리
+  const [isStartPickerVisible, setIsStartPickerVisible] = useState(false); // 시작 날짜 선택기 표시 여부 상태 관리
+  const [isEndPickerVisible, setIsEndPickerVisible] = useState(false); // 종료 날짜 선택기 표시 여부 상태 관리
+  const [isButtonEnabled, setIsButtonEnabled] = useState(false); // 완료 버튼 활성화 여부 상태 관리
+  const [destination, setDestination] = useState(''); // 여행지 입력 상태 관리
+  const [errorMessage, setErrorMessage] = useState(''); // 오류 메시지 상태 관리
+  const [touched, setTouched] = useState(false); // 입력 값이 변경되었는지 여부 상태 관리
 
-  const startPickerRef = useRef<HTMLDivElement>(null);
-  const endPickerRef = useRef<HTMLDivElement>(null);
+  const startPickerRef = useRef<HTMLDivElement>(null); // 시작 날짜 선택기 참조
+  const endPickerRef = useRef<HTMLDivElement>(null); // 종료 날짜 선택기 참조
 
   // 시작 날짜와 종료 날짜의 상태 관리
   const [startPickerValue, setStartPickerValue] = useState({
@@ -45,6 +47,7 @@ export default function CalendarPage() {
     day: '',
   });
 
+  // 컴포넌트가 마운트될 때 초기 이벤트 설정
   useEffect(() => {
     setEvents([
       {
@@ -68,6 +71,7 @@ export default function CalendarPage() {
     ]);
   }, []);
 
+  // 클릭 이벤트가 선택기 바깥에서 발생했는지 확인하고 선택기를 닫음
   const handleClickOutside = (event: MouseEvent) => {
     if (
       startPickerRef.current &&
@@ -83,6 +87,7 @@ export default function CalendarPage() {
     }
   };
 
+  // 컴포넌트가 마운트되거나 언마운트될 때 클릭 이벤트 리스너 추가/제거
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
@@ -90,18 +95,18 @@ export default function CalendarPage() {
     };
   }, []);
 
-  // Function to validate if the button should be enabled
+  // 버튼 활성화 여부를 검증하는 함수
   const validateButton = () => {
-    setErrorMessage(''); // Reset error message before validation
+    setErrorMessage(''); // 검증 전에 오류 메시지 초기화
 
-    // Check if the destination is empty
+    // 여행지가 비어있는지 확인
     if (destination.trim() === '') {
       setErrorMessage('여행지를 입력하세요.');
       setIsButtonEnabled(false);
       return;
     }
 
-    // Check if both dates are set
+    // 시작 날짜와 종료 날짜가 설정되었는지 확인
     if (
       !startPickerValue.year ||
       !startPickerValue.month ||
@@ -115,7 +120,7 @@ export default function CalendarPage() {
       return;
     }
 
-    // Convert dates to comparable formats (e.g., YYYY-MM-DD)
+    // 날짜를 비교 가능한 형식(예: YYYY-MM-DD)으로 변환
     const startDate = new Date(
       `${startPickerValue.year}-${startPickerValue.month}-${startPickerValue.day}`,
     );
@@ -123,36 +128,39 @@ export default function CalendarPage() {
       `${endPickerValue.year}-${endPickerValue.month}-${endPickerValue.day}`,
     );
 
-    // Check if end date is before start date
+    // 종료 날짜가 시작 날짜보다 빠른지 확인
     if (endDate < startDate) {
       setErrorMessage('종료 날짜는 시작 날짜와 같거나 이후여야 합니다.');
       setIsButtonEnabled(false);
       return;
     }
 
-    // Enable the button if all validations pass
+    // 모든 검증을 통과하면 버튼 활성화
     setIsButtonEnabled(true);
   };
 
-  // Use effects to validate whenever inputs change
+  // 입력 값이 변경될 때마다 검증 실행
   useEffect(() => {
     if (touched) validateButton();
   }, [destination, startPickerValue, endPickerValue, touched]);
 
+  // FullCalendar의 각 날짜 셀 콘텐츠를 렌더링하는 함수
   const renderDayCellContent = (renderProps: any) => {
     const dayNumber = renderProps.dayNumberText.replace('일', '');
     return <span>{dayNumber}</span>;
   };
 
+  // 일정 추가 버튼 클릭 시 모달 표시
   const handleAddClick = () => {
     setIsAddScheduleVisible(true);
   };
 
+  // 일정 추가 모달 닫기
   const handleClose = () => {
     setIsAddScheduleVisible(false);
   };
 
-  // Handle form interaction to set touched state
+  // 폼과의 상호작용 시 상태 변경
   const handleInteraction = () => {
     setTouched(true);
     validateButton();
@@ -160,6 +168,9 @@ export default function CalendarPage() {
 
   return (
     <div className={cx('container')}>
+      <Header isShowButton isShowProfile>
+        MY FAMILY
+      </Header>
       <div className={cx('calendar-container')}>
         <FullCalendar
           plugins={[dayGridPlugin]}

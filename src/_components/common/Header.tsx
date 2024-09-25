@@ -22,8 +22,14 @@ export default function Header({
   const router = useRouter();
 
   const handleBackClick = () => {
-    router.back(); // 이전 페이지로 이동
+    router.back();
+
+    // 1초 후 새로고침 실행
+    setTimeout(() => {
+      window.location.reload();
+    }, 100); // 1000ms = 1초
   };
+
   return (
     <div className={cx('header-container')}>
       {isShowButton && (
