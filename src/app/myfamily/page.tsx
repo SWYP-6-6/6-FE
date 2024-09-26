@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames/bind';
-import Header from '@/_components/common/Header';
+import Header from '@/app/_components/common/Header';
 import Calendar from '@/app/_components/myfamily/Calendar';
 import Checklist from '@/app/_components/myfamily/Checklist';
 import TravelRecord from '@/app/_components/myfamily/TravelRecord';

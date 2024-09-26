@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import classNames from 'classnames/bind';
 import { FaX } from 'react-icons/fa6';
-import Header from '@/_components/common/Header';
+import Header from '@/app/_components/common/Header';
 import styles from './MainFormPage.module.scss';
 
 const cx = classNames.bind(styles);
