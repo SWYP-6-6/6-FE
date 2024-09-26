@@ -3,7 +3,7 @@
 import React, { useState, ChangeEvent, KeyboardEvent } from 'react';
 import { FaTrashAlt } from 'react-icons/fa';
 import classNames from 'classnames/bind';
-import Header from '@/_components/common/Header';
+import Header from '@/app/_components/common/Header';
 import styles from './CheckListPage.module.scss';
 
 const cx = classNames.bind(styles);
