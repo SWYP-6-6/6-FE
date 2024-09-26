@@ -59,12 +59,13 @@
 
 .button {
   @include flexbox;
-  font-size: 1.5rem;
-  font-weight: 400;
+  @include text-style($size: 15, $weight: light);
   width: 40.8rem;
   padding: 1.5rem 0;
+  margin: 0 2.3rem;
   border-radius: 0.6rem;
   cursor: pointer;
+  transition: $base-transition;
 }
 
 .next-button {
