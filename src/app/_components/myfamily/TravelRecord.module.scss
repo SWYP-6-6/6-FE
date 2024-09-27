@@ -2,15 +2,18 @@
   @include column-flexbox(center, start, 1rem);
   width: 100%;
   margin-top: 0.3rem;
-  padding-left: 2.4rem;
 
   &-title {
     @include text-style(18, $black, bolder);
     @include flexbox(center, center, 1rem);
     line-height: 3.3rem;
+    padding-left: 2.4rem;
   }
 
   .scroll-container {
+    padding-left: 2.4rem;
+
+    height: 15rem;
     width: 100%;
     display: flex;
     flex-wrap: nowrap;
