@@ -12,7 +12,7 @@ const cx = classNames.bind(styles);
 export default function MyFamily() {
   return (
     <div className={cx('container')}>
-      <Header isShowButton isShowProfile>
+      <Header isShowButton={false} isShowProfile>
         MY FAMILY
       </Header>
       <Calendar />
