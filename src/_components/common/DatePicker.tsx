@@ -8,13 +8,16 @@ import styles from './DatePicker.module.scss';
 const cx = classNames.bind(styles);
 
 const currentDate = new Date();
+
+// 특정 연도와 월의 일 수를 구하는 함수
 const getDaysInMonth = (year: number, month: number): number => {
   return new Date(year, month, 0).getDate();
 };
 
+// 연도 선택 범위를 현재 연도 기준으로 3년 전부터 50년 후까지 설정
 const selections: { [key: string]: string[] } = {
-  year: Array.from({ length: 51 }, (_, i) =>
-    (currentDate.getFullYear() + i).toString(),
+  year: Array.from({ length: 54 }, (_, i) =>
+    (currentDate.getFullYear() - 3 + i).toString(),
   ),
   month: Array.from({ length: 12 }, (_, i) =>
     (i + 1).toString().padStart(2, '0'),
@@ -59,7 +62,7 @@ export default function DatePicker({
         day: currentDay,
       });
     }
-  }, [pickerValue, setPickerValue]);
+  }, []);
 
   useEffect(() => {
     const { year, month } = pickerValue;
