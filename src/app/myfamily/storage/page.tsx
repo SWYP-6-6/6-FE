@@ -22,7 +22,7 @@ interface Item {
 
 export default function StoragePage() {
   const router = useRouter();
-  const [items, setItems] = useState<Item[]>([
+  const [items] = useState<Item[]>([
     {
       id: 1,
       destination: 'Seoul',
@@ -114,13 +114,12 @@ export default function StoragePage() {
     });
   };
 
-  // 아이템 삭제 함수
-  const handleDelete = (id: number) => {
-    setItems(items.filter((item) => item.id !== id));
-  };
-
   const handleAddClick = () => {
     router.push('/myfamily/storage/add');
+  };
+
+  const handleStorageClick = (id: number) => {
+    router.push(`/myfamily/storage/${id}/travel-review`);
   };
 
   return (
@@ -145,18 +144,28 @@ export default function StoragePage() {
                     : 'transform 0.3s ease',
                 }}
               >
-                <p className={cx('draggableContent-title')}>
-                  {item.destination}
-                </p>
-                <p className={cx('draggableContent-duration')}>
-                  {item.startDate}-{item.endDate}
-                </p>
+                <button
+                  className={cx('draggableContent-button')}
+                  type="button"
+                  onClick={() => handleStorageClick(item.id)}
+                >
+                  <p className={cx('draggableContent-button-title')}>
+                    {item.destination}
+                  </p>
+                  <p className={cx('draggableContent-button-duration')}>
+                    {item.startDate}-{item.endDate}
+                  </p>
+                </button>
                 <div
                   className={cx('Buttons', {
                     showButton: showDelete[item.id],
                   })}
                 >
-                  <button type="button" className={cx('button-cover')}>
+                  <button
+                    onClick={(e) => e.stopPropagation}
+                    type="button"
+                    className={cx('button-cover')}
+                  >
                     <div className={cx('button', 'revise')}>
                       <Image
                         src="/svgs/revise_icon.svg"
@@ -164,13 +173,16 @@ export default function StoragePage() {
                         width={17}
                         height={17}
                         priority
-                        // onClick={handleAddClick}
                       />
                     </div>
                   </button>
-                  <button type="button" className={cx('button-cover')}>
+                  <button
+                    onClick={(e) => e.stopPropagation}
+                    type="button"
+                    className={cx('button-cover')}
+                  >
                     <div className={cx('button', 'delete')}>
-                      <FaTrashAlt onClick={() => handleDelete(item.id)} />
+                      <FaTrashAlt />
                     </div>
                   </button>
                 </div>

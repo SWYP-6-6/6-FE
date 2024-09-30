@@ -15,7 +15,6 @@
 
 .swipeableLists {
   width: 100%;
-  // overflow: hidden;
 }
 
 .swipeableList {
@@ -60,14 +59,19 @@
   border-radius: 0.6rem;
   position: relative;
   user-select: none;
-  padding: 1.8rem 0 1.7rem 2.4rem;
 
-  &-title {
-    @include text-style(16, $black, bolder);
-  }
+  &-button {
+    width: 100%;
+    margin: 1.8rem 0 1.7rem 2.4rem;
+    @include column-flexbox(start, start, 1.3rem);
 
-  &-duration {
-    @include text-style(16, $black, light);
+    &-title {
+      @include text-style(16, $black, bolder);
+    }
+
+    &-duration {
+      @include text-style(16, $black, light);
+    }
   }
 }
 
