@@ -1,0 +1,134 @@
+// StoragePage.module.scss
+
+.container {
+  @include column-flexbox(start, start, 2.5rem);
+  width: 100%;
+
+  position: relative;
+}
+
+.title {
+  @include text-style(20, $black, bolder);
+  padding-top: 3.4rem;
+  padding-left: 2.9rem;
+}
+
+.swipeableLists {
+  width: 100%;
+  // overflow: hidden;
+}
+
+.swipeableList {
+  @include column-flexbox(start, start, 1.4rem);
+
+  width: 100%;
+  padding: 0 2.4rem 0 2.3rem;
+  max-height: 77vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+
+  &::-webkit-scrollbar {
+    height: 1.2rem;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $gray10;
+    border-radius: 0.8rem;
+    border: 0.2rem solid transparent;
+    background-clip: padding-box;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: $gray;
+    transition: $base-transition;
+  }
+}
+
+.draggableContent {
+  @include column-flexbox(start, start, 1.3rem);
+
+  width: 100%;
+  cursor: grab;
+  background-color: $white;
+  border-radius: 0.6rem;
+  position: relative;
+  user-select: none;
+  padding: 1.8rem 0 1.7rem 2.4rem;
+
+  &-title {
+    @include text-style(16, $black, bolder);
+  }
+
+  &-duration {
+    @include text-style(16, $black, light);
+  }
+}
+
+.draggableContent.showButton {
+  transform: translateX(-12.7rem);
+}
+
+.Buttons {
+  @include flexbox(center, center);
+  width: 11.7rem;
+  height: 8.2rem;
+  background-color: $gray20;
+  border: none;
+  border-radius: 0.6rem;
+  padding: 1.2rem 0 1rem;
+  position: absolute;
+  right: -12.7rem;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: opacity 1s ease;
+  opacity: 0;
+  cursor: default;
+
+  & > *:not(:last-child) {
+    border-right: 0.1rem solid $gray;
+    border-right-color: $gray;
+  }
+}
+
+.Buttons.showButton {
+  opacity: 1;
+  cursor: pointer;
+}
+
+.button-cover {
+  @include flexbox(center, center);
+  height: 100%;
+  width: 100%;
+  border: 0.1rem solid transparent;
+
+  .button {
+    transition: $base-transition;
+  }
+
+  &:hover {
+    .revise {
+      filter: brightness(40%);
+    }
+    .delete {
+      color: red;
+    }
+  }
+}
+
+.addButton {
+  transition: $base-transition;
+  position: absolute;
+  right: 3.8rem;
+  bottom: 20.1rem;
+
+  &:hover {
+    filter: brightness(0.9);
+  }
+}
