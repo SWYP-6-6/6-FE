@@ -1,10 +1,10 @@
 import React from 'react';
-import Header from '@/app/_components/common/Header';
 import classNames from 'classnames/bind';
 import Image from 'next/image';
 import { FaPlus } from 'react-icons/fa6';
 import Link from 'next/link';
 import { getFetchFeedList } from '@/app/api/api';
+import MainComment from '@/app/_components/common/MainComment';
 import MainContent from '@/_components/common/MainComment';
 import styles from './main.module.scss';
 
