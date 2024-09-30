@@ -119,7 +119,7 @@ export default function StoragePage() {
     setItems(items.filter((item) => item.id !== id));
   };
 
-  const handleDateClick = () => {
+  const handleAddClick = () => {
     router.push('/myfamily/storage/add');
   };
 
@@ -180,7 +180,7 @@ export default function StoragePage() {
         </div>
       </div>
       <button
-        onClick={handleDateClick}
+        onClick={handleAddClick}
         className={cx('addButton')}
         type="button"
       >
@@ -191,7 +191,6 @@ export default function StoragePage() {
           height={48}
           priority
           className={cx('button')}
-          // onClick={handleAddClick}
         />
       </button>
     </div>
