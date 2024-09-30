@@ -83,7 +83,7 @@ export default function StoragePage() {
   const [showDelete, setShowDelete] = useState<{ [key: number]: boolean }>({});
   const [isSwiping, setIsSwiping] = useState<{ [key: number]: boolean }>({});
 
-  const Handlers = (id) => {
+  const Handlers = (id: number) => {
     return useSwipeable({
       onSwipedLeft: () => {
         setShowDelete((prev) => ({
