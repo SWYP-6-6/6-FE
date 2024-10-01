@@ -132,8 +132,8 @@ export default function ChecklistAdd() {
     };
   }, []);
 
-  const handleCompleteClick = (id: number) => {
-    router.push(`/myfamily/storage/${id}/travel-review-form`);
+  const handleCompleteClick = () => {
+    router.push('/myfamily/checklist');
   };
 
   return (
@@ -223,7 +223,7 @@ export default function ChecklistAdd() {
         <CommonButton
           isEnabled={isButtonEnabled}
           onClick={() => {
-            handleCompleteClick(1);
+            handleCompleteClick();
             setTouched(false); // 제출 후 상호작용 상태 초기화
           }}
           text="입력 완료"
