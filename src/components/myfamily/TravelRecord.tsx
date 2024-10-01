@@ -1,4 +1,8 @@
+'use client';
+
 import React from 'react';
+import { useRouter } from 'next/navigation';
+
 import Image from 'next/image';
 import classNames from 'classnames/bind';
 import styles from './TravelRecord.module.scss';
@@ -16,8 +20,17 @@ const sortedStoredData = storedData.sort(
 );
 
 export default function TravelRecord() {
+  const router = useRouter();
+
+  const handleRecordClick = () => {
+    router.push('/myfamily/storage');
+  };
   return (
-    <div className={cx('travelRecord')}>
+    <button
+      type="button"
+      onClick={handleRecordClick}
+      className={cx('travelRecord')}
+    >
       <div className={cx('travelRecord-title')}>
         여행기록 저장소
         <Image
@@ -43,6 +56,6 @@ export default function TravelRecord() {
           ))}
         </div>
       </div>
-    </div>
+    </button>
   );
 }

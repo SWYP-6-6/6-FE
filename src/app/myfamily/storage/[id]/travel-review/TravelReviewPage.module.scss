@@ -1,0 +1,111 @@
+.container {
+  @include column-flexbox(start, center, 4.8rem);
+  @include text-style(16, $black, bold);
+
+  margin-bottom: 10rem;
+  width: 100%;
+  flex: 1;
+
+  .review {
+    @include column-flexbox(center, center);
+
+    width: 100%;
+    padding: 0 2.4rem 0 2.3rem;
+
+    .title {
+      @include column-flexbox(center, center, 1.5rem);
+
+      width: 100%;
+      border-radius: 0.6rem 0.6rem 0 0;
+      padding: 2.1rem 0 2.2rem 0;
+      background-color: $primary;
+
+      &-title {
+        @include text-style(20, $white, bolder);
+      }
+      &-duration {
+        @include text-style(16, $white, light);
+      }
+    }
+    .reviews {
+      width: 100%;
+      background-color: $white;
+
+      padding: 0 0.8rem 0 0.9rem;
+
+      .review {
+        @include column-flexbox(center, center, 0.6rem);
+
+        width: 100%;
+
+        padding: 1.6rem 0.9rem 2.2rem 1rem;
+        border-bottom: 0.1rem $gray20 solid;
+
+        &-header {
+          @include flexbox(between, center);
+          @include text-style(16, $black, light);
+          width: 100%;
+
+          .profile {
+            @include flexbox(center, center, 1.3rem);
+
+            &-picture {
+              width: 2.8rem;
+              height: 2.8rem;
+              border-radius: 50%;
+              background-color: $gray20;
+            }
+          }
+
+          .buttons {
+            @include flexbox(center, center, 1.6rem);
+
+            .revise {
+              transition: $base-transition;
+              &:hover {
+                filter: brightness(40%);
+              }
+            }
+            .delete {
+              transition: $base-transition;
+              &:hover {
+                color: red;
+              }
+            }
+          }
+        }
+
+        &-title {
+          @include text-style(18, $black, bolder);
+
+          margin-bottom: 2.2rem;
+        }
+
+        &-description {
+          @include text-style(16, $black, light);
+        }
+      }
+    }
+  }
+}
+
+.add {
+  @include flexbox(start, center);
+
+  padding: 0.3rem 0 0.6rem 0.4rem;
+  border-radius: 0 0 0.6rem 0.6rem;
+  background-color: $white;
+  width: 100%;
+
+  &-button {
+    @include text-style(16, $gray, light);
+    @include flexbox(center, center, 1rem);
+
+    padding: 1.2rem 1.4rem 1.2rem 1.9rem;
+    transition: $base-transition;
+
+    &:hover {
+      filter: brightness(40%);
+    }
+  }
+}

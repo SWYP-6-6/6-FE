@@ -44,23 +44,26 @@ export default function Calendar() {
     return <span>{dayNumber}</span>;
   };
 
-  const handleDateClick = () => {
+  const handleCalendarClick = () => {
     router.push('/myfamily/calendar');
   };
 
   return (
-    <div className={cx('main-calander-container')}>
+    <button
+      type="button"
+      onClick={handleCalendarClick}
+      className={cx('main-calander-container')}
+    >
       <FullCalendar
         plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
         locale="ko"
-        dateClick={handleDateClick}
         events={events}
         headerToolbar={{ left: 'prev', center: 'title', right: 'next' }}
         titleFormat={{ year: 'numeric', month: 'numeric' }}
         dayCellContent={renderDayCellContent}
         height="auto"
       />
-    </div>
+    </button>
   );
 }

@@ -4,8 +4,8 @@ import Image from 'next/image';
 import { FaPlus } from 'react-icons/fa6';
 import Link from 'next/link';
 import { getFetchFeedList } from '@/app/api/api';
-import MainComment from '@/app/_components/common/MainComment';
-import MainContent from '@/_components/common/MainComment';
+import MainContent from '@/components/common/MainComment';
+import Header from '@/components/common/Header';
 import styles from './main.module.scss';
 
 const cx = classNames.bind(styles);

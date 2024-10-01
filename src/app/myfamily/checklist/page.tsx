@@ -58,6 +58,13 @@ export default function CheckListPage() {
     setTodoLists({ ...todoLists, [selectedDestination]: updatedList });
   };
 
+  const uncheckedItems = todoLists[selectedDestination].filter(
+    (item) => !item.check,
+  );
+  const checkedItems = todoLists[selectedDestination].filter(
+    (item) => item.check,
+  );
+
   return (
     <div className={cx('container')}>
       <Header isShowButton isShowProfile>
@@ -78,7 +85,7 @@ export default function CheckListPage() {
         ))}
       </div>
       <div className={cx('todolist')}>
-        {todoLists[selectedDestination].map((item) => (
+        {uncheckedItems.map((item) => (
           <div className={cx('todolist-textlists')} key={item.id}>
             <div className={cx('checkTextBox')}>
               <input
@@ -87,9 +94,24 @@ export default function CheckListPage() {
                 checked={item.check}
                 onChange={() => handleToggleCheck(item.id)}
               />
-              <div className={cx(item.check ? 'checkedTextList' : 'textList')}>
-                {item.text}
-              </div>
+              <div className={cx('textList')}>{item.text}</div>
+            </div>
+            <FaTrashAlt
+              className={cx('trash-icon')}
+              onClick={() => handleDelete(item.id)}
+            />
+          </div>
+        ))}
+        {checkedItems.map((item) => (
+          <div className={cx('todolist-textlists')} key={item.id}>
+            <div className={cx('checkTextBox')}>
+              <input
+                className={cx('checkInput')}
+                type="checkbox"
+                checked={item.check}
+                onChange={() => handleToggleCheck(item.id)}
+              />
+              <div className={cx('checkedTextList')}>{item.text}</div>
             </div>
             <FaTrashAlt
               className={cx('trash-icon')}
