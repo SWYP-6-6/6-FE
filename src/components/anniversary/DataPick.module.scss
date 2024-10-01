@@ -1,0 +1,11 @@
+.picker {
+  width: 100%;
+}
+
+.picker-wheel {
+  @include text-style(20, $gray10, light);
+}
+
+.picker-item-selected {
+  @include text-style(20, $black, bold);
+}

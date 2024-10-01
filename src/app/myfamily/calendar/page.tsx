@@ -5,9 +5,9 @@ import Image from 'next/image';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import classNames from 'classnames/bind';
-import DatePicker from '@/_components/common/DatePicker';
-import CommonButton from '@/_components/common/CommonButton';
-import Header from '@/_components/common/Header';
+import DatePicker from '@/components/common/DatePicker';
+import CommonButton from '@/components/common/CommonButton';
+import Header from '@/components/common/Header';
 import './Calendar.scss';
 import styles from './CalendarPage.module.scss';
 

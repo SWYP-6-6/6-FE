@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames/bind';
-import NicknameForm from '../_components/nicknamesetting/NicknameForm';
+import NicknameForm from '@/components/nicknamesetting/NicknameForm';
 import styles from './NicknamePage.module.scss';
 
 const cx = classNames.bind(styles);
