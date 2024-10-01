@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
-import Header from '@/_components/common/Header';
+import Header from '@/components/common/Header';
 import { useParams, useRouter } from 'next/navigation';
 import { FaTrashAlt } from 'react-icons/fa';
 import Image from 'next/image';

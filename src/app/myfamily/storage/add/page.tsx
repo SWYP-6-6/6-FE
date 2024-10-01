@@ -4,9 +4,9 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
 import classNames from 'classnames/bind';
-import DatePicker from '@/_components/common/DatePicker';
-import CommonButton from '@/_components/common/CommonButton';
-import Header from '@/_components/common/Header';
+import DatePicker from '@/components/common/DatePicker';
+import CommonButton from '@/components/common/CommonButton';
+import Header from '@/components/common/Header';
 import styles from './StorageAdd.module.scss'; // 컴포넌트에 맞는 SCSS 모듈을 가져옴
 
 const cx = classNames.bind(styles);

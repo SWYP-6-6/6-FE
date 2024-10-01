@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useSwipeable } from 'react-swipeable';
 import classNames from 'classnames/bind';
-import Header from '@/_components/common/Header';
+import Header from '@/components/common/Header';
 import { useRouter } from 'next/navigation';
 import { FaTrashAlt } from 'react-icons/fa';
 
