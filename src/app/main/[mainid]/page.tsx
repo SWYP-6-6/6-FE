@@ -1,5 +1,5 @@
 import React from 'react';
-import Header from '@/_components/common/Header';
+import Header from '@/components/common/Header';
 import classNames from 'classnames/bind';
 import Image from 'next/image';
 import { getFetchFeedDetail } from '@/app/api/api';
@@ -9,7 +9,6 @@ const cx = classNames.bind(styles);
 
 export default async function Page({ params }: { params: { id: string } }) {
   const { id } = params;
-  console.log(id);
 
   const { data } = await getFetchFeedDetail({ id });
   console.log(data);
