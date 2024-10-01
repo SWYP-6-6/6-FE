@@ -1,8 +1,8 @@
 import React from 'react';
 import classNames from 'classnames/bind';
 import Image from 'next/image';
+import ProfileToggles from '@/components/profile/ProfileToggles';
 import styles from './ProfilePage.module.scss';
-import ProfileToggles from '../_components/profile/ProfileToggles';
 
 const cx = classNames.bind(styles);
 

@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import classNames from 'classnames/bind';
-import CommonButton from '@/_components/common/CommonButton';
+import CommonButton from '@/components/common/CommonButton';
 import styles from './NicknameForm.module.scss';
 
 const cx = classNames.bind(styles);
