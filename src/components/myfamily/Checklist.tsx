@@ -1,5 +1,8 @@
+'use client';
+
 import React from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import classNames from 'classnames/bind';
 import styles from './Checklist.module.scss';
 
@@ -16,8 +19,17 @@ const sortedData = checklistData.sort(
 );
 
 export default function Checklist() {
+  const router = useRouter();
+
+  const handleChecklistClick = () => {
+    router.push('/myfamily/checklist');
+  };
   return (
-    <div className={cx('checklist')}>
+    <button
+      type="button"
+      className={cx('checklist')}
+      onClick={handleChecklistClick}
+    >
       <div className={cx('checklist-title')}>
         체크리스트
         <Image
@@ -45,6 +57,6 @@ export default function Checklist() {
           />
         </div>
       </div>
-    </div>
+    </button>
   );
 }

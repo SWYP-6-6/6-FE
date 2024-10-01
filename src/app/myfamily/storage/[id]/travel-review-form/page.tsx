@@ -2,9 +2,9 @@
 
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
-import Header from '@/_components/common/Header';
+import Header from '@/components/common/Header';
 import { useParams, useRouter } from 'next/navigation';
-import CommonButton from '@/_components/common/CommonButton';
+import CommonButton from '@/components/common/CommonButton';
 import styles from './TravelReviewFormPage.module.scss';
 
 const cx = classNames.bind(styles);

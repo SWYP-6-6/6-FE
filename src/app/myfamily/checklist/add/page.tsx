@@ -7,7 +7,7 @@ import classNames from 'classnames/bind';
 import DatePicker from '@/components/common/DatePicker';
 import CommonButton from '@/components/common/CommonButton';
 import Header from '@/components/common/Header';
-import styles from './StorageAdd.module.scss'; // 컴포넌트에 맞는 SCSS 모듈을 가져옴
+import styles from './ChecklistAdd.module.scss'; // 컴포넌트에 맞는 SCSS 모듈을 가져옴
 
 const cx = classNames.bind(styles);
 
@@ -18,7 +18,7 @@ type DatePickerValue = {
   day: string;
 };
 
-export default function StorageAdd() {
+export default function ChecklistAdd() {
   const router = useRouter();
 
   // 시작 날짜 선택기 표시 여부를 관리하는 상태
@@ -132,8 +132,8 @@ export default function StorageAdd() {
     };
   }, []);
 
-  const handleCompleteClick = (id: number) => {
-    router.push(`/myfamily/storage/${id}/travel-review-form`);
+  const handleCompleteClick = () => {
+    router.push('/myfamily/checklist');
   };
 
   return (
@@ -223,7 +223,7 @@ export default function StorageAdd() {
         <CommonButton
           isEnabled={isButtonEnabled}
           onClick={() => {
-            handleCompleteClick(1);
+            handleCompleteClick();
             setTouched(false); // 제출 후 상호작용 상태 초기화
           }}
           text="입력 완료"

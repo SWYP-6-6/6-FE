@@ -1,136 +1,210 @@
 'use client';
 
-import React, { useState, ChangeEvent, KeyboardEvent } from 'react';
-import { FaTrashAlt } from 'react-icons/fa';
+import React, { useState } from 'react';
+import { useSwipeable } from 'react-swipeable';
 import classNames from 'classnames/bind';
 import Header from '@/components/common/Header';
-import styles from './CheckListPage.module.scss';
+import { useRouter } from 'next/navigation';
+import { FaTrashAlt } from 'react-icons/fa';
+
+import Image from 'next/image';
+import styles from './ChecklistPage.module.scss';
 
 const cx = classNames.bind(styles);
 
-const destinations: string[] = ['경주', '여수', '부산', '강릉', '제주', '양평'];
-
-interface TodoItem {
+// 아이템 타입 정의
+interface Item {
   id: number;
-  text: string;
-  check: boolean;
+  destination: string;
+  startDate: string;
+  endDate: string;
 }
 
-export default function CheckListPage() {
-  const [selectedDestination, setSelectedDestination] = useState<string>(
-    destinations[0],
-  );
-  const [text, setText] = useState<string>('');
-  const [todoLists, setTodoLists] = useState<Record<string, TodoItem[]>>(
-    destinations.reduce(
-      (acc, destination) => {
-        acc[destination] = [];
-        return acc;
+export default function ChecklistPage() {
+  const router = useRouter();
+  const [items] = useState<Item[]>([
+    {
+      id: 1,
+      destination: 'Seoul',
+      startDate: '2024.09.26',
+      endDate: '2024.10.01',
+    },
+    {
+      id: 2,
+      destination: 'Busan',
+      startDate: '2024.10.05',
+      endDate: '2024.10.10',
+    },
+    {
+      id: 3,
+      destination: 'Jeju',
+      startDate: '2024.10.15',
+      endDate: '2024.10.20',
+    },
+    // {
+    //   id: 4,
+    //   destination: 'Seoul',
+    //   startDate: '2024.09.26',
+    //   endDate: '2024.10.01',
+    // },
+    // {
+    //   id: 5,
+    //   destination: 'Busan',
+    //   startDate: '2024.10.05',
+    //   endDate: '2024.10.10',
+    // },
+    // {
+    //   id: 6,
+    //   destination: 'Jeju',
+    //   startDate: '2024.10.15',
+    //   endDate: '2024.10.20',
+    // },
+    // {
+    //   id: 7,
+    //   destination: 'Seoul',
+    //   startDate: '2024.09.26',
+    //   endDate: '2024.10.01',
+    // },
+    // {
+    //   id: 8,
+    //   destination: 'Busan',
+    //   startDate: '2024.10.05',
+    //   endDate: '2024.10.10',
+    // },
+    // {
+    //   id: 9,
+    //   destination: 'Jeju',
+    //   startDate: '2024.10.15',
+    //   endDate: '2024.10.20',
+    // },
+  ]);
+
+  // 각 아이템의 삭제 버튼 표시 여부와 스와이프 상태 관리
+  const [showDelete, setShowDelete] = useState<{ [key: number]: boolean }>({});
+  const [isSwiping, setIsSwiping] = useState<{ [key: number]: boolean }>({});
+
+  const Handlers = (id: number) => {
+    return useSwipeable({
+      onSwipedLeft: () => {
+        setShowDelete((prev) => ({
+          ...prev,
+          [id]: true, // id가 일치하는 항목의 삭제 버튼을 표시
+        }));
       },
-      {} as Record<string, TodoItem[]>,
-    ),
-  );
-
-  const handleText = (e: ChangeEvent<HTMLInputElement>) =>
-    setText(e.target.value);
-
-  const handleListAddText = () => {
-    if (text.trim() === '') return;
-    const newItem: TodoItem = { id: Math.random(), text, check: false };
-    setTodoLists({
-      ...todoLists,
-      [selectedDestination]: [...todoLists[selectedDestination], newItem],
+      onSwipedRight: () => {
+        setShowDelete((prev) => ({
+          ...prev,
+          [id]: false, // id가 일치하는 항목의 삭제 버튼을 숨기기
+        }));
+      },
+      onSwiping: () => {
+        setIsSwiping((prev) => ({
+          ...prev,
+          [id]: true, // id가 일치하는 항목에서 스와이프 중임을 표시
+        }));
+      },
+      onSwiped: () => {
+        setIsSwiping((prev) => ({
+          ...prev,
+          [id]: false, // id가 일치하는 항목에서 스와이프가 완료되었음을 표시
+        }));
+      },
+      preventScrollOnSwipe: false, // 스와이프 중 스크롤을 막지 않음
+      trackMouse: true, // 마우스 드래그로도 스와이프 가능
     });
-    setText('');
   };
 
-  const handleToggleCheck = (id: number) => {
-    const updatedList = todoLists[selectedDestination].map((item) =>
-      item.id === id ? { ...item, check: !item.check } : item,
-    );
-    setTodoLists({ ...todoLists, [selectedDestination]: updatedList });
+  const handleAddClick = () => {
+    router.push('/myfamily/checklist/add');
   };
 
-  const handleDelete = (id: number) => {
-    const updatedList = todoLists[selectedDestination].filter(
-      (item) => item.id !== id,
-    );
-    setTodoLists({ ...todoLists, [selectedDestination]: updatedList });
+  const handleChecklistClick = (id: number) => {
+    router.push(`/myfamily/checklist/${id}/detail`);
   };
-
-  const uncheckedItems = todoLists[selectedDestination].filter(
-    (item) => !item.check,
-  );
-  const checkedItems = todoLists[selectedDestination].filter(
-    (item) => item.check,
-  );
 
   return (
     <div className={cx('container')}>
       <Header isShowButton isShowProfile>
         체크리스트
       </Header>
-      <div className={cx('tabs')}>
-        {destinations.map((destination) => (
-          <button
-            type="button"
-            key={destination}
-            className={cx('tab', {
-              active: selectedDestination === destination,
-            })}
-            onClick={() => setSelectedDestination(destination)}
-          >
-            {destination}
-          </button>
-        ))}
-      </div>
-      <div className={cx('todolist')}>
-        {uncheckedItems.map((item) => (
-          <div className={cx('todolist-textlists')} key={item.id}>
-            <div className={cx('checkTextBox')}>
-              <input
-                className={cx('checkInput')}
-                type="checkbox"
-                checked={item.check}
-                onChange={() => handleToggleCheck(item.id)}
-              />
-              <div className={cx('textList')}>{item.text}</div>
-            </div>
-            <FaTrashAlt
-              className={cx('trash-icon')}
-              onClick={() => handleDelete(item.id)}
-            />
-          </div>
-        ))}
-        {checkedItems.map((item) => (
-          <div className={cx('todolist-textlists')} key={item.id}>
-            <div className={cx('checkTextBox')}>
-              <input
-                className={cx('checkInput')}
-                type="checkbox"
-                checked={item.check}
-                onChange={() => handleToggleCheck(item.id)}
-              />
-              <div className={cx('checkedTextList')}>{item.text}</div>
-            </div>
-            <FaTrashAlt
-              className={cx('trash-icon')}
-              onClick={() => handleDelete(item.id)}
-            />
-          </div>
-        ))}
-        <div className={cx('inputBox')}>
-          <input
-            className={cx('addInput')}
-            placeholder="할 일을 입력 후 Enter를 누르세요."
-            value={text}
-            onChange={handleText}
-            onKeyDown={(e: KeyboardEvent<HTMLInputElement>) =>
-              e.key === 'Enter' && handleListAddText()
-            }
-          />
+      <div className={cx('title')}>여행기록 저장소</div>
+      <div className={cx('swipeableLists')}>
+        <div className={cx('swipeableList')}>
+          {items.map((item) => {
+            return (
+              <div
+                key={item.id}
+                className={cx('draggableContent', {
+                  showButton: showDelete[item.id],
+                })}
+                {...Handlers(item.id)}
+                style={{
+                  transition: isSwiping[item.id]
+                    ? 'none'
+                    : 'transform 0.3s ease',
+                }}
+              >
+                <button
+                  className={cx('draggableContent-button')}
+                  type="button"
+                  onClick={() => handleChecklistClick(item.id)}
+                >
+                  <p className={cx('draggableContent-button-title')}>
+                    {item.destination}
+                  </p>
+                  <p className={cx('draggableContent-button-duration')}>
+                    {item.startDate}-{item.endDate}
+                  </p>
+                </button>
+                <div
+                  className={cx('Buttons', {
+                    showButton: showDelete[item.id],
+                  })}
+                >
+                  <button
+                    onClick={(e) => e.stopPropagation}
+                    type="button"
+                    className={cx('button-cover')}
+                  >
+                    <div className={cx('button', 'revise')}>
+                      <Image
+                        src="/svgs/revise_icon.svg"
+                        alt="revise Icon"
+                        width={17}
+                        height={17}
+                        priority
+                      />
+                    </div>
+                  </button>
+                  <button
+                    onClick={(e) => e.stopPropagation}
+                    type="button"
+                    className={cx('button-cover')}
+                  >
+                    <div className={cx('button', 'delete')}>
+                      <FaTrashAlt />
+                    </div>
+                  </button>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
+      <button
+        onClick={handleAddClick}
+        className={cx('addButton')}
+        type="button"
+      >
+        <Image
+          src="/svgs/add-icon.svg"
+          alt="Add Icon"
+          width={48}
+          height={48}
+          priority
+          className={cx('button')}
+        />
+      </button>
     </div>
   );
 }
