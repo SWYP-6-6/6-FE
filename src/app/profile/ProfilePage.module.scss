@@ -1,38 +1,212 @@
 .container {
-  @include column-flexbox(center, center, 1.4rem);
+  @include column-flexbox(center, center, 2.6rem);
   width: 100%;
-  padding: 0 2.4rem;
+
+  .title {
+    @include flexbox(start, center);
+    @include text-style(24, $black, bolder);
+
+    width: 100%;
+    margin: 7.5rem 0 0 2.5rem;
+  }
+
+  .profile {
+    @include flexbox(start, center, 1.5rem);
+
+    width: 100%;
+    padding-left: 2.5rem;
+
+    .image-container {
+      @include flexbox;
+
+      background-color: $gray20;
+      width: 6.5rem;
+      height: 6.5rem;
+      border-radius: 50%;
+    }
+
+    &-info {
+      @include text-style(20, $black, bolder);
+      @include column-flexbox(center, start, 0.3rem);
+
+      &-email {
+        @include text-style(15, $black, light);
+      }
+    }
+  }
+
+  .tabs {
+    @include flexbox(center, start);
+
+    width: 100%;
+    padding-top: 0.3rem;
+
+    position: sticky; // 스크롤 시 고정
+    top: 0; // 화면 상단에 고정
+    background-color: $white;
+
+    .tab {
+      @include text-style(20, $gray);
+
+      padding-bottom: 0.3rem;
+      width: 100%;
+      transition: $base-transition;
+      border-bottom: 0.3rem solid $gray;
+      cursor: pointer;
+
+      &.active {
+        @include text-style(20, $black);
+
+        border-bottom: 0.3rem solid $primary;
+      }
+    }
+  }
+}
+.profile-content {
+  @include column-flexbox(center, start, 2.8rem);
+
+  width: 100%;
+  padding: 0.4rem 2.4rem 0 2.3rem;
+
+  &-nickname {
+    @include column-flexbox(center, start, 1.8rem);
+    @include text-style(16, $black, bolder);
+
+    width: 100%;
+
+    &-input {
+      width: 100%;
+      border-radius: 0.6rem;
+      border: 0.05rem solid $gray;
+      padding: 1.5rem 0 1.4rem 1.1rem;
+
+      &:focus {
+        border: 0.05rem solid $primary;
+      }
+    }
+  }
+
+  &-alarm {
+    @include column-flexbox(center, start, 2.4rem);
+
+    width: 100%;
+
+    &-title {
+      @include text-style(16, $black, bolder);
+    }
+  }
 }
 
-.title {
-  @include flexbox(start, center);
-  @include text-style(24, $black, bolder);
-
+.posts-content {
   width: 100%;
-  margin: 7.7rem 0 3.8rem 1.9rem;
 }
 
-.image-container {
+.modal {
   @include flexbox;
 
-  background-color: $gray20;
-  width: 27.7rem;
-  height: 27.7rem;
-  border-radius: 50%;
-  margin-bottom: 2.9rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(217, 217, 217, 0.39);
+  z-index: 1000;
+
+  .modal-content {
+    @include column-flexbox(between, center, 1.8rem);
+
+    background-color: white;
+    padding: 4.1rem 2.9rem 1.9rem 2.8rem;
+    border-radius: 1.9rem;
+    text-align: center;
+    width: 38.7rem;
+    height: 18.5rem;
+    box-shadow: 0 0.4rem 0.4rem 0 rgba(0, 0, 0, 0.25);
+
+    &-description {
+      @include column-flexbox(center, center, 2rem);
+
+      &-text {
+        font-size: 1.7rem;
+      }
+      &-subtext {
+        @include text-style(14, $gray, light);
+      }
+    }
+
+    &-buttons {
+      @include flexbox(center, center, 1rem);
+
+      width: 100%;
+
+      &-cancel {
+        @include text-style(14, $white, light);
+
+        width: 100%;
+        border-radius: 0.5rem;
+        background-color: $gray20;
+        padding: 0.7rem 0 0.8rem;
+        transition: $base-transition;
+
+        &:hover {
+          background-color: $gray;
+        }
+      }
+
+      &-confirm {
+        @include text-style(14, $white, light);
+
+        width: 100%;
+        border-radius: 0.5rem;
+        background-color: $primary;
+        padding: 0.7rem 0 0.8rem;
+        transition: $base-transition;
+
+        &:hover {
+          background-color: $primary-10;
+          @include text-style(14, $gray30, light);
+        }
+      }
+    }
+  }
+
+  .second-modal-content {
+    @include column-flexbox(between, center, 2.6rem);
+    @include text-style(17, $black, light);
+
+    background-color: white;
+    padding: 3.8rem 0 2.3rem;
+    border-radius: 1.9rem;
+    text-align: center;
+    width: 38.7rem;
+    height: 13.9rem;
+    box-shadow: 0 0.4rem 0.4rem 0 rgba(0, 0, 0, 0.25);
+
+    &-button {
+      @include text-style(14, $white, light);
+
+      width: 16rem;
+      height: 3.2rem;
+      border-radius: 0.5rem;
+      background-color: $primary;
+    }
+  }
 }
 
-.profile-info-container {
-  @include column-flexbox(center, center, 1.1rem);
-
-  padding-bottom: 6.1rem;
-
-  .nickname {
-    @include flexbox($gap: 0.7rem);
-    @include text-style(30, $primary, bolder);
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-1rem);
   }
 
-  .email {
-    @include text-style(20, $black);
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
+}
+
+.error-message {
+  @include text-style(16, red);
+
+  animation: slideIn 0.3s ease-out;
 }

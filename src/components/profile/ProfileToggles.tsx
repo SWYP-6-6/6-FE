@@ -21,7 +21,6 @@ export default function ProfileToggles() {
 
   return (
     <div className={cx('alarm')}>
-      <p className={cx('alarm-title')}>알림</p>
       <div className={cx('alarm-toggle-container')}>
         <div className={cx('alarm-labels')}>공유 피드 좋아요 알림</div>
         <button
