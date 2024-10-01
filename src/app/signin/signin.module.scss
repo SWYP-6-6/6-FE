@@ -1,10 +1,12 @@
 .container {
   @include flexbox;
+  flex: 1;
   flex-direction: column;
-  height: 100vh;
+  overflow: hidden;
 }
 
 .image-container {
+  margin-top: 13.2rem;
   margin-bottom: 6.3rem;
 }
 
@@ -12,6 +14,10 @@
   @include text-style(24, $weight: light);
   text-align: center;
   margin-bottom: 2.3rem;
+  line-height: 3rem;
+}
+.bold-purple-text {
+  @include text-style(24, $primary, bolder);
 }
 
 .character-placeholder {
@@ -63,7 +69,9 @@
   width: 40.8rem;
   padding: 1.5rem 0;
   margin: 0 2.3rem;
+  margin-bottom: 10.6rem;
   border-radius: 0.6rem;
+
   cursor: pointer;
   transition: $base-transition;
 }
