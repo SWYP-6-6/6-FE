@@ -7,7 +7,7 @@ import styles from './signin.module.scss';
 
 const cx = classNames.bind(styles);
 
-const KAKAO_TOKEN_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${process.env.NEXT_PUBLIC_REST_API_KEY}&redirect_uri=${process.env.NEXT_PUBLIC_REDIRECT_URI}`;
+// const KAKAO_TOKEN_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${process.env.NEXT_PUBLIC_REST_API_KEY}&redirect_uri=${process.env.NEXT_PUBLIC_REDIRECT_URI}`;
 
 export default function Page() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -25,15 +25,15 @@ export default function Page() {
         return (
           <>
             <Image
-              src="/svgs/login-center.svg"
+              src="/svgs/login-center1.svg"
               alt=""
-              width={371}
-              height={445}
+              width={310}
+              height={502}
               className={cx('image-container')}
             />
             <p className={cx('introduce-text')}>
-              가족끼리 갔던 여행에서
-              <br /> 찍은 사진을 공유해봐요!
+              소중한 <b>가족 여행 기록</b>을
+              <br /> 저장해보세요!
             </p>
           </>
         );
@@ -41,15 +41,16 @@ export default function Page() {
         return (
           <>
             <Image
-              src="/svgs/login-center.svg"
+              src="/svgs/login-center2.svg"
               alt=""
-              width={371}
-              height={445}
+              width={310}
+              height={502}
               className={cx('image-container')}
             />
             <p className={cx('introduce-text')}>
-              우리가족 뿐만 아니라,
-              <br /> 다른 가족들의 사진을 볼 수 있어요!
+              특별한 가족 여행을 위한
+              <br />
+              <b>여정</b>을 준비해보세요!
             </p>
           </>
         );
@@ -57,13 +58,16 @@ export default function Page() {
         return (
           <>
             <Image
-              src="/svgs/login-center.svg"
+              src="/svgs/login-center3.svg"
               alt=""
-              width={371}
-              height={445}
+              width={310}
+              height={502}
               className={cx('image-container')}
             />
-            <p className={cx('introduce-text')}>어쩌구 어쩌구 어쩌구 </p>
+            <p className={cx('introduce-text')}>
+              다른 가족과 <b>여행 추억</b>을
+              <br /> <b>공유</b>할 수 있어요!
+            </p>
           </>
         );
       case 4:
@@ -72,13 +76,14 @@ export default function Page() {
             <Image
               src="/svgs/login-center4.svg"
               alt=""
-              width={332}
-              height={329}
+              width={746}
+              height={560}
+              className={cx('image-container')}
             />
-            <p className={cx('title')}>OUR TRIPTERRIOR</p>
             <p className={cx('introduce-text')}>
-              여행에서 가족과 찍은 사진을
-              <br /> 공유하고 <b>패밀몽</b>을 키워봐요!
+              “여행의 <b>모든 순간</b>을 특별하게, <br />
+              <span className={cx('bold-purple-text')}>트립테리어</span>와
+              함께하세요.”
             </p>
           </>
         );
@@ -116,9 +121,10 @@ export default function Page() {
         <button
           type="button"
           className={cx('button', 'kakao-button')}
-          onClick={() => {
-            window.location.href = KAKAO_TOKEN_URL;
-          }}
+          // onClick={() => {
+          //   // window.location.href = KAKAO_TOKEN_URL;
+          //     '/oauth2/authorization/kakao';
+          // }}
         >
           <Image
             src="/svgs/kakao-icon.svg"

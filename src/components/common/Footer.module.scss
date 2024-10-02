@@ -1,0 +1,17 @@
+.footer-container {
+  width: 100%;
+}
+
+.emoticon-box {
+  @include flexbox($jc: between, $ai: center);
+  padding: 3.8rem 2.5rem 3.7rem 2.9rem;
+}
+
+.image {
+  &:hover {
+    #icon-path {
+      fill: $primary;
+      transition: $base-transition;
+    }
+  }
+}
