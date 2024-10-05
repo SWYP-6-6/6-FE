@@ -1,7 +1,12 @@
 .card {
-  padding: 2rem 2.4rem 0rem 2.4rem;
+  padding-top: 2.4rem;
   border-top: 0.1rem solid $gray20;
-  margin-top: 2.3rem;
+  margin-top: 2.4rem;
+
+  .post {
+    padding: 1.6rem 2.1rem 2rem 2.7rem;
+    border-bottom: 0.1rem solid $gray20;
+  }
 }
 
 .profile {
@@ -51,7 +56,6 @@
   display: flex;
   overflow-x: scroll; /* 수평 스크롤 가능 */
   margin-top: 1.4rem;
-  padding-bottom: 0.5rem;
   .image {
     width: 15rem;
     height: 15rem;
@@ -103,9 +107,35 @@
     margin-right: 1.8rem;
   }
 }
+
 @include responsive(M) {
   .write-button {
     bottom: 8.4rem;
     right: 2.3rem;
+  }
+}
+
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10rem;
+
+  .spinner-icon {
+    border: 0.4rem solid rgba(0, 0, 0, 0.1); // 바깥쪽 테두리
+    border-top: 0.4rem solid $primary; // 스피너의 상단 부분 색상
+    border-radius: 50%;
+    width: 4rem;
+    height: 4rem;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
 }

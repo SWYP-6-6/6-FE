@@ -14,6 +14,7 @@
   "rules": {
     "quotes": ["error", "single", { "avoidEscape": true }],
     "prettier/prettier": ["error", { "endOfLine": "auto" }],
-    "react/jsx-props-no-spreading": "off"
+    "react/jsx-props-no-spreading": "off",
+    "import/prefer-default-export": "off"
   }
 }

@@ -3,7 +3,7 @@
 }
 
 .form-container {
-  padding: 8.7rem 2.3rem 3.5rem 2.3rem;
+  padding: 3.7rem 2.3rem 3.5rem 2.3rem;
   .image-container {
     display: flex;
   }
@@ -143,4 +143,22 @@
     border-radius: 0.6rem;
     cursor: pointer;
   }
+}
+
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-1rem);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.error-message {
+  @include text-style(14, red);
+  margin-top: 0.3rem;
+
+  animation: slideIn 0.3s ease-out;
 }
