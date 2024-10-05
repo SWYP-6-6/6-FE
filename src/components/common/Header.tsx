@@ -37,7 +37,11 @@ export default function Header({
       })
         .then((response) => response.json())
         .then((data) => {
-          setProfileImage(data.profileImage);
+          if (data.nickname === null) {
+            router.push('/nicknamesetting');
+          } else {
+            setProfileImage(data.profileImage);
+          }
         });
       // .catch((error) => console.error('Error fetching profile:', error));
     }
