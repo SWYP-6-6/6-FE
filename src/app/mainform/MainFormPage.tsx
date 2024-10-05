@@ -1,11 +1,10 @@
-// app/components/mainform/MainFormPage.tsx
-
 'use client';
 
 import React, { useState } from 'react';
 import Image from 'next/image';
 import classNames from 'classnames/bind';
 import { FaX } from 'react-icons/fa6';
+import CommonButton from '@/components/common/CommonButton';
 import styles from './MainFormPage.module.scss';
 
 const cx = classNames.bind(styles);
@@ -26,6 +25,7 @@ export default function MainFormPage({ submitForm }: MainFormPageProps) {
     place: '',
     content: '',
   });
+  const [isSubmitting, setIsSubmitting] = useState(false); // 제출 상태 추가
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -83,7 +83,7 @@ export default function MainFormPage({ submitForm }: MainFormPageProps) {
     return !errors.title && !errors.place && !errors.content;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // 유효성 검사를 통과하지 못하면 중단
@@ -91,16 +91,27 @@ export default function MainFormPage({ submitForm }: MainFormPageProps) {
       return;
     }
 
-    // FormData 생성
-    const formData = new FormData();
-    selectedImages.forEach((image) => formData.append('images', image)); // 이미지 추가
-    formData.append('title', title);
-    formData.append('content', content);
-    formData.append('place', place);
-    formData.append('isPublic', visibility); // 공개 여부 추가
+    // 폼이 제출 중이라면 중복 제출 방지
+    if (isSubmitting) return;
 
-    // 서버로 폼 데이터 전송
-    submitForm(formData);
+    setIsSubmitting(true); // 제출 시작 시 상태를 true로 설정
+
+    try {
+      // FormData 생성
+      const formData = new FormData();
+      selectedImages.forEach((image) => formData.append('images', image)); // 이미지 추가
+      formData.append('title', title);
+      formData.append('content', content);
+      formData.append('place', place);
+      formData.append('isPublic', visibility); // 공개 여부 추가
+
+      // 서버로 폼 데이터 전송
+      await submitForm(formData);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    } finally {
+      setIsSubmitting(false); // 요청 완료 후 다시 false로 설정
+    }
   };
 
   return (
@@ -163,6 +174,7 @@ export default function MainFormPage({ submitForm }: MainFormPageProps) {
         {errorMessages.email && (
           <p className={cx('error-message')}>{errorMessages.email}</p>
         )}
+
         {/* 제목 입력 */}
         <div className={cx('form-group')}>
           <label htmlFor="title">
@@ -240,9 +252,13 @@ export default function MainFormPage({ submitForm }: MainFormPageProps) {
           </div>
         </div>
 
-        <button type="submit" className={cx('submitButton')}>
-          작성완료
-        </button>
+        <div className={cx('submitButton')}>
+          <CommonButton
+            isEnabled={!isSubmitting}
+            text="다음 단계로"
+            type="submit" // 'submit' 타입으로 설정
+          />
+        </div>
       </form>
     </div>
   );
