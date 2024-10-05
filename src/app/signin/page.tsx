@@ -19,6 +19,11 @@ export default function Page() {
     }
   };
 
+  const handleLogin = () => {
+    window.location.href =
+      'http://13.209.88.22:8080/oauth2/authorization/kakao'; // Spring Boot 서버의 카카오 로그인 URI
+  };
+
   const renderContent = () => {
     switch (currentPage) {
       case 1:
@@ -121,10 +126,7 @@ export default function Page() {
         <button
           type="button"
           className={cx('button', 'kakao-button')}
-          // onClick={() => {
-          //   // window.location.href = KAKAO_TOKEN_URL;
-          //     '/oauth2/authorization/kakao';
-          // }}
+          onClick={handleLogin}
         >
           <Image
             src="/svgs/kakao-icon.svg"

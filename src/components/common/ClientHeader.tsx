@@ -1,7 +1,5 @@
 'use client';
 
-// 클라이언트 컴포넌트로 선언
-
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -10,19 +8,19 @@ import styles from './Header.module.scss';
 
 const cx = classNames.bind(styles);
 
-interface HeaderProps {
+interface ClientHeaderProps {
+  token: string | '';
   children: React.ReactNode;
   isShowButton: boolean;
   isShowProfile: boolean;
-  token: string;
 }
 
-export default function Header({
+export default function ClientHeader({
+  token,
   children,
   isShowButton,
   isShowProfile,
-  token,
-}: HeaderProps) {
+}: ClientHeaderProps) {
   const router = useRouter();
   const [profileImage, setProfileImage] = useState<string | null>(null);
 
@@ -38,8 +36,8 @@ export default function Header({
         .then((response) => response.json())
         .then((data) => {
           setProfileImage(data.profileImage);
-        });
-      // .catch((error) => console.error('Error fetching profile:', error));
+        })
+        .catch((error) => console.log('Error fetching profile:', error));
     }
   }, [token]);
 
@@ -65,21 +63,17 @@ export default function Header({
       )}
       <p className={cx('create-post')}>{children}</p>
       {isShowProfile && profileImage ? (
-        <div className={cx('profile-button')}>
-          <Image
-            src={profileImage}
-            alt="Profile"
-            width={33}
-            height={33}
-            className={cx('profile-image')}
-          />
-        </div>
+        <Image
+          src={profileImage}
+          alt="Profile"
+          width={40}
+          height={40}
+          className={cx('profile-image')}
+        />
       ) : (
-        isShowProfile && (
-          <div className={cx('profile-button')}>
-            {/* 프로필 이미지가 없을 때 대체 UI */}
-          </div>
-        )
+        <div className={cx('profile-button')}>
+          {/* 프로필 이미지가 없을 때 */}
+        </div>
       )}
     </div>
   );

@@ -1,165 +1,74 @@
-'use client';
+// app/mainform/page.tsx
 
-import React, { useState } from 'react';
-import Image from 'next/image';
-import classNames from 'classnames/bind';
-import { FaX } from 'react-icons/fa6';
+import React from 'react';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 import Header from '@/components/common/Header';
-import styles from './MainFormPage.module.scss';
+import MainFormPage from './MainFormPage';
 
-const cx = classNames.bind(styles);
+export default function Page() {
+  const cookieStore = cookies();
+  const token = cookieStore.get('JWT')?.value;
 
-export default function MainFormPage() {
-  const [selectedImages, setSelectedImages] = useState<File[]>([]);
-  const [visibility, setVisibility] = useState<string>('whole ');
+  // submitForm 함수 정의
+  const submitForm = async (formData: FormData) => {
+    'use server';
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const filesArray = Array.from(e.target.files);
+    // const cookieStore = cookies();
+    // const token = cookieStore.get('JWT')?.value;
 
-      if (selectedImages.length + filesArray.length > 10) {
-        alert('이미지는 최대 10개까지 업로드할 수 있습니다.');
-        return;
-      }
+    // FormData에서 각 데이터를 가져옴
+    const title = formData.get('title') as string;
+    const content = formData.get('content') as string;
+    const place = formData.get('place') as string;
+    const isPublic = formData.get('isPublic') === 'true'; // 공개 여부
+    const images = formData.getAll('images') as File[];
 
-      setSelectedImages((prevImages) => [...prevImages, ...filesArray]); // setSelectedImages안에 filesArray 하나씩 누적되는 형태
+    // 필수 데이터가 없는 경우 에러 처리
+    if (!title || !content || !place || images.length === 0) {
+      throw new Error('제목, 내용, 장소 및 이미지를 모두 입력해주세요.');
     }
+
+    // 서버에 보낼 request 필드에 포함될 JSON 데이터 생성
+    const requestBody = JSON.stringify({
+      title,
+      content,
+      place,
+      isPublic,
+    });
+
+    // FormData 생성
+    const apiFormData = new FormData();
+    apiFormData.append('request', requestBody); // JSON 데이터는 문자열로 변환 후 추가
+    images.forEach((image) => {
+      apiFormData.append('imageFiles', image); // 이미지 파일들 추가
+    });
+
+    // 게시글 생성 요청
+    const response = await fetch('http://13.209.88.22:8080/api/v1/feed', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`, // JWT 토큰 포함
+        // Content-Type은 fetch가 자동으로 설정하므로 명시적으로 설정하지 않음
+      },
+      body: apiFormData, // multipart/form-data 형식으로 전송
+    });
+
+    if (!response.ok) {
+      throw new Error('피드 생성에 실패했습니다.');
+    }
+
+    // 성공 시, 메인 페이지로 리다이렉트
+    redirect('/');
   };
 
-  const handleImageRemove = (name: string, lastModified: number) => {
-    setSelectedImages((prevImages) =>
-      prevImages.filter(
-        (image) => image.name !== name || image.lastModified !== lastModified,
-      ),
-    );
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Form submitted:', { selectedImages, visibility });
-  };
-
+  // MainFormPage 컴포넌트에 submitForm을 prop으로 전달
   return (
-    <div className={cx('mainform')}>
-      <Header isShowButton isShowProfile={false}>
+    <>
+      <Header token={token || ''} isShowButton isShowProfile={false}>
         게시글작성
       </Header>
-      <form onSubmit={handleSubmit} className={cx('form-container')}>
-        <div className={cx('image-container')}>
-          <div className={cx('image-form-section')}>
-            <label htmlFor="fileInput" className={cx('imageLabel')}>
-              사진
-              <div className={cx('imagePlaceholder')}>
-                <div>
-                  <Image
-                    src="/svgs/camera.svg"
-                    alt=""
-                    width={31}
-                    height={22}
-                    priority
-                  />
-                  <p>{`${selectedImages.length}/10`}</p>
-                </div>
-              </div>
-            </label>
-            <input
-              type="file"
-              id="fileInput"
-              accept="image/*"
-              onChange={handleImageChange}
-              className={cx('fileInput')}
-            />
-          </div>
-          <div className={cx('image-preview-section')}>
-            <div className={cx('image-preview-position')}>
-              {selectedImages.map((image) => (
-                <div
-                  key={`${image.name}-${image.lastModified}`}
-                  className={cx('image-preview-remove')}
-                >
-                  <Image
-                    src={URL.createObjectURL(image)} // 로컬에서 이미지 미리보기
-                    alt={`uploaded image ${image.name}`}
-                    width={85}
-                    height={85}
-                    className={cx('image')}
-                  />
-                  <button
-                    type="button"
-                    className={cx('remove-button')}
-                    onClick={() =>
-                      handleImageRemove(image.name, image.lastModified)
-                    }
-                  >
-                    <FaX size={7} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className={cx('form-group')}>
-          <label htmlFor="title">
-            제목
-            <input
-              id="title"
-              name="title"
-              type="text"
-              placeholder="제목을 작성해 주세요."
-              className={cx('input-field')}
-            />
-          </label>
-        </div>
-
-        <div className={cx('form-group')}>
-          <label htmlFor="location">
-            장소
-            <input
-              id="location"
-              type="text"
-              name="location"
-              placeholder="장소를 입력해 주세요."
-              className={cx('input-field')}
-            />
-          </label>
-        </div>
-
-        <div className={cx('form-group')}>
-          <label htmlFor="description">
-            자세한 설명
-            <textarea
-              id="description"
-              name="description"
-              placeholder="메인 피드에 올라갈 게시글 내용을 작성해 주세요."
-              className={cx('textArea')}
-            />
-          </label>
-        </div>
-        <div className={cx('share-container')}>
-          <p className={cx('text')}>공유방식</p>
-          <div className={cx('visibility')}>
-            <button
-              type="button"
-              className={cx('all', { active: visibility === 'whole' })}
-              onClick={() => setVisibility('whole')}
-            >
-              전체 공개
-            </button>
-            <button
-              type="button"
-              className={cx('group', { active: visibility === 'group' })}
-              onClick={() => setVisibility('group')}
-            >
-              그룹 공개
-            </button>
-          </div>
-        </div>
-
-        <button type="submit" className={cx('submitButton')}>
-          작성완료
-        </button>
-      </form>
-    </div>
+      <MainFormPage submitForm={submitForm} />
+    </>
   );
 }
