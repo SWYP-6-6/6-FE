@@ -8,7 +8,7 @@ export default function MyFamilyLayout({
 }) {
   return (
     <div>
-      <Header isShowButton isShowProfile={false}>
+      <Header token="" isShowButton isShowProfile={false}>
         기념일 설정
       </Header>
       {children}

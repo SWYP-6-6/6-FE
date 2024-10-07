@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation'; // 리다이렉트를 위한 모듈
 import Header from '@/components/common/Header';
 import InfiniteScrollClient from '@/components/mainClient';
 
-export default async function InfiniteScrollPage() {
+export default async function Home() {
   // 쿠키에서 JWT 토큰 가져오기
   const cookieStore = cookies();
   const token = cookieStore.get('JWT')?.value;
