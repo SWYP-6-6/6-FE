@@ -1,10 +1,10 @@
 .card {
-  padding-top: 2.4rem;
+  // padding-top: 2.4rem;
   border-top: 0.1rem solid $gray20;
   margin-top: 2.4rem;
 
   .post {
-    padding: 1.6rem 2.1rem 2rem 2.7rem;
+    padding: 1.8rem 0 1.2rem 2rem;
     border-bottom: 0.1rem solid $gray20;
   }
 }
@@ -12,6 +12,7 @@
 .profile {
   @include flexbox($jc: between, $ai: center);
   margin-bottom: 1.2rem;
+  margin-right: 2.1rem;
 }
 
 .avatar {
@@ -84,8 +85,11 @@
 }
 
 .actions {
-  display: flex;
-  gap: 1.4rem;
+  @include flexbox(start, center, 0.5rem);
+  @include text-style(12);
+
+  font-weight: 300;
+  gap: 0.5rem;
   margin-left: 0.2rem;
   margin-top: 0.8rem;
 }
@@ -143,7 +147,7 @@
 .comments {
   @include column-flexbox(center, start, 1.2rem);
 
-  margin: 2.2rem 0 1.9rem 0;
+  margin-top: 1.7rem;
   width: 100%;
 
   .comment {
@@ -168,5 +172,29 @@
         font-weight: 300;
       }
     }
+  }
+}
+
+@keyframes heartBeat {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.75;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.heart-icon {
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
+  &.liked {
+    animation: heartBeat 0.5s ease;
   }
 }

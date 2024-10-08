@@ -300,12 +300,12 @@ export default function CalendarPage() {
           <CommonButton
             isEnabled={isButtonEnabled}
             onClick={() => {
-              console.log(
-                '시작 날짜:',
-                startPickerValue,
-                '끝나는 날짜:',
-                endPickerValue,
-              );
+              // console.log(
+              //   '시작 날짜:',
+              //   startPickerValue,
+              //   '끝나는 날짜:',
+              //   endPickerValue,
+              // );
               handleClose();
             }}
             text="완료"

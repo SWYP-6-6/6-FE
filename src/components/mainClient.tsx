@@ -5,7 +5,7 @@ import classNames from 'classnames/bind';
 import Image from 'next/image';
 import { FaPlus } from 'react-icons/fa6';
 import Link from 'next/link';
-import { getFetchFeedList } from '@/app/api/api';
+import { getFetchFeedList, likeFeed, removeLikeFromFeed } from '@/app/api/api';
 import MainContent from '@/components/common/MainComment';
 import styles from './main.module.scss';
 
@@ -23,22 +23,69 @@ interface FeedItem {
   imageList: string[];
   commentList: any[];
   commentCount: number;
+  isLiked: boolean;
+}
+
+interface User {
+  id: number;
+  username: string;
+  email: string;
+  profileImage: string;
+  nickName: string | null;
+  familyId: number | null;
 }
 
 interface InfiniteScrollClientProps {
   initialFeedData: FeedItem[];
-  token: string | undefined;
+  token: string;
+  user: User;
 }
 
-export default function InfiniteScrollClient({
+export default function MainClient({
   initialFeedData,
   token,
+  user,
 }: InfiniteScrollClientProps) {
   const [feedList, setFeedList] = useState<FeedItem[]>(initialFeedData);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const observer = useRef<IntersectionObserver | null>(null);
+  const [animateLike, setAnimateLike] = useState<number | null>(null);
+  // console.log(user);
+  const handleLike = async (feedId: number) => {
+    try {
+      await likeFeed({ feedId, token });
+      setFeedList((prevFeedList) =>
+        prevFeedList.map((feed) =>
+          feed.id === feedId
+            ? { ...feed, isLiked: true, likeCnt: feed.likeCnt + 1 }
+            : feed,
+        ),
+      );
+      setAnimateLike(feedId);
+      setTimeout(() => setAnimateLike(null), 500);
+    } catch (error) {
+      console.error('Error liking feed:', error);
+    }
+  };
+
+  const handleRemoveLike = async (feedId: number) => {
+    try {
+      await removeLikeFromFeed({ feedId, token });
+      setFeedList((prevFeedList) =>
+        prevFeedList.map((feed) =>
+          feed.id === feedId
+            ? { ...feed, isLiked: false, likeCnt: feed.likeCnt - 1 }
+            : feed,
+        ),
+      );
+      setAnimateLike(feedId);
+      setTimeout(() => setAnimateLike(null), 500);
+    } catch (error) {
+      console.error('Error removing like from feed:', error);
+    }
+  };
 
   const fetchFeedData = useCallback(async () => {
     if (!token || loading || !hasMore) return;
@@ -47,7 +94,6 @@ export default function InfiniteScrollClient({
 
     try {
       const data = await getFetchFeedList({ page, size: 10, token });
-
       setFeedList((prev) => {
         const newFeeds = data.content.filter(
           (newFeed: FeedItem) => !prev.some((feed) => feed.id === newFeed.id),
@@ -62,6 +108,8 @@ export default function InfiniteScrollClient({
       setLoading(false);
     }
   }, [page, token, loading, hasMore]);
+
+  console.log(feedList);
 
   const lastFeedElementRef = useCallback(
     (node: HTMLElement | null) => {
@@ -124,37 +172,61 @@ export default function InfiniteScrollClient({
                 )}
                 <div className={cx('actions')}>
                   <Image
-                    src="/svgs/main-like.svg"
+                    src={
+                      content.isLiked
+                        ? '/svgs/liked-heart.svg'
+                        : '/svgs/main-like.svg'
+                    }
                     alt="좋아요"
                     width={15}
                     height={15}
+                    className={cx('heart-icon', {
+                      liked: animateLike === content.id,
+                    })} // 애니메이션 클래스 적용
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (user.nickName === content.nickname) {
+                        return;
+                      }
+                      if (content.isLiked) {
+                        handleRemoveLike(content.id);
+                      } else {
+                        handleLike(content.id);
+                      }
+                    }}
                   />
+                  {content.likeCnt}
                   <Image
                     src="/svgs/main-comment.svg"
                     alt="댓글"
                     width={15}
                     height={15}
                   />
+                  {content.commentCount}
                 </div>
-                <div className={cx('comments')}>
-                  {content.commentList.slice(0, 2).map((comment: any) => (
-                    <div className={cx('comment')} key={comment.id}>
-                      <div className={cx('avatar')}>
-                        <Image
-                          src={comment.profileImage}
-                          alt={`${comment.nickname}의 아바타`}
-                          width={35}
-                          height={35}
-                          className={cx('img')}
-                        />
+                {content.commentCount > 0 && (
+                  <div className={cx('comments')}>
+                    {content.commentList.slice(0, 2).map((comment: any) => (
+                      <div className={cx('comment')} key={comment.id}>
+                        <div className={cx('avatar')}>
+                          <Image
+                            src={comment.profileImage}
+                            alt={`${comment.nickname}의 아바타`}
+                            width={35}
+                            height={35}
+                            className={cx('img')}
+                          />
+                        </div>
+                        <div className={cx('content')}>
+                          <div className={cx('username')}>
+                            {comment.nickname}
+                          </div>
+                          <div className={cx('text')}>{comment.comment}</div>
+                        </div>
                       </div>
-                      <div className={cx('content')}>
-                        <div className={cx('username')}>{comment.nickname}</div>
-                        <div className={cx('text')}>{comment.comment}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </Link>
