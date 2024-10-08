@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import classNames from 'classnames/bind';
+import { getFetchUser } from '@/app/api/api'; // getFetchUser 불러오기
 import styles from './Header.module.scss';
 
 const cx = classNames.bind(styles);
@@ -14,7 +15,7 @@ interface HeaderProps {
   children: React.ReactNode;
   isShowButton: boolean;
   isShowProfile: boolean;
-  token: string;
+  token: string | undefined;
 }
 
 export default function Header({
@@ -28,24 +29,21 @@ export default function Header({
 
   useEffect(() => {
     if (token) {
-      fetch('http://13.209.88.22:8080/users/get', {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          accept: '*/*',
-        },
-      })
-        .then((response) => response.json())
+      // getFetchUser를 사용하여 API 호출
+      getFetchUser({ token })
         .then((data) => {
-          if (data.nickname === null) {
+          if (data.nickName === null) {
             router.push('/nicknamesetting');
           } else {
             setProfileImage(data.profileImage);
           }
+        })
+        .catch((error) => {
+          // console.error('프로필 데이터를 불러오는 중 오류 발생:', error);
+          return <div> 프로필 데이터를 불러오는 중 오류 발생: {error}</div>;
         });
-      // .catch((error) => console.error('Error fetching profile:', error));
     }
-  }, [token]);
+  }, [token, router]);
 
   const handleBackClick = () => {
     router.back();

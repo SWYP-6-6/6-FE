@@ -1,5 +1,3 @@
-// NicknameForm.tsx
-
 'use client';
 
 import React, { useState, FormEvent } from 'react';
@@ -16,6 +14,7 @@ interface NicknameFormProps {
 export default function NicknameForm({ submitNickname }: NicknameFormProps) {
   const [nickname, setNickname] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false); // 추가된 상태값
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
@@ -33,13 +32,21 @@ export default function NicknameForm({ submitNickname }: NicknameFormProps) {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
+    // 이미 제출 중이면 요청을 중단
+    if (isSubmitting) return;
+
     const formData = new FormData();
     formData.set('nickname', nickname);
+
+    setIsSubmitting(true); // 제출 중 상태 설정
 
     try {
       await submitNickname(formData);
     } catch (error) {
       setErrorMessage('닉네임 업데이트에 실패했습니다. 다시 시도해주세요.');
+    } finally {
+      setIsSubmitting(false); // 제출 완료 후 다시 활성화
     }
   };
 
@@ -57,12 +64,13 @@ export default function NicknameForm({ submitNickname }: NicknameFormProps) {
           onChange={handleInputChange}
           placeholder="닉네임을 입력하세요"
           className={cx('input')}
+          disabled={isSubmitting} // 제출 중일 때 입력 필드 비활성화 (선택 사항)
         />
         {errorMessage && <p className={cx('error-message')}>{errorMessage}</p>}
       </label>
       <CommonButton
-        isEnabled={!errorMessage && nickname.length > 0}
-        text="다음 단계로"
+        isEnabled={!errorMessage && nickname.length > 0 && !isSubmitting} // 제출 중일 때 버튼 비활성화
+        text={isSubmitting ? '처리 중...' : '다음 단계로'}
         type="submit" // 'submit' 타입으로 설정
       />
     </form>
