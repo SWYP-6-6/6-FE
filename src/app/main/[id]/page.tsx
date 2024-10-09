@@ -4,15 +4,21 @@ import Header from '@/components/common/Header';
 import classNames from 'classnames/bind';
 import Image from 'next/image';
 import { revalidatePath } from 'next/cache';
-// import { redirect } from 'next/navigation'; // 리다이렉트를 위한 모듈
+import { redirect } from 'next/navigation'; // 리다이렉트를 위한 모듈
 import { getFetchFeedDetail, getFetchUser } from '@/app/api/api';
 import { FaTrashAlt } from 'react-icons/fa';
 import styles from './mainId.module.scss';
 import CommentSection from './CommentSection';
+import LikeButton from './LikeButton';
+import CommentLikeButton from './CommentLikeButton';
 
 const cx = classNames.bind(styles);
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function FeedDetailPage({
+  params,
+}: {
+  params: { id: string };
+}) {
   const { id } = params;
   const cookieStore = cookies();
   const token = cookieStore.get('JWT')?.value;
@@ -43,9 +49,33 @@ export default async function Page({ params }: { params: { id: string } }) {
     revalidatePath(`/main/${id}`);
   };
 
+  const deleteComment = async (formData: FormData) => {
+    'use server';
+
+    const commentId = formData.get('commentId') as string;
+
+    const response = await fetch(
+      `http://13.209.88.22:8080/api/v1/comment/${commentId}`,
+      {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+          accept: '*/*',
+        },
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error('댓글 삭제에 실패 했습니다');
+    }
+
+    // 성공 시, 페이지를 다시 로드
+    revalidatePath(`/main/${id}`);
+  };
   // 토큰이 없으면 /signin 페이지로 리다이렉트
   if (!token) {
-    // redirect('/signin');
+    redirect('/signin');
   }
 
   try {
@@ -61,14 +91,14 @@ export default async function Page({ params }: { params: { id: string } }) {
 
     // 리다이렉트 응답일 경우 처리
     if (!FeedData) {
-      // redirect('/signin');
+      redirect('/signin');
     }
 
-    console.log('initialFeedData:', FeedData);
-    console.log('UserData', UserData);
+    // console.log('initialFeedData:', FeedData);
+    // console.log('UserData', UserData);
     return (
       <>
-        <Header token={token} isShowButton isShowProfile>
+        <Header user={UserData} isShowButton isShowProfile>
           트립테리어
         </Header>
         <div className={cx('feed-container')}>
@@ -102,11 +132,13 @@ export default async function Page({ params }: { params: { id: string } }) {
               ))}
             </div>
             <div className={cx('actions')}>
-              <Image
-                src="/svgs/main-like.svg"
-                alt="like"
-                width={15}
-                height={15}
+              <LikeButton
+                feedId={FeedData.id}
+                initialIsLiked={FeedData.isLiked}
+                initialLikeCnt={FeedData.likeCnt}
+                token={token}
+                userNickName={UserData.nickName}
+                FeedNickName={FeedData.nickname}
               />
               <Image
                 src="/svgs/main-comment.svg"
@@ -114,44 +146,52 @@ export default async function Page({ params }: { params: { id: string } }) {
                 width={15}
                 height={15}
               />
+              {FeedData.commentList?.length || 0}
             </div>
           </div>
-          {/* 댓글 */}
           <div className={cx('comment-section')}>
             {FeedData.commentList.map((comment: any) => (
               <div className={cx('comment')} key={comment.id}>
-                <div className={cx('avatar')}>
-                  <Image
-                    src={comment.profileImage}
-                    alt={`${comment.nickname}의 아바타`}
-                    width={25}
-                    height={25}
-                    className={cx('img')}
+                <div className={cx('comment-container')}>
+                  <div className={cx('avatar')}>
+                    <Image
+                      src={comment.profileImage}
+                      alt={`${comment.nickname}의 아바타`}
+                      width={25}
+                      height={25}
+                      className={cx('img')}
+                    />
+                  </div>
+                  <div className={cx('content')}>
+                    <div className={cx('username-title-box')}>
+                      <div className={cx('username')}>{comment.nickname}</div>
+                      <div className={cx('date')}>{comment.createdAt}</div>
+                    </div>
+                    <div className={cx('text')}>{comment.comment}</div>
+                  </div>
+                </div>
+                <div className={cx('buttons')}>
+                  {comment.nickname === UserData.nickName && (
+                    <form action={deleteComment} method="post">
+                      <input
+                        type="hidden"
+                        name="commentId"
+                        value={comment.id}
+                      />
+                      <button type="submit" className={cx('delete-button')}>
+                        <FaTrashAlt />
+                      </button>
+                    </form>
+                  )}
+                  <CommentLikeButton
+                    commentId={comment.id}
+                    initialIsLiked={comment.isLiked}
+                    initialLikeCnt={comment.likeCnt}
+                    token={token}
+                    userNickName={UserData.nickName}
+                    CommentNickName={comment.nickname}
                   />
                 </div>
-                <div className={cx('content')}>
-                  <div className={cx('username-title-box')}>
-                    <div className={cx('username')}>{comment.nickname}</div>
-                    <div className={cx('date')}>{comment.createdAt}</div>
-                  </div>
-                  <div className={cx('text')}>{comment.comment}</div>
-                </div>
-                {comment.nickname === UserData.nickName && (
-                  <div className={cx('Buttons')}>
-                    <div className={cx('button', 'revise')}>
-                      <Image
-                        src="/svgs/revise_icon.svg"
-                        alt="revise Icon"
-                        width={17}
-                        height={17}
-                        priority
-                      />
-                    </div>
-                    <div className={cx('button', 'delete')}>
-                      <FaTrashAlt />
-                    </div>
-                  </div>
-                )}
               </div>
             ))}
             <div className={cx('comment')}>

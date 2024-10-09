@@ -4,24 +4,22 @@ import React from 'react';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import Header from '@/components/common/Header';
+import { getFetchUser } from '@/app/api/api';
 import MainFormPage from './MainFormPage';
 
-export default function Page() {
+export default async function Page() {
   const cookieStore = cookies();
   const token = cookieStore.get('JWT')?.value;
+  const userData = await getFetchUser({ token });
 
   // submitForm 함수 정의
   const submitForm = async (formData: FormData) => {
     'use server';
 
-    // const cookieStore = cookies();
-    // const token = cookieStore.get('JWT')?.value;
-
-    // FormData에서 각 데이터를 가져옴
     const title = formData.get('title') as string;
     const content = formData.get('content') as string;
     const place = formData.get('place') as string;
-    const isPublic = formData.get('isPublic') === 'true'; // 공개 여부
+    const isPublic = formData.get('isPublic') === 'true';
     const images = formData.getAll('images') as File[];
 
     // 필수 데이터가 없는 경우 에러 처리
@@ -65,7 +63,7 @@ export default function Page() {
   // MainFormPage 컴포넌트에 submitForm을 prop으로 전달
   return (
     <>
-      <Header token={token || ''} isShowButton isShowProfile={false}>
+      <Header user={userData} isShowButton isShowProfile={false}>
         게시글작성
       </Header>
       <MainFormPage submitForm={submitForm} />

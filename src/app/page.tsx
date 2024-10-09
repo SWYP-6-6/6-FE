@@ -1,9 +1,9 @@
 import React from 'react';
 import { cookies } from 'next/headers';
-import { getFetchFeedList } from '@/app/api/api';
+import { getFetchFeedList, getFetchUser } from '@/app/api/api';
 import { redirect } from 'next/navigation'; // 리다이렉트를 위한 모듈
 import Header from '@/components/common/Header';
-import InfiniteScrollClient from '@/components/mainClient';
+import MainClient from '@/components/mainClient';
 
 export default async function Home() {
   // 쿠키에서 JWT 토큰 가져오기
@@ -16,6 +16,17 @@ export default async function Home() {
   }
 
   try {
+    // 사용자 정보 가져오기
+    const userData = await getFetchUser({ token });
+
+    if (!userData) {
+      redirect('/signin');
+    }
+
+    if (userData.nickName === null) {
+      redirect('/nicknamesetting');
+    }
+
     // 초기 피드 데이터 가져오기
     const initialFeedData = await getFetchFeedList({
       page: 0,
@@ -35,19 +46,22 @@ export default async function Home() {
     // 초기 데이터와 토큰을 클라이언트 컴포넌트로 전달
     return (
       <>
-        <Header isShowButton={false} isShowProfile token={token || ''}>
+        <Header
+          user={userData} // 사용자 정보도 전달
+          isShowButton={false}
+          isShowProfile
+        >
           트립테리어
         </Header>
-        <InfiniteScrollClient
+        <MainClient
           initialFeedData={initialFeedData.content}
           token={token}
+          user={userData} // 사용자 정보도 전달
         />
       </>
     );
   } catch (error) {
-    // console.error('Error fetching feed data:', error);
     // 에러가 발생했을 경우 /signin 페이지로 리다이렉트
-
     redirect('/signin');
   }
 }
