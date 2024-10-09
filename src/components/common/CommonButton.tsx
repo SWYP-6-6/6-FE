@@ -1,5 +1,3 @@
-// CommonButton.tsx
-
 import React from 'react';
 import classNames from 'classnames/bind';
 import styles from './CommonButton.module.scss';
@@ -13,10 +11,15 @@ interface CommonButtonProps {
   type?: 'button' | 'submit';
 }
 
-function CommonButton({ isEnabled, onClick, text, type }: CommonButtonProps) {
+function CommonButton({
+  isEnabled,
+  onClick = () => {}, // 기본값 설정
+  text,
+  type = 'button', // 기본값 설정
+}: CommonButtonProps) {
   return (
     <button
-      type={type === 'submit' ? 'submit' : 'button'} // Explicit ternary expression
+      type={type === 'submit' ? 'submit' : 'button'}
       disabled={!isEnabled}
       onClick={onClick}
       className={cx('button', { enabled: isEnabled })}
@@ -25,11 +28,5 @@ function CommonButton({ isEnabled, onClick, text, type }: CommonButtonProps) {
     </button>
   );
 }
-
-// Set defaultProps for optional props
-CommonButton.defaultProps = {
-  type: 'button',
-  onClick: () => {},
-};
 
 export default CommonButton;

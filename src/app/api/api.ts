@@ -62,6 +62,41 @@ export async function getFetchFeedList({
   }
 }
 
+export async function getFetchPersonalFeedList({
+  page,
+  size,
+  token,
+}: FetchFeedsParamsType) {
+  if (!token) {
+    throw new Error('Token is missing.');
+  }
+
+  try {
+    const res = await fetch(
+      `${BASE_URL}api/v1/feed/feedList?page=${page}&size=${size}&sort=string`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+          accept: '*/*',
+        },
+      },
+    );
+
+    if (res.ok) {
+      return await res.json();
+    }
+
+    // Handle error as plain text if JSON parsing fails
+    const errorText = await res.text();
+    throw new Error(errorText || 'Failed to fetch feed list.');
+  } catch (error) {
+    console.error('Error fetching feed list:', error);
+    throw error;
+  }
+}
+
 // Fetch feed detail
 export async function getFetchFeedDetail({ id, token }: FetchFeedParamsType) {
   if (!token) {

@@ -52,7 +52,7 @@ export default function MainClient({
   const [loading, setLoading] = useState(false);
   const observer = useRef<IntersectionObserver | null>(null);
   const [animateLike, setAnimateLike] = useState<number | null>(null);
-  // console.log(user);
+
   const handleLike = async (feedId: number) => {
     try {
       await likeFeed({ feedId, token });
@@ -107,9 +107,7 @@ export default function MainClient({
     } finally {
       setLoading(false);
     }
-  }, [page, token, loading, hasMore]);
-
-  console.log(feedList);
+  }, [page]);
 
   const lastFeedElementRef = useCallback(
     (node: HTMLElement | null) => {
@@ -128,7 +126,7 @@ export default function MainClient({
     if (page > 0 && hasMore) {
       fetchFeedData();
     }
-  }, [page, fetchFeedData, hasMore]);
+  }, [page]);
 
   return (
     <>
@@ -145,7 +143,7 @@ export default function MainClient({
                   height={49}
                   className={cx('avatar')}
                   src={content.profileImage}
-                  alt={content.nickname}
+                  alt={`${content.nickname}의 프로필 사진`}
                 />
                 <div className={cx('profileInfo')}>
                   <div className={cx('userName')}>{content.nickname}</div>
@@ -164,7 +162,7 @@ export default function MainClient({
                         width={150}
                         height={150}
                         src={`http://13.209.88.22:8080/api/v1/image/${image}`}
-                        alt={`${content.title} - 이미지 ${idx + 1}`}
+                        alt={`${content.title} - ${idx + 1}번째 이미지`}
                         className={cx('image')}
                       />
                     ))}
@@ -177,7 +175,7 @@ export default function MainClient({
                         ? '/svgs/liked-heart.svg'
                         : '/svgs/main-like.svg'
                     }
-                    alt="좋아요"
+                    alt="좋아요 버튼"
                     width={15}
                     height={15}
                     className={cx('heart-icon', {

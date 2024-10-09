@@ -54,13 +54,13 @@
 
 .imagePlaceholder {
   width: 100%;
-  display: flex;
+  @include flexbox(start, center, 1.2rem);
   overflow-x: scroll; /* 수평 스크롤 가능 */
   margin-top: 1.4rem;
-  .image {
-    width: 15rem;
-    height: 15rem;
-    margin-right: 1rem; /* 이미지 간격 조정 */
+  .feed-image {
+    // height: 15rem; /* 원하는 세로 크기 */
+    // width: auto;
+    // margin-right: 1rem; /* 이미지 간격 조정 */
   }
   /* 스크롤바 스타일 커스터마이징 */
   &::-webkit-scrollbar {
