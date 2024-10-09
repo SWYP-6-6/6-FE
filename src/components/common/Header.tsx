@@ -31,12 +31,15 @@ export default function Header({
   user,
 }: HeaderProps) {
   const router = useRouter();
-
   const handleBackClick = () => {
     router.back();
     setTimeout(() => {
       window.location.reload();
     }, 100);
+  };
+
+  const handleProfileClick = () => {
+    router.push('/profile');
   };
 
   return (
@@ -54,7 +57,11 @@ export default function Header({
       )}
       <p className={cx('create-post')}>{children}</p>
       {isShowProfile && user?.profileImage ? (
-        <div className={cx('profile-button')}>
+        <button
+          type="button"
+          onClick={handleProfileClick}
+          className={cx('profile-button')}
+        >
           <Image
             src={user.profileImage}
             alt="Profile"
@@ -62,7 +69,7 @@ export default function Header({
             height={33}
             className={cx('profile-image')}
           />
-        </div>
+        </button>
       ) : (
         isShowProfile && (
           <div className={cx('profile-button')}>

@@ -35,11 +35,7 @@ export default async function Home() {
     });
 
     // 리다이렉트 응답일 경우 처리
-    if (
-      !initialFeedData ||
-      initialFeedData.status === 307 ||
-      !initialFeedData.content
-    ) {
+    if (!initialFeedData) {
       redirect('/signin');
     }
 
