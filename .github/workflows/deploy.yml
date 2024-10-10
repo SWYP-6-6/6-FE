@@ -1,0 +1,30 @@
+name: Docker Image Deploy
+
+on:
+  workflow_run:
+    workflows: ['Docker Image Build']
+    types:
+      - completed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to dev
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST_DEV }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: 22
+          key: ${{ secrets.PRIVATE_KEY }}
+          script: |
+            sudo docker ps
+            sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/swyp6front
+            sudo docker stop swyp6-front || true
+            sudo docker rm swyp6-front || true
+            sudo docker run -d \
+                      -p 3000:3000 \
+                      --name swyp6-front ${{ secrets.DOCKERHUB_USERNAME }}/swyp6front
+            sudo docker image prune -f
