@@ -97,7 +97,7 @@
 .write-button {
   @include text-style($size: 16, $weight: bolder);
   position: fixed;
-  bottom: 8.4rem;
+  bottom: 13.4rem;
   /* 화면의 전체 너비가 100vw일 때, 45.5rem이 전체 화면에서 차지하는 비율을 계산, 화면 전체 너비에서 반으로 나누고 약간의 여백 추가 */
   right: calc((100vw - 45.5rem) / 2 + 2.3rem);
   background-color: $primary;
@@ -114,7 +114,7 @@
 
 @include responsive(M) {
   .write-button {
-    bottom: 8.4rem;
+    bottom: 13.4rem;
     right: 2.3rem;
   }
 }

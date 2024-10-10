@@ -5,6 +5,7 @@ import { getFetchUser, getFetchPersonalFeedList } from '@/app/api/api';
 import { revalidatePath } from 'next/cache';
 import classNames from 'classnames/bind';
 import Image from 'next/image';
+import Footer from '@/components/common/Footer';
 import styles from './ProfilePage.module.scss';
 import ProfilePageClient from './ProfilePageClient';
 
@@ -53,33 +54,36 @@ export default async function ProfilePage() {
   };
 
   return (
-    <div className={cx('container')}>
-      <div className={cx('title')}>마이트립</div>
-      <div className={cx('profile')}>
-        <div className={cx('image-container')}>
-          <Image
-            src={userData.profileImage}
-            alt="Profile"
-            width={65}
-            height={65}
-            className={cx('profile-image')}
-          />
-        </div>
-        <div className={cx('profile-info')}>
-          <div>
-            <span>{userData.nickName}</span>
+    <>
+      <div className={cx('container')}>
+        <div className={cx('title')}>마이트립</div>
+        <div className={cx('profile')}>
+          <div className={cx('image-container')}>
+            <Image
+              src={userData.profileImage}
+              alt="Profile"
+              width={65}
+              height={65}
+              className={cx('profile-image')}
+            />
           </div>
-          <div className={cx('profile-info-email')}>
-            <span>{userData.email}</span>
+          <div className={cx('profile-info')}>
+            <div>
+              <span>{userData.nickName}</span>
+            </div>
+            <div className={cx('profile-info-email')}>
+              <span>{userData.email}</span>
+            </div>
           </div>
         </div>
+        <ProfilePageClient
+          submitNickname={submitNickname}
+          INITIAL_NICKNAME={userData.nickName}
+          initialFeedData={initialFeedData.content}
+          token={token}
+        />
       </div>
-      <ProfilePageClient
-        submitNickname={submitNickname}
-        INITIAL_NICKNAME={userData.nickName}
-        initialFeedData={initialFeedData.content}
-        token={token}
-      />
-    </div>
+      <Footer pathname="/profile" />
+    </>
   );
 }
