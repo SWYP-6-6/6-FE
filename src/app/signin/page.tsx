@@ -7,8 +7,6 @@ import styles from './signin.module.scss';
 
 const cx = classNames.bind(styles);
 
-// const KAKAO_TOKEN_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${process.env.NEXT_PUBLIC_REST_API_KEY}&redirect_uri=${process.env.NEXT_PUBLIC_REDIRECT_URI}`;
-
 export default function Page() {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 4;
@@ -20,9 +18,24 @@ export default function Page() {
   };
 
   const handleLogin = () => {
+    // auth. page
     window.location.href =
       'http://13.209.88.22:8080/oauth2/authorization/kakao'; // Spring Boot 서버의 카카오 로그인 URI
   };
+
+  // const handleLogin = async () => {
+  //   const response = await fetch('/api/login', {
+  //     method: 'POST',
+  //   });
+
+  //   if (response.ok) {
+  //     // 로그인 성공 시 리다이렉트 또는 다른 동작 수행
+  //     window.location.href = '/'; // 또는 원하는 페이지로 이동
+  //   } else {
+  //     // 로그인 실패 처리
+  //     console.error('로그인 실패');
+  //   }
+  // };
 
   const renderContent = () => {
     switch (currentPage) {

@@ -1,82 +1,52 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSwipeable } from 'react-swipeable';
 import classNames from 'classnames/bind';
 import Header from '@/components/common/Header';
 import { useRouter } from 'next/navigation';
 import { FaTrashAlt } from 'react-icons/fa';
+import { CheckDestinationListProps } from '@/types/types';
+import { travelAllData } from '@/app/api/api';
+
 import Image from 'next/image';
 import styles from './checklist.module.scss';
 
 const cx = classNames.bind(styles);
 
 // 아이템 타입 정의
-interface Item {
-  id: number;
-  destination: string;
-  startDate: string;
-  endDate: string;
-}
+// interface Item {
+//   id: number;
+//   destination: string;
+//   startDate: string;
+//   endDate: string;
+// }
 
-export default function ChecklistPage() {
+export default function ChecklistPage({ token }: { token: string }) {
+  const [travelData, setTravelData] = useState<CheckDestinationListProps[]>([]);
+
   const router = useRouter();
-  const [items] = useState<Item[]>([
-    {
-      id: 1,
-      destination: 'Seoul',
-      startDate: '2024.09.26',
-      endDate: '2024.10.01',
-    },
-    {
-      id: 2,
-      destination: 'Busan',
-      startDate: '2024.10.05',
-      endDate: '2024.10.10',
-    },
-    {
-      id: 3,
-      destination: 'Jeju',
-      startDate: '2024.10.15',
-      endDate: '2024.10.20',
-    },
-    // {
-    //   id: 4,
-    //   destination: 'Seoul',
-    //   startDate: '2024.09.26',
-    //   endDate: '2024.10.01',
-    // },
-    // {
-    //   id: 5,
-    //   destination: 'Busan',
-    //   startDate: '2024.10.05',
-    //   endDate: '2024.10.10',
-    // },
-    // {
-    //   id: 6,
-    //   destination: 'Jeju',
-    //   startDate: '2024.10.15',
-    //   endDate: '2024.10.20',
-    // },
-    // {
-    //   id: 7,
-    //   destination: 'Seoul',
-    //   startDate: '2024.09.26',
-    //   endDate: '2024.10.01',
-    // },
-    // {
-    //   id: 8,
-    //   destination: 'Busan',
-    //   startDate: '2024.10.05',
-    //   endDate: '2024.10.10',
-    // },
-    // {
-    //   id: 9,
-    //   destination: 'Jeju',
-    //   startDate: '2024.10.15',
-    //   endDate: '2024.10.20',
-    // },
-  ]);
+
+  // const [items] = useState<Item[]>([
+  //   {
+  //     id: 1,
+  //     destination: 'Seoul',
+  //     startDate: '2024.09.26',
+  //     endDate: '2024.10.01',
+  //   },
+  //   {
+  //     id: 2,
+  //     destination: 'Busan',
+  //     startDate: '2024.10.05',
+  //     endDate: '2024.10.10',
+  //   },
+  //   {
+  //     id: 3,
+  //     destination: 'Jeju',
+  //     startDate: '2024.10.15',
+  //     endDate: '2024.10.20',
+  //   },
+  // ]);
 
   // 각 아이템의 삭제 버튼 표시 여부와 스와이프 상태 관리
   const [showDelete, setShowDelete] = useState<{ [key: number]: boolean }>({});
@@ -121,6 +91,23 @@ export default function ChecklistPage() {
     router.push(`/myfamily/checklist/${id}/detail`);
   };
 
+  useEffect(() => {
+    const fetchTravelData = async () => {
+      try {
+        const data = await travelAllData();
+        setTravelData(data);
+      } catch (err) {
+        console.error('Error liking feed:', err);
+      }
+    };
+
+    fetchTravelData();
+  }, [token]);
+
+  const sortedData = travelData.sort(
+    (a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime(),
+  );
+
   return (
     <div className={cx('container')}>
       <Header isShowButton isShowProfile>
@@ -129,7 +116,7 @@ export default function ChecklistPage() {
       <div className={cx('title')}>여행기록 저장소</div>
       <div className={cx('swipeableLists')}>
         <div className={cx('swipeableList')}>
-          {items.map((item) => {
+          {sortedData.map((item) => {
             return (
               <div
                 key={item.id}
@@ -148,9 +135,9 @@ export default function ChecklistPage() {
                   type="button"
                   onClick={() => handleChecklistClick(item.id)}
                 >
-                  <p className={cx('draggableContent-button-title')}>
+                  {/* <p className={cx('draggableContent-button-title')}>
                     {item.destination}
-                  </p>
+                  </p> */}
                   <p className={cx('draggableContent-button-duration')}>
                     {item.startDate}-{item.endDate}
                   </p>

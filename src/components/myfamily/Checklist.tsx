@@ -1,29 +1,41 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import classNames from 'classnames/bind';
+import { travelAllData } from '@/app/api/api';
+import { CheckDestinationListProps } from '@/types/types';
 import styles from './Checklist.module.scss';
 
 const cx = classNames.bind(styles);
 
-const checklistData = [
-  { id: 1, title: '경주', startDate: '2024-09-20' },
-  { id: 2, title: '서울 여행', startDate: '2024-09-18' },
-  { id: 3, title: '회의', startDate: '2024-09-25' },
-];
-
-const sortedData = checklistData.sort(
-  (a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime(),
-);
-
 export default function Checklist() {
+  const [travelData, setTravelData] = useState<CheckDestinationListProps[]>([]);
+  console.log(travelData);
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchTravelData = async () => {
+      try {
+        const data = await travelAllData();
+        setTravelData(data);
+      } catch (err) {
+        console.error('Error liking feed:', err);
+      }
+    };
+
+    fetchTravelData();
+  }, []);
+
+  const sortedData = travelData.sort(
+    (a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime(),
+  );
 
   const handleChecklistClick = () => {
     router.push('/myfamily/checklist');
   };
+
   return (
     <button
       type="button"
@@ -43,7 +55,7 @@ export default function Checklist() {
       <div className={cx('checklist-main')}>
         {sortedData.map((item) => (
           <div key={item.id} className={cx('checklist-main-section')}>
-            <p>{item.title}</p>
+            <p>{item.name}</p>
             <p>{item.startDate}</p>
           </div>
         ))}
