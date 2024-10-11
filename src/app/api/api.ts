@@ -1,53 +1,15 @@
+import {
+  FetchFeedParamsType,
+  FetchFeedsParamsType,
+  FetchUserParamsType,
+  LikeRequestParams,
+  CommentLikeRequestParams,
+} from '@/types/types';
+
+import { fetchAPI } from '@/app/api/fetchInstance';
+
 const BASE_URL = 'http://13.209.88.22:8080/';
-// const NEXT_PUBLIC_BASE_URL =
-//   process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'; // 기본값 설정
 
-export interface FetchFeedsParamsType {
-  page: number;
-  size: number;
-  token?: string;
-}
-
-export interface FetchFeedParamsType {
-  id: string;
-  token?: string;
-}
-
-export interface FetchUserParamsType {
-  token?: string;
-}
-export interface FetchGroupParamsType {
-  token?: string;
-  groupId: string;
-}
-
-export interface LikeRequestParams {
-  feedId: number;
-  token: string;
-}
-export interface CommentLikeRequestParams {
-  commentId: number;
-  token: string;
-}
-
-export interface FamilyImageParams {
-  formData: FormData;
-  token?: string;
-}
-export interface FamilyDetailParams {
-  familyId: string;
-  token?: string;
-}
-
-interface CreateFamilyRequestParams {
-  token?: string; // 인증에 사용할 JWT 토큰
-  formData: {
-    // 서버로 보낼 데이터 (nickname 등)
-    nickname: string; // 가족 이름 (닉네임)
-  };
-}
-
-// Fetch feed list
 export async function getFetchFeedList({
   page,
   size,
@@ -550,5 +512,16 @@ export const familyAnniversary = async (
   } catch (error) {
     console.error('error ', error);
     return null; // catch 블록에서도 null 반환
+  }
+};
+
+export const travelAllData = async () => {
+  try {
+    const response = await fetchAPI('api/travels/all', 'GET');
+    console.log('API 응답:', response);
+    return response; // JSON 형식의 응답 반환
+  } catch (error) {
+    console.error('Error fetching travel data:', error);
+    throw error;
   }
 };
