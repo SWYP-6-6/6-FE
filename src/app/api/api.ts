@@ -16,6 +16,10 @@ export interface FetchFeedParamsType {
 export interface FetchUserParamsType {
   token?: string;
 }
+export interface FetchGroupParamsType {
+  token?: string;
+  groupId: string;
+}
 
 export interface LikeRequestParams {
   feedId: number;
@@ -24,6 +28,23 @@ export interface LikeRequestParams {
 export interface CommentLikeRequestParams {
   commentId: number;
   token: string;
+}
+
+export interface FamilyImageParams {
+  formData: FormData;
+  token?: string;
+}
+export interface FamilyDetailParams {
+  familyId: string;
+  token?: string;
+}
+
+interface CreateFamilyRequestParams {
+  token?: string; // 인증에 사용할 JWT 토큰
+  formData: {
+    // 서버로 보낼 데이터 (nickname 등)
+    nickname: string; // 가족 이름 (닉네임)
+  };
 }
 
 // Fetch feed list
@@ -154,6 +175,34 @@ export async function getFetchUser({ token }: FetchUserParamsType) {
   }
 }
 
+// Fetch user details
+export async function getFetchGroup({ token, groupId }: FetchGroupParamsType) {
+  if (!token) {
+    throw new Error('Token is missing.');
+  }
+
+  try {
+    const res = await fetch(`${BASE_URL}api/v1/family/${groupId}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        accept: '*/*',
+      },
+    });
+
+    if (res.ok) {
+      return await res.json();
+    }
+
+    // Handle error as plain text if JSON parsing fails
+    const errorText = await res.text();
+    throw new Error(errorText || 'Failed to fetch Group details.');
+  } catch (error) {
+    console.error('Error fetching Group details:', error);
+    throw error;
+  }
+}
+
 // Like feed
 export const likeFeed = async ({ feedId, token }: LikeRequestParams) => {
   try {
@@ -264,3 +313,134 @@ export const removeLikeFromComment = async ({
     throw error;
   }
 };
+
+export const createFamily = async ({
+  token,
+  formData,
+}: CreateFamilyRequestParams) => {
+  try {
+    const response = await fetch(`${BASE_URL}api/v1/family`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+        accept: '*/*',
+      },
+      body: JSON.stringify({ familyName: formData.nickname }),
+    });
+
+    // 오류가 발생했을 때 (status 400 또는 500대)
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText || 'Failed to create family.');
+    }
+
+    // 성공하면 JSON 데이터를 반환
+    return await response.json();
+  } catch (error) {
+    console.error('Error creating family:', error);
+    throw error; // 오류를 다시 throw해서 catch로 전달
+  }
+};
+
+export const updateFamilyProfileImage = async ({
+  token,
+  formData,
+}: FamilyImageParams) => {
+  const response = await fetch(`${BASE_URL}api/v1/family/profile/image`, {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(errorText || 'Failed to update family profile image.');
+  }
+};
+
+export async function getAllFamily({ token }: FetchUserParamsType) {
+  if (!token) {
+    throw new Error('Token is missing.');
+  }
+
+  try {
+    const res = await fetch(`${BASE_URL}api/v1/family/all`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        accept: '*/*',
+      },
+    });
+
+    if (res.ok) {
+      return await res.json();
+    }
+
+    // Handle error as plain text if JSON parsing fails
+    const errorText = await res.text();
+    throw new Error(errorText || 'Failed to fetch families.');
+  } catch (error) {
+    console.error('Error fetching families:', error);
+    throw error;
+  }
+}
+
+export async function getFamilyDetail({ token, familyId }: FamilyDetailParams) {
+  if (!token) {
+    throw new Error('Token is missing.');
+  }
+
+  try {
+    const res = await fetch(`${BASE_URL}api/v1/family/${familyId}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        accept: '*/*',
+      },
+    });
+
+    if (res.ok) {
+      return await res.json();
+    }
+
+    // Handle error as plain text if JSON parsing fails
+    const errorText = await res.text();
+    throw new Error(errorText || 'Failed to fetch family detail.');
+  } catch (error) {
+    console.error('Error fetching family detail:', error);
+    throw error;
+  }
+}
+
+export async function joinFamilyDetail({
+  token,
+  familyId,
+}: FamilyDetailParams) {
+  if (!token) {
+    throw new Error('Token is missing.');
+  }
+
+  try {
+    const res = await fetch(`${BASE_URL}api/v1/family/${familyId}/join`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        accept: '*/*',
+      },
+    });
+
+    if (res.ok) {
+      return await res.json();
+    }
+
+    // Handle error as plain text if JSON parsing fails
+    const errorText = await res.text();
+    throw new Error(errorText || 'Failed to join family.');
+  } catch (error) {
+    console.error('Error joining family:', error);
+    throw error;
+  }
+}

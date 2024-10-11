@@ -1,0 +1,78 @@
+.title {
+  @include text-style(24, $black, bolder);
+
+  padding-left: 2.1rem;
+  padding-top: 1.8rem;
+}
+
+.profile {
+  @include column-flexbox(center, center, 0.9rem);
+  @include text-style(24, $black, bolder);
+
+  width: 100%;
+  margin-top: 5.4rem;
+
+  &-imageContainer {
+    width: 25.8rem;
+    height: 25.8rem;
+    border-radius: 50%;
+    background-color: $gray20;
+
+    &-image {
+      border-radius: 50%;
+    }
+  }
+}
+
+.buttons {
+  @include column-flexbox(center, center, 0.9rem);
+  margin-top: 4.4rem;
+  width: 100%;
+  padding: 0 2.4rem 0 2.3rem;
+
+  .button {
+    @include flexbox;
+
+    width: 100%;
+    border-radius: 0.6rem;
+    padding: 1.6rem 0 1.4rem 0;
+    transition: $base-transition;
+
+    &:hover {
+      filter: brightness(0.8); // filter에 값 추가
+    }
+  }
+
+  .yes {
+    @include text-style(15, $white, light);
+
+    background-color: $primary;
+  }
+
+  .no {
+    @include text-style(15, $gray, light);
+
+    background-color: $gray20;
+  }
+}
+
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-1rem);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.error-message {
+  @include flexbox;
+  @include text-style(16, red);
+
+  width: 100%;
+  margin-top: 1rem;
+
+  animation: slideIn 0.3s ease-out;
+}

@@ -12,23 +12,14 @@ interface HeaderProps {
   children: React.ReactNode;
   isShowButton: boolean;
   isShowProfile: boolean;
-  user?: User; // user를 선택적인 prop으로 설정
+  groupImage?: string; // Optional groupImage prop
 }
 
-interface User {
-  id: number;
-  username: string;
-  email: string;
-  profileImage: string;
-  nickName: string | null;
-  familyId: number | null;
-}
-
-export default function Header({
+export default function GroupHeader({
   children,
   isShowButton,
   isShowProfile,
-  user,
+  groupImage,
 }: HeaderProps) {
   const router = useRouter();
 
@@ -40,7 +31,7 @@ export default function Header({
   };
 
   const handleProfileClick = () => {
-    router.push('/profile');
+    router.push('/group');
   };
 
   return (
@@ -57,27 +48,30 @@ export default function Header({
         </button>
       )}
       <p className={cx('create-post')}>{children}</p>
-      {isShowProfile && user?.profileImage ? (
-        <button
-          type="button"
-          onClick={handleProfileClick}
-          className={cx('profile-button')}
-        >
-          <Image
-            src={user.profileImage}
-            alt="Profile"
-            width={33}
-            height={33}
-            className={cx('profile-image')}
-          />
-        </button>
-      ) : (
-        isShowProfile && (
-          <div className={cx('profile-button')}>
-            {/* 대체 프로필 이미지 혹은 UI */}
-          </div>
-        )
-      )}
+      {isShowProfile &&
+        (groupImage ? (
+          <button
+            type="button"
+            onClick={handleProfileClick}
+            className={cx('profile-button')}
+          >
+            <Image
+              src={`http://13.209.88.22:8080/api/v1/image/${groupImage}`}
+              alt="Profile"
+              width={33}
+              height={33}
+              className={cx('profile-image')}
+            />
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={handleProfileClick}
+            aria-label="Go to profile"
+          >
+            <div className={cx('profile-button')} />
+          </button>
+        ))}
     </div>
   );
 }
