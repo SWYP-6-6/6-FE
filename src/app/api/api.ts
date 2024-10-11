@@ -264,3 +264,38 @@ export const removeLikeFromComment = async ({
     throw error;
   }
 };
+
+export const travelSchedulePost = async (
+  name: string,
+  startDate: string,
+  endDate: string,
+  token?: string,
+) => {
+  try {
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+    };
+
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+
+    const response = await fetch(`${BASE_URL}api/travels`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        name,
+        startDate,
+        endDate,
+      }),
+    });
+
+    if (response.ok) {
+      return await response.json();
+    }
+    throw new Error(`Failed to create itinerary: ${response.statusText}`);
+  } catch (error) {
+    console.error('Error: Failed to create itinerary', error);
+    throw error;
+  }
+};

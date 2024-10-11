@@ -9,6 +9,9 @@ import DatePicker from '@/components/common/DatePicker';
 import CommonButton from '@/components/common/CommonButton';
 import Header from '@/components/common/Header';
 import './Calendar.scss';
+import { travelSchedulePost } from '@/app/api/api';
+import DateBetween from '@/utils/dateBetween';
+import Cookies from 'js-cookie';
 import styles from './CalendarPage.module.scss';
 
 const cx = classNames.bind(styles);
@@ -40,7 +43,6 @@ export default function CalendarPage() {
     month: '',
     day: '',
   });
-
   const [endPickerValue, setEndPickerValue] = useState({
     year: '',
     month: '',
@@ -158,6 +160,26 @@ export default function CalendarPage() {
   // 일정 추가 모달 닫기
   const handleClose = () => {
     setIsAddScheduleVisible(false);
+  };
+
+  // 일정생성 완료 api
+  const handleCreateSchedule = () => {
+    const myCookie = Cookies.get('JWT');
+
+    const startDate = DateBetween(
+      startPickerValue.year,
+      startPickerValue.month,
+      startPickerValue.day,
+    );
+    const endDate = DateBetween(
+      endPickerValue.year,
+      endPickerValue.month,
+      endPickerValue.day,
+    );
+
+    if (touched) {
+      travelSchedulePost(destination, startDate, endDate, myCookie);
+    }
   };
 
   // 폼과의 상호작용 시 상태 변경
@@ -299,15 +321,15 @@ export default function CalendarPage() {
           </div>
           <CommonButton
             isEnabled={isButtonEnabled}
-            onClick={() => {
+            onClick={
               // console.log(
               //   '시작 날짜:',
               //   startPickerValue,
               //   '끝나는 날짜:',
               //   endPickerValue,
               // );
-              handleClose();
-            }}
+              handleCreateSchedule
+            }
             text="완료"
           />
           {touched && errorMessage && (
