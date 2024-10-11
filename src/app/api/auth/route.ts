@@ -11,8 +11,6 @@ export async function GET(request: Request) {
     cookieStore.set('JWT', jwt, {
       maxAge: 60 * 60 * 24,
       httpOnly: true,
-      sameSite: 'none',
-      secure: true,
     });
     // After setting the cookie, redirect to the homepage or another destination
     return NextResponse.redirect('http://13.209.88.22:3000/');
