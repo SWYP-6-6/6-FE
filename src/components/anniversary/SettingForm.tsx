@@ -4,11 +4,16 @@ import React, { useState } from 'react';
 import classNames from 'classnames/bind';
 import DataPick from '@/components/anniversary/DataPick';
 import validateTitle from '@/utils/validate';
+import Cookies from 'js-cookie';
 import styles from './SettingForm.module.scss';
+import DateBetween from '../../utils/dateBetween';
+import { familyAnniversary } from '../../app/api/api';
 
 const cx = classNames.bind(styles);
 
 export default function SettingForm() {
+  // 나중에 ID값 넣기
+  const id = '5';
   const [title, setTitle] = useState('');
   const [errorMessage, setErrorMessage] = useState(''); // 에러 상태 추가
   const [isButtonEnabled, setIsButtonEnabled] = useState<boolean>(false);
@@ -16,7 +21,7 @@ export default function SettingForm() {
     year: string;
     month: string;
     day: string;
-  } | null>(null);
+  }>({ year: '', month: '', day: '' });
   const [isDateTouched, setIsDateTouched] = useState<boolean>(false);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,6 +50,17 @@ export default function SettingForm() {
     }
   };
 
+  const handleSubmitForm = () => {
+    // 나중에 쿠키 바꾸기
+    const myCookie = Cookies.get('JWT');
+    const startDate = DateBetween(
+      pickerDate.year,
+      pickerDate.month,
+      pickerDate.day,
+    );
+    familyAnniversary(title, startDate, id, myCookie);
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (title.trim() === '') {
@@ -53,6 +69,7 @@ export default function SettingForm() {
     if (pickerDate === null) {
       setErrorMessage('날짜를 선택하세요.');
     }
+    handleSubmitForm();
   };
 
   return (

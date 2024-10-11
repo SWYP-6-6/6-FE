@@ -42,6 +42,10 @@ export default function Header({
     router.push('/profile');
   };
 
+  const handleRouterGroup = () => {
+    router.push('/group');
+  };
+
   return (
     <div className={cx('header-container')}>
       {isShowButton && (
@@ -72,9 +76,14 @@ export default function Header({
         </button>
       ) : (
         isShowProfile && (
-          <div className={cx('profile-button')}>
+          <button
+            className={cx('profile-button')}
+            onClick={handleRouterGroup}
+            type="button"
+            aria-label="프로필 보기" // 접근성을 위한 레이블 추가
+          >
             {/* 대체 프로필 이미지 혹은 UI */}
-          </div>
+          </button>
         )
       )}
     </div>

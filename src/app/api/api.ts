@@ -265,6 +265,7 @@ export const removeLikeFromComment = async ({
   }
 };
 
+// 여행일정추가
 export const travelSchedulePost = async (
   name: string,
   startDate: string,
@@ -297,5 +298,77 @@ export const travelSchedulePost = async (
   } catch (error) {
     console.error('Error: Failed to create itinerary', error);
     throw error;
+  }
+};
+
+// 가족 정보
+export const familyInfo = async (id: string) => {
+  try {
+    const response = await fetch(`${BASE_URL}api/v1/family/${id}`);
+    if (response.ok) {
+      return await response.json();
+    }
+    return null;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+// 가족프로필이미지
+export const familyImg = async (img: File, token?: string) => {
+  try {
+    const formData = new FormData();
+    formData.append('imageFiles', img);
+
+    const response = await fetch(`${BASE_URL}api/v1/family/profile/image`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      method: 'PUT',
+      body: formData,
+    });
+
+    if (response.ok) {
+      return await response.json();
+    }
+    return null; // 서버에서 오류가 발생했을 경우 null 반환
+  } catch (error) {
+    console.error('error', error);
+    return null;
+  }
+};
+
+export const familyAnniversary = async (
+  anniversaryContent: string,
+  anniversaryDate: string,
+  id: string,
+  token?: string,
+) => {
+  try {
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+    };
+
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+
+    const response = await fetch(`${BASE_URL}api/v1/family/${id}/anniversary`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        anniversaryContent,
+        anniversaryDate,
+      }),
+    });
+
+    if (response.ok) {
+      return await response.json();
+    }
+    return null; // 서버에서 오류가 발생했을 경우 null 반환
+  } catch (error) {
+    console.error('error ', error);
+    return null; // catch 블록에서도 null 반환
   }
 };

@@ -5,7 +5,7 @@ export async function POST() {
   const response = NextResponse.json({ message: '로그인 성공' });
   response.cookies.set(
     'JWT',
-    'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLtlYTqsrgiLCJpYXQiOjE3Mjg2MjI2NjgsImV4cCI6MTcyODcwOTA2OH0.svygj92HaaHyB8iQmei6f_EZ-mRv1F0AQd46o044zZ8',
+    'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLtlYTqsrgiLCJpYXQiOjE3Mjg2NTQ1MTYsImV4cCI6MTcyODc0MDkxNn0.UBsxTCCYKRjP9sBnipUj13OPvN-w6peZTxxPxHpu6V4',
     { maxAge: 60 * 60 * 24, httpOnly: false },
   );
   return response;
