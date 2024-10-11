@@ -6,7 +6,6 @@ import classNames from 'classnames/bind';
 import Header from '@/components/common/Header';
 import { useRouter } from 'next/navigation';
 import { FaTrashAlt } from 'react-icons/fa';
-
 import Image from 'next/image';
 import styles from './ChecklistPage.module.scss';
 
