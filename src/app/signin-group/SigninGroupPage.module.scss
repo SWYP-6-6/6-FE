@@ -1,0 +1,10 @@
+.container {
+  @include column-flexbox(center, center);
+  width: 100%;
+
+  &-content {
+    @include column-flexbox(center, center, 2rem);
+
+    margin-top: 10.2rem;
+  }
+}
