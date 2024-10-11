@@ -6,7 +6,7 @@ export async function POST() {
   response.cookies.set(
     'JWT',
     'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLtlYTqsrgiLCJpYXQiOjE3Mjg2NTQ1MTYsImV4cCI6MTcyODc0MDkxNn0.UBsxTCCYKRjP9sBnipUj13OPvN-w6peZTxxPxHpu6V4',
-    { maxAge: 60 * 60 * 24, httpOnly: false, sameSite: 'none', secure: true },
+    { maxAge: 60 * 60 * 24, httpOnly: false },
   );
 
   return response;
