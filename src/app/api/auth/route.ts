@@ -10,7 +10,7 @@ export async function GET(request: Request) {
     const cookieStore = cookies();
     cookieStore.set('JWT', jwt, {
       maxAge: 60 * 60 * 24,
-      httpOnly: false,
+      httpOnly: true,
       sameSite: 'none',
       secure: true,
     });
