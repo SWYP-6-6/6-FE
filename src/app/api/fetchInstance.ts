@@ -10,8 +10,7 @@ export async function fetchAPI(
   const token = Cookies.get('JWT');
 
   const headers: HeadersInit = {
-    'Content-Type': 'application/json', // Include JSON content type
-    accept: '*/*', // Accept all types of responses
+    accept: '*/*',
   };
 
   if (token) {
@@ -24,7 +23,11 @@ export async function fetchAPI(
   };
 
   if (body) {
-    options.body = JSON.stringify(body);
+    // FormData를 사용하면 자동으로 Content-Type이 설정됩니다.
+    options.body = body instanceof FormData ? body : JSON.stringify(body);
+    if (!(body instanceof FormData)) {
+      headers['Content-Type'] = 'application/json'; // JSON일 경우에만 설정
+    }
   }
 
   try {
@@ -34,7 +37,8 @@ export async function fetchAPI(
       throw new Error('Network response was not ok');
     }
 
-    return await response.json();
+    const text = await response.text();
+    return text ? JSON.parse(text) : 'Success';
   } catch (error) {
     console.error('Fetch API error:', error);
     throw error;
