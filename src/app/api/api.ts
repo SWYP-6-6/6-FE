@@ -1,9 +1,13 @@
 import {
   FetchFeedParamsType,
   FetchFeedsParamsType,
-  FetchUserParamsType,
+  FetchGroupParamsType,
   LikeRequestParams,
   CommentLikeRequestParams,
+  FetchUserParamsType,
+  FamilyImageParams,
+  CreateFamilyRequestParams,
+  FamilyDetailParams,
 } from '@/types/types';
 
 import { fetchAPI } from '@/app/api/fetchInstance';
@@ -520,6 +524,14 @@ export const travelAllData = async () => {
     const response = await fetchAPI('api/travels/all', 'GET');
     console.log('API 응답:', response);
     return response; // JSON 형식의 응답 반환
+  } catch (error) {
+    console.error('Error fetching travel data:', error);
+    throw error;
+  }
+};
+export const travelDestinationDelete = async (id: number) => {
+  try {
+    await fetchAPI(`api/travels/${id}`, 'DELETE');
   } catch (error) {
     console.error('Error fetching travel data:', error);
     throw error;
