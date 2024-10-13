@@ -21,7 +21,6 @@ const getMaxDays = (year: number, month: number): number => {
 };
 
 export default function DataPick({ onChange }: DataPickProps) {
-  console.log(onChange);
   const today = new Date();
   const currentYear = today.getFullYear().toString();
   const currentMonth = (today.getMonth() + 1).toString().padStart(2, '0'); // 월은 0부터 시작하므로 +1

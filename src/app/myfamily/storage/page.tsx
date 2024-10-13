@@ -84,16 +84,20 @@ export default function StoragePage() {
       <div className={cx('title')}>여행기록 저장소</div>
       <div className={cx('swipeableLists')}>
         <div className={cx('swipeableList')}>
-          {items.map((item) => (
-            <SwipeableListItem
-              key={item.id}
-              item={item}
-              showDelete={showDelete[item.id]}
-              setShowDelete={setShowDelete}
-              handleStorageClick={handleStorageClick}
-              fetchTravelData={fetchTravelData}
-            />
-          ))}
+          {items.length > 0 ? (
+            items.map((item) => (
+              <SwipeableListItem
+                key={item.id}
+                item={item}
+                showDelete={showDelete[item.id]}
+                setShowDelete={setShowDelete}
+                handleStorageClick={handleStorageClick}
+                fetchTravelData={fetchTravelData}
+              />
+            ))
+          ) : (
+            <p>여행기록이 없습니다.</p>
+          )}
         </div>
       </div>
       {/* <button
