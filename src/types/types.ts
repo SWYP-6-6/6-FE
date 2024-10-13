@@ -75,3 +75,10 @@ export interface TravelReviewBody {
   title: string;
   content: string;
 }
+// api/v1/family/all
+export interface FamilyAllItemParams {
+  id: number;
+  name: string;
+  startDate: string;
+  endDate: string;
+}

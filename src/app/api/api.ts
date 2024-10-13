@@ -574,6 +574,7 @@ export const travelData = async (id: string) => {
   }
 };
 
+
 export const travelReviewData = async (id: string) => {
   try {
     const response = await fetchAPI(`api/v1/travels/${id}/reviews`, 'GET');
@@ -659,6 +660,12 @@ export const putFamilyImage = async (img: File) => {
     return response;
   } catch (error) {
     console.error('Error putting family image:', error);
+
+export const travelDestinationDelete = async (id: number) => {
+  try {
+    await fetchAPI(`api/travels/${id}`, 'DELETE');
+  } catch (error) {
+    console.error('Error fetching travel data:', error);
     throw error;
   }
 };

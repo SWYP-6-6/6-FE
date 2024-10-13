@@ -12,7 +12,6 @@ const cx = classNames.bind(styles);
 
 export default function Checklist() {
   const [travelData, setTravelData] = useState<CheckDestinationListProps[]>([]);
-  console.log(travelData);
   const router = useRouter();
 
   useEffect(() => {

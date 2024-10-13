@@ -1,112 +1,71 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useSwipeable } from 'react-swipeable';
 import classNames from 'classnames/bind';
 import Header from '@/components/common/Header';
 import { useRouter } from 'next/navigation';
-import { FaTrashAlt } from 'react-icons/fa';
-import { CheckDestinationListProps } from '@/types/types';
-import { travelAllData } from '@/app/api/api';
-
+import { FamilyAllItemParams } from '@/types/types';
+import { travelAllData, travelDestinationDelete } from '@/app/api/api';
 import Image from 'next/image';
+import SwipeableListItem from '@/components/checklist/SwipeableListItem';
 import styles from './checklist.module.scss';
 
 const cx = classNames.bind(styles);
 
-// 아이템 타입 정의
-// interface Item {
-//   id: number;
-//   destination: string;
-//   startDate: string;
-//   endDate: string;
-// }
-
-export default function ChecklistPage({ token }: { token: string }) {
-  const [travelData, setTravelData] = useState<CheckDestinationListProps[]>([]);
-
-  const router = useRouter();
-
-  // const [items] = useState<Item[]>([
-  //   {
-  //     id: 1,
-  //     destination: 'Seoul',
-  //     startDate: '2024.09.26',
-  //     endDate: '2024.10.01',
-  //   },
-  //   {
-  //     id: 2,
-  //     destination: 'Busan',
-  //     startDate: '2024.10.05',
-  //     endDate: '2024.10.10',
-  //   },
-  //   {
-  //     id: 3,
-  //     destination: 'Jeju',
-  //     startDate: '2024.10.15',
-  //     endDate: '2024.10.20',
-  //   },
-  // ]);
-
-  // 각 아이템의 삭제 버튼 표시 여부와 스와이프 상태 관리
+export default function ChecklistPage() {
+  const [travelData, setTravelData] = useState<FamilyAllItemParams[]>([]);
   const [showDelete, setShowDelete] = useState<{ [key: number]: boolean }>({});
   const [isSwiping, setIsSwiping] = useState<{ [key: number]: boolean }>({});
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const Handlers = (id: number) => {
-    return useSwipeable({
-      onSwipedLeft: () => {
-        setShowDelete((prev) => ({
-          ...prev,
-          [id]: true, // id가 일치하는 항목의 삭제 버튼을 표시
-        }));
-      },
-      onSwipedRight: () => {
-        setShowDelete((prev) => ({
-          ...prev,
-          [id]: false, // id가 일치하는 항목의 삭제 버튼을 숨기기
-        }));
-      },
-      onSwiping: () => {
-        setIsSwiping((prev) => ({
-          ...prev,
-          [id]: true, // id가 일치하는 항목에서 스와이프 중임을 표시
-        }));
-      },
-      onSwiped: () => {
-        setIsSwiping((prev) => ({
-          ...prev,
-          [id]: false, // id가 일치하는 항목에서 스와이프가 완료되었음을 표시
-        }));
-      },
-      preventScrollOnSwipe: false, // 스와이프 중 스크롤을 막지 않음
-      trackMouse: true, // 마우스 드래그로도 스와이프 가능
-    });
-  };
-
-  const handleAddClick = () => {
-    router.push('/myfamily/checklist/add');
-  };
-
-  const handleChecklistClick = (id: number) => {
-    router.push(`/myfamily/checklist/${id}/detail`);
-  };
+  const router = useRouter();
 
   useEffect(() => {
     const fetchTravelData = async () => {
       try {
-        const data = await travelAllData();
-        setTravelData(data);
+        const data = await travelAllData(); // API 호출
+        const formattedItems: FamilyAllItemParams[] = data.map(
+          (item: FamilyAllItemParams) => ({
+            id: item.id,
+            name: item.name,
+            startDate: item.startDate,
+            endDate: item.endDate,
+          }),
+        );
+        setTravelData(formattedItems);
+        setLoading(false);
       } catch (err) {
-        console.error('Error liking feed:', err);
+        console.error('Error fetching travel data:', err);
+        setLoading(false);
       }
     };
-
     fetchTravelData();
-  }, [token]);
+  }, []);
 
-  const sortedData = travelData.sort(
-    (a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime(),
-  );
+  // 항목 클릭 시 상세 페이지로 이동
+  const handleChecklistClick = (id: number) => {
+    router.push(`/myfamily/checklist/${id}/detail`);
+  };
+
+  // 삭제 버튼 클릭 시 처리
+  const handleDelete = async (id: number) => {
+    try {
+      await travelDestinationDelete(id); // 항목 삭제 API 호출
+
+      // 삭제된 항목을 상태에서 제거하여 UI 업데이트
+      setTravelData((prev) => {
+        const updatedData = prev.filter((travelItem) => travelItem.id !== id);
+        return updatedData;
+      });
+    } catch (error) {
+      console.error('Error deleting item:', error);
+    }
+  };
+
+  // 로딩 중 메시지 표시
+  if (loading) {
+    return <div>로딩 중...</div>;
+  }
 
   return (
     <div className={cx('container')}>
@@ -116,69 +75,26 @@ export default function ChecklistPage({ token }: { token: string }) {
       <div className={cx('title')}>여행기록 저장소</div>
       <div className={cx('swipeableLists')}>
         <div className={cx('swipeableList')}>
-          {sortedData.map((item) => {
-            return (
-              <div
+          {travelData.length > 0 ? (
+            travelData.map((item) => (
+              <SwipeableListItem
                 key={item.id}
-                className={cx('draggableContent', {
-                  showButton: showDelete[item.id],
-                })}
-                {...Handlers(item.id)}
-                style={{
-                  transition: isSwiping[item.id]
-                    ? 'none'
-                    : 'transform 0.3s ease',
-                }}
-              >
-                <button
-                  className={cx('draggableContent-button')}
-                  type="button"
-                  onClick={() => handleChecklistClick(item.id)}
-                >
-                  {/* <p className={cx('draggableContent-button-title')}>
-                    {item.destination}
-                  </p> */}
-                  <p className={cx('draggableContent-button-duration')}>
-                    {item.startDate}-{item.endDate}
-                  </p>
-                </button>
-                <div
-                  className={cx('Buttons', {
-                    showButton: showDelete[item.id],
-                  })}
-                >
-                  <button
-                    onClick={(e) => e.stopPropagation}
-                    type="button"
-                    className={cx('button-cover')}
-                  >
-                    <div className={cx('button', 'revise')}>
-                      <Image
-                        src="/svgs/revise_icon.svg"
-                        alt="revise Icon"
-                        width={17}
-                        height={17}
-                        priority
-                      />
-                    </div>
-                  </button>
-                  <button
-                    onClick={(e) => e.stopPropagation}
-                    type="button"
-                    className={cx('button-cover')}
-                  >
-                    <div className={cx('button', 'delete')}>
-                      <FaTrashAlt />
-                    </div>
-                  </button>
-                </div>
-              </div>
-            );
-          })}
+                item={item}
+                showDelete={showDelete}
+                isSwiping={isSwiping}
+                setShowDelete={setShowDelete}
+                setIsSwiping={setIsSwiping}
+                handleChecklistClick={handleChecklistClick}
+                handleDelete={handleDelete} // 삭제 처리 함수 전달
+              />
+            ))
+          ) : (
+            <p>여행기록이 없습니다.</p>
+          )}
         </div>
       </div>
       <button
-        onClick={handleAddClick}
+        onClick={() => router.push('/myfamily/checklist/add')}
         className={cx('addButton')}
         type="button"
       >

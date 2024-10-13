@@ -10,8 +10,7 @@ export async function fetchAPI(
   const token = Cookies.get('JWT');
 
   const headers: HeadersInit = {
-    // 'Content-Type': 'application/json', // Include JSON content type
-    accept: '*/*', // Accept all types of responses
+    accept: '*/*',
   };
 
   if (token) {
