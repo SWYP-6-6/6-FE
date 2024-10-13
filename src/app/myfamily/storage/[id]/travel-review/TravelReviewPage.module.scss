@@ -54,6 +54,10 @@
               height: 2.8rem;
               border-radius: 50%;
               background-color: $gray20;
+
+              &-img {
+                border-radius: 50%;
+              }
             }
           }
 
@@ -74,15 +78,32 @@
             }
           }
         }
+        &-text {
+          @include column-flexbox(center, center);
 
-        &-title {
-          @include text-style(18, $black, bolder);
+          width: 100%;
 
-          margin-bottom: 2.2rem;
-        }
+          &-title {
+            @include text-style(18, $black, bolder);
+            @include flexbox(center, center);
 
-        &-description {
-          @include text-style(16, $black, light);
+            width: 100%;
+            margin-bottom: 2.2rem;
+          }
+
+          &-description {
+            @include text-style(16, $black, light);
+            @include flexbox(center, center);
+
+            width: 100%;
+          }
+
+          .editing-mode {
+            border: 2px solid $gray30; /* 테두리 강조 */
+            background-color: $gray30; /* 배경색 변경 */
+            transition: all 0.3s ease; /* 부드러운 전환 효과 */
+            // box-shadow: 0 0 10px rgba(255, 204, 0, 0.5); /* 테두리의 그림자 */
+          }
         }
       }
     }

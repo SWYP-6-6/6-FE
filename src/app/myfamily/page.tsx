@@ -17,13 +17,14 @@ export default async function MyFamily() {
   const cookieStore = cookies();
   const token = cookieStore.get('JWT')?.value;
   const userData = await getFetchUser({ token });
+  // const travelData = await travelAllData();
 
   if (!userData) {
     return redirect('/signin');
   }
 
   if (userData.familyId === null) {
-    return redirect('/signin');
+    return redirect('/signin-group');
   }
   const groupId = userData.familyId;
   const groupData = await getFetchGroup({ token, groupId });

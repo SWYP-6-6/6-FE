@@ -7,9 +7,14 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import classNames from 'classnames/bind';
 import DatePicker from '@/components/common/DatePicker';
 import CommonButton from '@/components/common/CommonButton';
-import Header from '@/components/common/Header';
+import GroupHeader from '@/components/common/GroupHeader';
 import './Calendar.scss';
-import { travelSchedulePost } from '@/app/api/api';
+import {
+  familyData,
+  travelAllData,
+  travelSchedulePost,
+  userData,
+} from '@/app/api/api';
 import DateBetween from '@/utils/dateBetween';
 import Cookies from 'js-cookie';
 import styles from './CalendarPage.module.scss';
@@ -24,6 +29,27 @@ type EventType = {
   color: string; // 이벤트 색상
 };
 
+interface TravelData {
+  id: number;
+  name: string;
+  startDate: string;
+  endDate: string;
+  checklist: {
+    id: number;
+    checkName: string;
+    content: string;
+    success: boolean;
+  }[];
+  familyId: number;
+}
+
+interface Event {
+  title: string;
+  start: string;
+  end: string;
+  color: string;
+}
+
 export default function CalendarPage() {
   const [events, setEvents] = useState<EventType[]>([]); // 이벤트 목록 상태 관리
   const [isAddScheduleVisible, setIsAddScheduleVisible] = useState(false); // 일정 추가 모달 표시 여부 상태 관리
@@ -33,11 +59,11 @@ export default function CalendarPage() {
   const [destination, setDestination] = useState(''); // 여행지 입력 상태 관리
   const [errorMessage, setErrorMessage] = useState(''); // 오류 메시지 상태 관리
   const [touched, setTouched] = useState(false); // 입력 값이 변경되었는지 여부 상태 관리
+  const [groupImage, setGroupImage] = useState(''); // 입력 값이 변경되었는지 여부 상태 관리
 
   const startPickerRef = useRef<HTMLDivElement>(null); // 시작 날짜 선택기 참조
   const endPickerRef = useRef<HTMLDivElement>(null); // 종료 날짜 선택기 참조
 
-  // 시작 날짜와 종료 날짜의 상태 관리
   const [startPickerValue, setStartPickerValue] = useState({
     year: '',
     month: '',
@@ -49,28 +75,46 @@ export default function CalendarPage() {
     day: '',
   });
 
-  // 컴포넌트가 마운트될 때 초기 이벤트 설정
+  const fetchTravelData = async () => {
+    try {
+      const data: TravelData[] = await travelAllData();
+
+      // travelData를 이벤트 형식으로 변환
+      const formattedEvents: Event[] = data.map((travel: TravelData) => ({
+        title: travel.name,
+        start: travel.startDate,
+        end: travel.endDate,
+        color: '#5302FF',
+      }));
+
+      setEvents(formattedEvents); // 이벤트를 설정
+    } catch (err) {
+      console.error('Error liking feed:', err);
+    }
+  };
   useEffect(() => {
-    setEvents([
-      {
-        title: '공부',
-        start: '2024-09-13',
-        end: '2024-09-14',
-        color: '#5302FF',
-      },
-      {
-        title: '축구하기',
-        start: '2024-09-15',
-        end: '2024-09-19',
-        color: '#5302FF',
-      },
-      {
-        title: '빨래',
-        start: '2024-09-28',
-        end: '2024-09-30',
-        color: '#5302FF',
-      },
-    ]);
+    fetchTravelData();
+  }, []);
+
+  useEffect(() => {
+    const fetchGroupImage = async () => {
+      try {
+        // userData를 실행하여 familyId 추출
+        const user = await userData();
+        const { familyId } = user;
+
+        // familyId로 familyData 호출하여 profileImage 가져오기
+        const family = await familyData(familyId);
+        const { profileImage } = family;
+
+        // 가져온 profileImage를 state에 저장
+        setGroupImage(profileImage);
+      } catch (err) {
+        console.error('Error fetching group image:', err);
+      }
+    };
+
+    fetchGroupImage();
   }, []);
 
   // 클릭 이벤트가 선택기 바깥에서 발생했는지 확인하고 선택기를 닫음
@@ -163,7 +207,7 @@ export default function CalendarPage() {
   };
 
   // 일정생성 완료 api
-  const handleCreateSchedule = () => {
+  const handleCreateSchedule = async () => {
     const myCookie = Cookies.get('JWT');
 
     const startDate = DateBetween(
@@ -178,7 +222,18 @@ export default function CalendarPage() {
     );
 
     if (touched) {
-      travelSchedulePost(destination, startDate, endDate, myCookie);
+      try {
+        // 일정 생성 API 호출
+        await travelSchedulePost(destination, startDate, endDate, myCookie);
+
+        // 일정 생성 후 fetchTravelData 다시 실행
+        await fetchTravelData();
+
+        // 모달 닫기
+        setIsAddScheduleVisible(false);
+      } catch (error) {
+        console.error('Error creating schedule:', error);
+      }
     }
   };
 
@@ -190,9 +245,9 @@ export default function CalendarPage() {
 
   return (
     <div className={cx('container')}>
-      <Header isShowButton isShowProfile>
+      <GroupHeader groupImage={groupImage} isShowButton isShowProfile>
         MY FAMILY
-      </Header>
+      </GroupHeader>
       <div className={cx('calendar-container')}>
         <FullCalendar
           plugins={[dayGridPlugin]}

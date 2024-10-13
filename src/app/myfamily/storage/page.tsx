@@ -1,14 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useSwipeable } from 'react-swipeable';
+import React, { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
-import Header from '@/components/common/Header';
 import { useRouter } from 'next/navigation';
-import { FaTrashAlt } from 'react-icons/fa';
-
-import Image from 'next/image';
+// import Image from 'next/image';
+import { familyData, travelAllData, userData } from '@/app/api/api';
+import GroupHeader from '@/components/common/GroupHeader';
 import styles from './StoragePage.module.scss';
+import SwipeableListItem from './SwipeableListItem';
 
 const cx = classNames.bind(styles);
 
@@ -22,176 +21,82 @@ interface Item {
 
 export default function StoragePage() {
   const router = useRouter();
-  const [items] = useState<Item[]>([
-    {
-      id: 1,
-      destination: 'Seoul',
-      startDate: '2024.09.26',
-      endDate: '2024.10.01',
-    },
-    {
-      id: 2,
-      destination: 'Busan',
-      startDate: '2024.10.05',
-      endDate: '2024.10.10',
-    },
-    {
-      id: 3,
-      destination: 'Jeju',
-      startDate: '2024.10.15',
-      endDate: '2024.10.20',
-    },
-    // {
-    //   id: 4,
-    //   destination: 'Seoul',
-    //   startDate: '2024.09.26',
-    //   endDate: '2024.10.01',
-    // },
-    // {
-    //   id: 5,
-    //   destination: 'Busan',
-    //   startDate: '2024.10.05',
-    //   endDate: '2024.10.10',
-    // },
-    // {
-    //   id: 6,
-    //   destination: 'Jeju',
-    //   startDate: '2024.10.15',
-    //   endDate: '2024.10.20',
-    // },
-    // {
-    //   id: 7,
-    //   destination: 'Seoul',
-    //   startDate: '2024.09.26',
-    //   endDate: '2024.10.01',
-    // },
-    // {
-    //   id: 8,
-    //   destination: 'Busan',
-    //   startDate: '2024.10.05',
-    //   endDate: '2024.10.10',
-    // },
-    // {
-    //   id: 9,
-    //   destination: 'Jeju',
-    //   startDate: '2024.10.15',
-    //   endDate: '2024.10.20',
-    // },
-  ]);
-
-  // 각 아이템의 삭제 버튼 표시 여부와 스와이프 상태 관리
+  const [groupImage, setGroupImage] = useState('');
+  const [items, setItems] = useState<Item[]>([]);
   const [showDelete, setShowDelete] = useState<{ [key: number]: boolean }>({});
-  const [isSwiping, setIsSwiping] = useState<{ [key: number]: boolean }>({});
 
-  const Handlers = (id: number) => {
-    return useSwipeable({
-      onSwipedLeft: () => {
-        setShowDelete((prev) => ({
-          ...prev,
-          [id]: true, // id가 일치하는 항목의 삭제 버튼을 표시
-        }));
-      },
-      onSwipedRight: () => {
-        setShowDelete((prev) => ({
-          ...prev,
-          [id]: false, // id가 일치하는 항목의 삭제 버튼을 숨기기
-        }));
-      },
-      onSwiping: () => {
-        setIsSwiping((prev) => ({
-          ...prev,
-          [id]: true, // id가 일치하는 항목에서 스와이프 중임을 표시
-        }));
-      },
-      onSwiped: () => {
-        setIsSwiping((prev) => ({
-          ...prev,
-          [id]: false, // id가 일치하는 항목에서 스와이프가 완료되었음을 표시
-        }));
-      },
-      preventScrollOnSwipe: false, // 스와이프 중 스크롤을 막지 않음
-      trackMouse: true, // 마우스 드래그로도 스와이프 가능
-    });
-  };
+  const fetchTravelData = async () => {
+    try {
+      const data = await travelAllData();
 
-  const handleAddClick = () => {
-    router.push('/myfamily/storage/add');
+      const formattedItems: Item[] = data.map((item: any) => ({
+        id: item.id,
+        destination: item.name,
+        startDate: item.startDate,
+        endDate: item.endDate,
+      }));
+
+      setItems(formattedItems);
+    } catch (err) {
+      console.error('Error fetching travel data:', err);
+    }
   };
+  useEffect(() => {
+    fetchTravelData();
+  }, []);
+
+  useEffect(() => {
+    const fetchGroupImage = async () => {
+      try {
+        // userData를 실행하여 familyId 추출
+        const user = await userData();
+        const { familyId } = user;
+
+        // familyId로 familyData 호출하여 profileImage 가져오기
+        const family = await familyData(familyId);
+        const { profileImage } = family;
+
+        // 가져온 profileImage를 state에 저장
+        setGroupImage(profileImage);
+      } catch (err) {
+        console.error('Error fetching group image:', err);
+      }
+    };
+
+    fetchGroupImage();
+  }, []);
+
+  // const handleAddClick = () => {
+  //   router.push('/myfamily/storage/add');
+  // };
 
   const handleStorageClick = (id: number) => {
     router.push(`/myfamily/storage/${id}/travel-review`);
   };
 
+  console.log(items);
+
   return (
     <div className={cx('container')}>
-      <Header isShowButton isShowProfile>
+      <GroupHeader groupImage={groupImage} isShowButton isShowProfile>
         MY FAMILY
-      </Header>
+      </GroupHeader>
       <div className={cx('title')}>여행기록 저장소</div>
       <div className={cx('swipeableLists')}>
         <div className={cx('swipeableList')}>
-          {items.map((item) => {
-            return (
-              <div
-                key={item.id}
-                className={cx('draggableContent', {
-                  showButton: showDelete[item.id],
-                })}
-                {...Handlers(item.id)}
-                style={{
-                  transition: isSwiping[item.id]
-                    ? 'none'
-                    : 'transform 0.3s ease',
-                }}
-              >
-                <button
-                  className={cx('draggableContent-button')}
-                  type="button"
-                  onClick={() => handleStorageClick(item.id)}
-                >
-                  <p className={cx('draggableContent-button-title')}>
-                    {item.destination}
-                  </p>
-                  <p className={cx('draggableContent-button-duration')}>
-                    {item.startDate}-{item.endDate}
-                  </p>
-                </button>
-                <div
-                  className={cx('Buttons', {
-                    showButton: showDelete[item.id],
-                  })}
-                >
-                  <button
-                    onClick={(e) => e.stopPropagation}
-                    type="button"
-                    className={cx('button-cover')}
-                  >
-                    <div className={cx('button', 'revise')}>
-                      <Image
-                        src="/svgs/revise_icon.svg"
-                        alt="revise Icon"
-                        width={17}
-                        height={17}
-                        priority
-                      />
-                    </div>
-                  </button>
-                  <button
-                    onClick={(e) => e.stopPropagation}
-                    type="button"
-                    className={cx('button-cover')}
-                  >
-                    <div className={cx('button', 'delete')}>
-                      <FaTrashAlt />
-                    </div>
-                  </button>
-                </div>
-              </div>
-            );
-          })}
+          {items.map((item) => (
+            <SwipeableListItem
+              key={item.id}
+              item={item}
+              showDelete={showDelete[item.id]}
+              setShowDelete={setShowDelete}
+              handleStorageClick={handleStorageClick}
+              fetchTravelData={fetchTravelData}
+            />
+          ))}
         </div>
       </div>
-      <button
+      {/* <button
         onClick={handleAddClick}
         className={cx('addButton')}
         type="button"
@@ -204,7 +109,7 @@ export default function StoragePage() {
           priority
           className={cx('button')}
         />
-      </button>
+      </button> */}
     </div>
   );
 }
