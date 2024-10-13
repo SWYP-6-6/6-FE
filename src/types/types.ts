@@ -61,6 +61,20 @@ export interface CreateFamilyRequestParams {
     nickname: string; // 가족 이름 (닉네임)
   };
 }
+
+export interface UserProfile {
+  id: number;
+  username: string;
+  email: string;
+  profileImage: string;
+  nickName: string;
+  familyId: number;
+}
+
+export interface TravelReviewBody {
+  title: string;
+  content: string;
+}
 // api/v1/family/all
 export interface FamilyAllItemParams {
   id: number;

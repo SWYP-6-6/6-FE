@@ -8,8 +8,8 @@ import {
   FamilyImageParams,
   CreateFamilyRequestParams,
   FamilyDetailParams,
+  TravelReviewBody,
 } from '@/types/types';
-
 import { fetchAPI } from '@/app/api/fetchInstance';
 
 const BASE_URL = 'http://13.209.88.22:8080/';
@@ -525,10 +525,142 @@ export const travelAllData = async () => {
     console.log('API 응답:', response);
     return response; // JSON 형식의 응답 반환
   } catch (error) {
+    console.error('Error fetching all travel data:', error);
+    throw error;
+  }
+};
+
+export const DdayData = async () => {
+  try {
+    const response = await fetchAPI('api/travels/d-day', 'GET');
+    console.log('API 응답:', response);
+    return response; // JSON 형식의 응답 반환
+  } catch (error) {
+    console.error('Error fetching Dday data:', error);
+    throw error;
+  }
+};
+
+export const userData = async () => {
+  try {
+    const response = await fetchAPI('users/get', 'GET');
+    console.log('API 응답:', response);
+    return response; // JSON 형식의 응답 반환
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    throw error;
+  }
+};
+
+export const familyData = async (id: string) => {
+  try {
+    const response = await fetchAPI(`api/v1/family/${id}`, 'GET');
+    console.log('familyData 응답:', response);
+    return response; // JSON 형식의 응답 반환
+  } catch (error) {
+    console.error('Error fetching family data:', error);
+    throw error;
+  }
+};
+
+export const travelData = async (id: string) => {
+  try {
+    const response = await fetchAPI(`api/travels/${id}`, 'GET');
+    console.log('travelData 응답:', response);
+    return response; // JSON 형식의 응답 반환
+  } catch (error) {
     console.error('Error fetching travel data:', error);
     throw error;
   }
 };
+
+
+export const travelReviewData = async (id: string) => {
+  try {
+    const response = await fetchAPI(`api/v1/travels/${id}/reviews`, 'GET');
+    console.log('travelReviewData 응답:', response);
+    return response; // JSON 형식의 응답 반환
+  } catch (error) {
+    console.error('Error fetching travel review data:', error);
+    throw error;
+  }
+};
+
+export const postTravelReviewData = async (
+  id: string,
+  body: TravelReviewBody,
+) => {
+  try {
+    const response = await fetchAPI(
+      `api/v1/travels/${id}/reviews`,
+      'POST',
+      body,
+    );
+    console.log('travelReviewData 응답:', response);
+    return response; // JSON 형식의 응답 반환
+  } catch (error) {
+    console.error('Error fetching travel review data:', error);
+    throw error;
+  }
+};
+
+export const deleteReview = async (travelId: string, reviewId: number) => {
+  try {
+    const response = await fetchAPI(
+      `api/v1/travels/${travelId}/reviews/${reviewId}`,
+      'DELETE',
+    );
+    console.log('deleteReview 응답:', response);
+    return response;
+  } catch (error) {
+    console.error('Error deleting review:', error);
+    throw error;
+  }
+};
+
+export const editReview = async (
+  travelId: string,
+  reviewId: number,
+  body: { title: string; content: string },
+) => {
+  try {
+    const response = await fetchAPI(
+      `api/v1/travels/${travelId}/reviews/${reviewId}`,
+      'PUT',
+      body,
+    );
+    return response;
+  } catch (error) {
+    console.error('Error editing review:', error);
+    throw error;
+  }
+};
+
+export const deleteTravel = async (travelId: number) => {
+  try {
+    const response = await fetchAPI(`api/travels/${travelId}`, 'DELETE');
+    console.log('deleteTravel 응답:', response);
+    return response;
+  } catch (error) {
+    console.error('Error deleting travel:', error);
+    throw error;
+  }
+};
+
+export const putFamilyImage = async (img: File) => {
+  try {
+    const formData = new FormData();
+    formData.append('imageFiles', img);
+    const response = await fetchAPI(
+      'api/v1/family/profile/image',
+      'PUT',
+      formData,
+    );
+    console.log('putFamilyImage 응답:', response);
+    return response;
+  } catch (error) {
+    console.error('Error putting family image:', error);
+
 export const travelDestinationDelete = async (id: number) => {
   try {
     await fetchAPI(`api/travels/${id}`, 'DELETE');

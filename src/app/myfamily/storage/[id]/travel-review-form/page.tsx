@@ -5,19 +5,21 @@ import classNames from 'classnames/bind';
 import Header from '@/components/common/Header';
 import { useParams, useRouter } from 'next/navigation';
 import CommonButton from '@/components/common/CommonButton';
+import { postTravelReviewData } from '@/app/api/api';
 import styles from './TravelReviewFormPage.module.scss';
 
 const cx = classNames.bind(styles);
 
 export default function TravelReviewFormPage() {
   const { id } = useParams();
-  console.log(id);
   const router = useRouter();
   const [isButtonEnabled, setIsButtonEnabled] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [touched, setTouched] = useState(false);
+
+  const travelId = id as string;
 
   const validateButton = () => {
     setErrorMessage('');
@@ -46,13 +48,25 @@ export default function TravelReviewFormPage() {
     validateButton();
   };
 
-  const handleCompleteClick = () => {
-    if (id) {
-      const numericId = Number(id);
-      router.push(`/myfamily/storage/${numericId}/travel-review`);
+  const handleCompleteClick = async () => {
+    const reviewData = {
+      title,
+      content: description,
+    };
+
+    console.log(reviewData);
+
+    try {
+      const response = await postTravelReviewData(travelId, reviewData);
+
+      if (response) {
+        router.push(`/myfamily/storage/${travelId}/travel-review`);
+        console.log(response);
+      }
+    } catch (error) {
+      console.error('리뷰 데이터를 제출하는 중 오류가 발생했습니다:', error);
     }
   };
-
   return (
     <div className={cx('container')}>
       <Header isShowButton isShowProfile={false}>
