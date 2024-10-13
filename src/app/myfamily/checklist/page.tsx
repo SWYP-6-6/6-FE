@@ -2,12 +2,17 @@
 
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
-import Header from '@/components/common/Header';
 import { useRouter } from 'next/navigation';
 import { FamilyAllItemParams } from '@/types/types';
-import { travelAllData, travelDestinationDelete } from '@/app/api/api';
+import {
+  familyData,
+  travelAllData,
+  travelDestinationDelete,
+  userData,
+} from '@/app/api/api';
 import Image from 'next/image';
 import SwipeableListItem from '@/components/checklist/SwipeableListItem';
+import GroupHeader from '@/components/common/GroupHeader';
 import styles from './checklist.module.scss';
 
 const cx = classNames.bind(styles);
@@ -17,8 +22,30 @@ export default function ChecklistPage() {
   const [showDelete, setShowDelete] = useState<{ [key: number]: boolean }>({});
   const [isSwiping, setIsSwiping] = useState<{ [key: number]: boolean }>({});
   const [loading, setLoading] = useState<boolean>(true);
+  const [groupImage, setGroupImage] = useState('');
 
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchGroupImage = async () => {
+      try {
+        // userData를 실행하여 familyId 추출
+        const user = await userData();
+        const { familyId } = user;
+
+        // familyId로 familyData 호출하여 profileImage 가져오기
+        const family = await familyData(familyId);
+        const { profileImage } = family;
+
+        // 가져온 profileImage를 state에 저장
+        setGroupImage(profileImage);
+      } catch (err) {
+        console.error('Error fetching group image:', err);
+      }
+    };
+
+    fetchGroupImage();
+  }, []);
 
   useEffect(() => {
     const fetchTravelData = async () => {
@@ -69,9 +96,9 @@ export default function ChecklistPage() {
 
   return (
     <div className={cx('container')}>
-      <Header isShowButton isShowProfile>
-        체크리스트
-      </Header>
+      <GroupHeader groupImage={groupImage} isShowButton isShowProfile>
+        MY FAMILY
+      </GroupHeader>
       <div className={cx('title')}>여행기록 저장소</div>
       <div className={cx('swipeableLists')}>
         <div className={cx('swipeableList')}>
