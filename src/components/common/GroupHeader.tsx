@@ -44,6 +44,7 @@ export default function GroupHeader({
             width={13}
             height={20}
             className={cx('return-button')}
+            priority
           />
         </button>
       )}
@@ -61,6 +62,7 @@ export default function GroupHeader({
               width={33}
               height={33}
               className={cx('profile-image')}
+              priority
             />
           </button>
         ) : (
