@@ -8,7 +8,7 @@ import {
   FamilyImageParams,
   CreateFamilyRequestParams,
   FamilyDetailParams,
-  TravelReviewBody,
+  CheckListsContent,
 } from '@/types/types';
 import { fetchAPI } from '@/app/api/fetchInstance';
 
@@ -666,6 +666,49 @@ export const putFamilyImage = async (img: File) => {
 export const travelDestinationDelete = async (id: number) => {
   try {
     await fetchAPI(`api/travels/${id}`, 'DELETE');
+  } catch (error) {
+    console.error('Error fetching travel data:', error);
+    throw error;
+  }
+};
+
+// 체크리스트 입력
+export const postCheckListItem = async (
+  travelId: number,
+  newItem: CheckListsContent,
+) => {
+  try {
+    const response = await fetchAPI(
+      `api/v1/${travelId}/checks`,
+      'POST',
+      newItem,
+    );
+    return response;
+  } catch (error) {
+    console.error('Error fetching travel data:', error);
+    throw error;
+  }
+};
+
+// 체크리스트아이템 가져오기
+export const getCheckListItems = async (travelId: number) => {
+  try {
+    const response = await fetchAPI(`api/v1/${travelId}/checks`, 'GET');
+    console.log(response);
+    return response;
+  } catch (error) {
+    console.error('Error fetching travel data:', error);
+    throw error;
+  }
+};
+
+// 체크리스트 삭제하기
+export const deleteCheckListItem = async (
+  travelId: number,
+  checkId: number,
+) => {
+  try {
+    await fetchAPI(`api/v1/${travelId}/checks/${checkId}`, 'DELETE');
   } catch (error) {
     console.error('Error fetching travel data:', error);
     throw error;

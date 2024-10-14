@@ -30,6 +30,11 @@ export type CheckListItem = {
   content: string;
   success: boolean;
 };
+// checks
+export type CheckListsContent = {
+  checkName: string;
+  content: string;
+};
 
 export interface CheckDestinationListProps {
   id: number;
