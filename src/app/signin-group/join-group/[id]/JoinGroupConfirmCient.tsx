@@ -33,8 +33,12 @@ export default function JoinGroupConfirmCient({
       router.push('/signin-group/complete'); // 가입 성공 시 complete 페이지로 이동
     } catch (error) {
       console.error('Error joining family:', error);
-      // 에러 메시지를 사용자에게 표시
-      setErrorMessage(error.message || '가입하는 동안 문제가 발생했습니다.');
+      // 에러가 객체이고 message 속성을 가진 경우만 처리
+      if (error instanceof Error) {
+        setErrorMessage(error.message || '가입하는 동안 문제가 발생했습니다.');
+      } else {
+        setErrorMessage('가입하는 동안 문제가 발생했습니다.');
+      }
     }
   };
   return (
