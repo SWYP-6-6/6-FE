@@ -671,3 +671,21 @@ export const travelDestinationDelete = async (id: number) => {
     throw error;
   }
 };
+
+export const addAnniversary = async (
+  anniversaryContent: string,
+  anniversaryDate: string,
+  id: string,
+) => {
+  try {
+    const response = await fetchAPI(`api/v1/family/${id}/anniversary`, 'POST', {
+      anniversaryDate,
+      anniversaryContent,
+    });
+    console.log('addAnniversary 응답:', response);
+    return response;
+  } catch (error) {
+    console.error('Error adding addAnniversary:', error);
+    throw error;
+  }
+};
