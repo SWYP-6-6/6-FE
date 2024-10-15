@@ -63,8 +63,11 @@ export default function GroupPage() {
     }
   };
 
-  const handleAnniversary = () => {
-    router.push('./anniversary');
+  const onClickAnniversary = () => {
+    router.push('/group/anniversary');
+  };
+  const onClickeMember = () => {
+    router.push('/group/member');
   };
 
   return (
@@ -114,7 +117,7 @@ export default function GroupPage() {
           <div className={cx('grid-container')}>
             <button
               className={cx('setting-card', 'anniversary-setting-card')}
-              onClick={handleAnniversary}
+              onClick={onClickAnniversary}
               type="button"
             >
               <Image
@@ -127,6 +130,7 @@ export default function GroupPage() {
               <span>기념일 설정</span>
             </button>
             <button
+              onClick={onClickeMember}
               className={cx('setting-card', 'family-member-setting-card')}
               type="button"
             >

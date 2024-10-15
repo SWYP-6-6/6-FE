@@ -82,3 +82,17 @@ export interface FamilyAllItemParams {
   startDate: string;
   endDate: string;
 }
+
+export interface AnniversaryItem {
+  id: string;
+  name: string;
+}
+
+export interface Member {
+  id: number;
+  username: string;
+  email: string;
+  profileImage: string;
+  nickName: string;
+  familyId: number;
+}

@@ -2,18 +2,17 @@
 
 import React, { useState } from 'react';
 import classNames from 'classnames/bind';
-import DataPick from '@/components/anniversary/DataPick';
 import validateTitle from '@/utils/validate';
-import Cookies from 'js-cookie';
+import DateBetween from '@/utils/dateBetween';
+import { addAnniversary, userData } from '@/app/api/api';
+import { useRouter } from 'next/navigation';
 import styles from './SettingForm.module.scss';
-import DateBetween from '../../utils/dateBetween';
-import { familyAnniversary } from '../../app/api/api';
+import DataPick from './DataPick';
 
 const cx = classNames.bind(styles);
 
 export default function SettingForm() {
-  // 나중에 ID값 넣기
-  const id = '5';
+  const router = useRouter();
   const [title, setTitle] = useState('');
   const [errorMessage, setErrorMessage] = useState(''); // 에러 상태 추가
   const [isButtonEnabled, setIsButtonEnabled] = useState<boolean>(false);
@@ -50,15 +49,20 @@ export default function SettingForm() {
     }
   };
 
-  const handleSubmitForm = () => {
-    // 나중에 쿠키 바꾸기
-    const myCookie = Cookies.get('JWT');
+  const handleSubmitForm = async () => {
     const startDate = DateBetween(
       pickerDate.year,
       pickerDate.month,
       pickerDate.day,
     );
-    familyAnniversary(title, startDate, id, myCookie);
+    try {
+      const user = await userData();
+      const { familyId } = user;
+      await addAnniversary(title, startDate, familyId);
+      router.push('/group/anniversary');
+    } catch (err) {
+      console.error('Error fetching group image:', err);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
