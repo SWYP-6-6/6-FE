@@ -9,6 +9,7 @@ import {
   CreateFamilyRequestParams,
   FamilyDetailParams,
   CheckListsContent,
+  TravelReviewBody,
 } from '@/types/types';
 import { fetchAPI } from '@/app/api/fetchInstance';
 
@@ -709,6 +710,27 @@ export const deleteCheckListItem = async (
 ) => {
   try {
     await fetchAPI(`api/v1/${travelId}/checks/${checkId}`, 'DELETE');
+  } catch (error) {
+    console.error('Error fetching travel data:', error);
+    throw error;
+  }
+};
+
+// 체크리스트 체크 여부
+export const putCheckListItem = async (
+  travelId: number,
+  checkId: number,
+  success: boolean,
+) => {
+  try {
+    const response = await fetchAPI(
+      `api/v1/${travelId}/checks/${checkId}`,
+      'PUT',
+      {
+        success, // 요청 본문에 success 값 포함
+      },
+    );
+    return response;
   } catch (error) {
     console.error('Error fetching travel data:', error);
     throw error;

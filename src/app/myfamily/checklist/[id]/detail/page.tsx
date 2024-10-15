@@ -14,7 +14,8 @@ import {
   travelAllData,
   postCheckListItem,
   getCheckListItems,
-  // deleteCheckListItem,
+  deleteCheckListItem,
+  putCheckListItem,
 } from '@/app/api/api'; // API 호출 함수들 가져오기
 import { CheckDestinationListProps, CheckListItem } from '@/types/types';
 import styles from './CheckListDetailPage.module.scss';
@@ -22,14 +23,17 @@ import styles from './CheckListDetailPage.module.scss';
 const cx = classNames.bind(styles);
 
 export default function CheckListDetailPage() {
-  const [text, setText] = useState<string>(''); // 입력 상태
-  const [isComposing, setIsComposing] = useState(false); // 조합 중 여부
-  const [travelData, setTravelData] = useState<CheckDestinationListProps[]>([]); // 여행지 데이터
-  console.log(travelData);
+  const [text, setText] = useState<string>('');
+  const [isComposing, setIsComposing] = useState(false);
+  const [travelData, setTravelData] = useState<CheckDestinationListProps[]>([]);
   const [todoLists, setTodoLists] = useState<Record<string, CheckListItem[]>>(
     {},
   ); // 체크리스트 데이터
-  const [selectedDestination, setSelectedDestination] = useState<string>(''); // 선택된 여행지
+  const [selectedDestination, setSelectedDestination] = useState<string>('');
+  const [selectedDestinationId, setSelectedDestinationId] = useState<
+    number | null
+  >(null); // 선택된 여행지 ID
+  const [loading, setLoading] = useState<boolean>(true);
 
   // 체크리스트 항목을 서버에서 가져오는 함수 (GET 요청)
   const fetchCheckListItems = async (
@@ -37,59 +41,54 @@ export default function CheckListDetailPage() {
     destinationName: string,
   ) => {
     try {
-      const items = await getCheckListItems(travelId); // 서버에서 체크리스트 항목을 가져옴
+      const items = await getCheckListItems(travelId);
       setTodoLists((prev) => ({
-        ...prev, // 기존 상태 유지
-        [destinationName]: items, // 선택된 여행지의 항목을 업데이트
+        ...prev,
+        [destinationName]: items,
       }));
     } catch (error) {
       console.error('Error fetching checklist items:', error);
     }
   };
 
-  // 여행지 데이터를 불러오는 useEffect
   useEffect(() => {
     const fetchTravelData = async () => {
       try {
         const data = await travelAllData(); // 모든 여행지 데이터를 가져오는 API
-        console.log(data);
         setTravelData(data);
 
-        // 첫 번째 여행지를 기본으로 선택하고 체크리스트 항목 불러오기
         if (data.length > 0) {
-          setSelectedDestination(data[0].name);
+          setSelectedDestination(data[0].name); // 첫 번째 여행지를 기본으로 선택
+          setSelectedDestinationId(data[0].id); // 첫 번째 여행지의 ID도 상태로 저장
           await fetchCheckListItems(data[0].id, data[0].name); // 첫 번째 여행지의 체크리스트 항목 불러오기
         }
       } catch (err) {
         console.error('Error fetching travel data:', err);
+      } finally {
+        setLoading(false); // 로딩 완료
       }
     };
     fetchTravelData();
   }, []);
 
-  // 입력 값을 처리하는 함수
   const handleText = (e: ChangeEvent<HTMLInputElement>) => {
-    setText(e.target.value); // 조합 중 여부와 관계없이 항상 값 반영
+    setText(e.target.value);
   };
 
-  // 새로운 체크리스트 항목을 추가하는 함수 (POST 요청)
   const handleListAddText = async () => {
     if (text.trim() === '') return;
 
-    // 서버에 전송할 데이터 (checkName과 content만)
     const newItemForPost = {
       checkName: selectedDestination,
       content: text,
     };
 
     try {
-      // 선택된 여행지에 맞는 객체를 찾는다.
       const selectedTravelData = travelData.find(
         (destination) => destination.name === selectedDestination,
       );
 
       if (selectedTravelData) {
-        // POST 요청으로 서버에 데이터 전송 및 추가된 항목을 서버로부터 다시 불러옴
         await postCheckListItem(selectedTravelData.id, newItemForPost);
         await fetchCheckListItems(selectedTravelData.id, selectedDestination); // 추가된 항목 반영된 리스트를 다시 불러오기
       }
@@ -100,11 +99,36 @@ export default function CheckListDetailPage() {
     setText(''); // 입력 필드를 비움
   };
 
-  // const handleDelete = async (id) => {
+  const handleToggleSuccess = async (
+    checkId: number,
+    currentSuccess: boolean,
+  ) => {
+    if (!selectedDestinationId) return;
 
-  // }
+    try {
+      const newSuccess = !currentSuccess;
+      await putCheckListItem(selectedDestinationId, checkId, newSuccess);
+      await fetchCheckListItems(selectedDestinationId, selectedDestination);
+    } catch (error) {
+      console.error('Error updating checklist success status:', error);
+    }
+  };
 
-  // 완료되지 않은 할 일 목록과 완료된 할 일 목록 분리
+  const handleDelete = async (checkId: number) => {
+    if (!selectedDestinationId) return;
+
+    try {
+      await deleteCheckListItem(selectedDestinationId, checkId);
+      await fetchCheckListItems(selectedDestinationId, selectedDestination);
+    } catch (error) {
+      console.error('Error deleting checklist item:', error);
+    }
+  };
+
+  if (loading) {
+    return <div>로딩 중...</div>; // 로딩 상태 시 출력할 UI
+  }
+
   const uncheckedItems =
     todoLists[selectedDestination]?.filter((item) => !item.success) || [];
   const checkedItems =
@@ -120,12 +144,11 @@ export default function CheckListDetailPage() {
           <button
             type="button"
             key={item.id}
-            className={cx('tab', {
-              active: selectedDestination === item.name,
-            })}
+            className={cx('tab', { active: selectedDestination === item.name })}
             onClick={() => {
-              setSelectedDestination(item.name); // 선택된 여행지를 업데이트
-              fetchCheckListItems(item.id, item.name); // 선택된 여행지의 체크리스트 항목 가져오기
+              setSelectedDestination(item.name);
+              setSelectedDestinationId(item.id);
+              fetchCheckListItems(item.id, item.name);
             }}
           >
             {item.name}
@@ -140,13 +163,13 @@ export default function CheckListDetailPage() {
                 className={cx('checkInput')}
                 type="checkbox"
                 checked={item.success}
-                onChange={() => {}} // 토글 삭제 관련 기능 유지
+                onChange={() => handleToggleSuccess(item.id, item.success)}
               />
               <div className={cx('textList')}>{item.content}</div>
             </div>
             <FaTrashAlt
               className={cx('trash-icon')}
-              onClick={() => {}} // 토글 삭제 관련 기능 유지
+              onClick={() => handleDelete(item.id)}
             />
           </div>
         ))}
@@ -157,13 +180,13 @@ export default function CheckListDetailPage() {
                 className={cx('checkInput')}
                 type="checkbox"
                 checked={item.success}
-                onChange={() => {}} // 토글 삭제 관련 기능 유지
+                onChange={() => handleToggleSuccess(item.id, item.success)}
               />
               <div className={cx('checkedTextList')}>{item.content}</div>
             </div>
             <FaTrashAlt
               className={cx('trash-icon')}
-              onClick={() => {}} // 토글 삭제 관련 기능 유지
+              onClick={() => handleDelete(item.id)}
             />
           </div>
         ))}
@@ -172,14 +195,14 @@ export default function CheckListDetailPage() {
             className={cx('addInput')}
             placeholder="할 일을 입력 후 Enter를 누르세요."
             value={text}
-            onChange={handleText} // 입력값을 항상 업데이트
+            onChange={handleText}
             onKeyDown={(e: KeyboardEvent<HTMLInputElement>) =>
               !isComposing && e.key === 'Enter' && handleListAddText()
             }
-            onCompositionStart={() => setIsComposing(true)} // 한글 조합 시작
+            onCompositionStart={() => setIsComposing(true)}
             onCompositionEnd={(e: CompositionEvent<HTMLInputElement>) => {
-              setIsComposing(false); // 한글 조합 종료
-              setText(e.currentTarget.value); // 한글 조합 종료 후 입력된 값 반영
+              setIsComposing(false);
+              setText(e.currentTarget.value);
             }}
           />
         </div>
