@@ -1,25 +1,22 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 
 import classNames from 'classnames/bind';
 import DatePicker from '@/components/common/DatePicker';
 import CommonButton from '@/components/common/CommonButton';
 import Header from '@/components/common/Header';
-import styles from './StorageAdd.module.scss'; // 컴포넌트에 맞는 SCSS 모듈을 가져옴
+import { DatePickerValue, PostCreateTravel } from '@/types/types';
+import { getTravels, patchTravels } from '@/app/api/api';
+import styles from './StorageAdd.module.scss';
 
 const cx = classNames.bind(styles);
 
-// 시작 및 종료 날짜의 타입 정의
-type DatePickerValue = {
-  year: string;
-  month: string;
-  day: string;
-};
-
-export default function StorageAdd() {
+export default function ChecklistEdit() {
   const router = useRouter();
+  const { id } = useParams();
+  const listId = Number(id);
 
   // 시작 날짜 선택기 표시 여부를 관리하는 상태
   const [isStartPickerVisible, setIsStartPickerVisible] = useState(false);
@@ -52,6 +49,37 @@ export default function StorageAdd() {
     month: '',
     day: '',
   });
+
+  // 현진 추가
+  // 여행 데이터를 불러오는 useEffect
+  useEffect(() => {
+    const fetchTravelData = async () => {
+      try {
+        const travelData = await getTravels(listId); // 여행 데이터 불러오기
+        setDestination(travelData.name); // 여행지 이름 설정
+        const startDate = new Date(travelData.startDate);
+        const endDate = new Date(travelData.endDate);
+
+        // 시작 날짜 설정
+        setStartPickerValue({
+          year: startDate.getFullYear().toString(),
+          month: (startDate.getMonth() + 1).toString().padStart(2, '0'), // 월은 0부터 시작하므로 +1
+          day: startDate.getDate().toString().padStart(2, '0'),
+        });
+
+        // 종료 날짜 설정
+        setEndPickerValue({
+          year: endDate.getFullYear().toString(),
+          month: (endDate.getMonth() + 1).toString().padStart(2, '0'),
+          day: endDate.getDate().toString().padStart(2, '0'),
+        });
+      } catch (error) {
+        console.error('Error fetching travel data:', error);
+      }
+    };
+
+    fetchTravelData(); // 컴포넌트가 마운트될 때 여행 데이터 불러오기
+  }, [id]);
 
   // 완료 버튼 활성화 여부를 검증하는 함수
   const validateButton = () => {
@@ -132,8 +160,25 @@ export default function StorageAdd() {
     };
   }, []);
 
-  const handleCompleteClick = (id: number) => {
-    router.push(`/myfamily/storage/${id}/travel-review-form`);
+  const handleCompleteClick = async () => {
+    // 날짜를 'YYYY-MM-DD' 형식으로 변환
+    const formattedStartDate = `${startPickerValue.year}-${startPickerValue.month}-${startPickerValue.day}`;
+    const formattedEndDate = `${endPickerValue.year}-${endPickerValue.month}-${endPickerValue.day}`;
+
+    // 여행 데이터를 객체로 정의
+    const travelEditData: PostCreateTravel = {
+      name: destination,
+      startDate: formattedStartDate,
+      endDate: formattedEndDate,
+    };
+
+    // API 요청 보내기
+    try {
+      await patchTravels(listId, travelEditData); // 정의한 객체를 전달
+      router.push('/myfamily/checklist'); // 성공 시 페이지 이동
+    } catch (error) {
+      console.error('Error creating travel', error);
+    }
   };
 
   return (
@@ -144,7 +189,7 @@ export default function StorageAdd() {
       aria-label="여행일정 추가"
     >
       <Header isShowButton isShowProfile={false}>
-        여행 기록 작성
+        수정하기
       </Header>
       <div className={cx('addSchedule-name')}>
         장소
@@ -223,7 +268,7 @@ export default function StorageAdd() {
         <CommonButton
           isEnabled={isButtonEnabled}
           onClick={() => {
-            handleCompleteClick(1);
+            handleCompleteClick();
             setTouched(false); // 제출 후 상호작용 상태 초기화
           }}
           text="입력 완료"
