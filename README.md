@@ -10,7 +10,10 @@
 <br />
 
 # 🔗 사이트
-[figma](https://www.figma.com/design/6YFtCqf064pX9La4sdwuxX/final?node-id=1-1614&node-type=frame&t=5AzrjJdueJBiecdV-0)
+[Demo](http://13.209.88.22:3000/) <br />
+[Figma](https://www.figma.com/design/6YFtCqf064pX9La4sdwuxX/final?node-id=1-1614&node-type=frame&t=5AzrjJdueJBiecdV-0)<br />
+[Swagger](http://13.209.88.22:8080/swagger-ui/index.html#/travel-controller/updateTravel)<br />
+
 
 
 <br />
