@@ -38,8 +38,6 @@ export default function SwipeableListItem({
   handleChecklistClick,
   handleDelete,
 }: SwipeableListItemProps) {
-  console.log(item);
-
   const [isSwipeComplete, setIsSwipeComplete] = useState(false); // 스와이프 완료 상태
 
   const router = useRouter();
