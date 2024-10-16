@@ -10,7 +10,6 @@ import {
   travelDestinationDelete,
   userData,
 } from '@/app/api/api';
-import Image from 'next/image';
 import SwipeableListItem from '@/components/checklist/SwipeableListItem';
 import GroupHeader from '@/components/common/GroupHeader';
 import styles from './checklist.module.scss';
@@ -120,20 +119,6 @@ export default function ChecklistPage() {
           )}
         </div>
       </div>
-      <button
-        onClick={() => router.push('/myfamily/checklist/add')}
-        className={cx('addButton')}
-        type="button"
-      >
-        <Image
-          src="/svgs/add-icon.svg"
-          alt="Add Icon"
-          width={48}
-          height={48}
-          priority
-          className={cx('button')}
-        />
-      </button>
     </div>
   );
 }
