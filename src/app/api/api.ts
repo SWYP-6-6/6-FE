@@ -737,6 +737,28 @@ export const putCheckListItem = async (
   }
 };
 
+// 체크리스트 여행생성 api
+export const postTravels = async () => {
+  try {
+    const response = await fetchAPI('api/travels', 'POST');
+    return response;
+  } catch (error) {
+    console.error('Error fetching travel data:', error);
+    throw error;
+  }
+};
+
+// 체크리스트 여행수정 api
+export const patchTravels = async (id: number) => {
+  try {
+    const response = await fetchAPI(`api/travels/${id}`, 'PATCH');
+    return response;
+  } catch (error) {
+    console.error('Error fetching travel data:', error);
+    throw error;
+  }
+};
+
 export const addAnniversary = async (
   anniversaryContent: string,
   anniversaryDate: string,
