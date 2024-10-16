@@ -30,6 +30,11 @@ export type CheckListItem = {
   content: string;
   success: boolean;
 };
+// checks
+export type CheckListsContent = {
+  checkName: string;
+  content: string;
+};
 
 export interface CheckDestinationListProps {
   id: number;
@@ -96,3 +101,9 @@ export interface Member {
   nickName: string;
   familyId: number;
 }
+
+export type DatePickerValue = {
+  year: string;
+  month: string;
+  day: string;
+};

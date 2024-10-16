@@ -7,16 +7,13 @@ import classNames from 'classnames/bind';
 import DatePicker from '@/components/common/DatePicker';
 import CommonButton from '@/components/common/CommonButton';
 import Header from '@/components/common/Header';
+// import { patchTravels, postTravels } from '@/app/api/api';
+import { DatePickerValue } from '@/types/types';
 import styles from './ChecklistAdd.module.scss'; // 컴포넌트에 맞는 SCSS 모듈을 가져옴
 
 const cx = classNames.bind(styles);
 
 // 시작 및 종료 날짜의 타입 정의
-type DatePickerValue = {
-  year: string;
-  month: string;
-  day: string;
-};
 
 export default function ChecklistAdd() {
   const router = useRouter();

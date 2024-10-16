@@ -4,7 +4,7 @@ const BASE_URL = 'http://13.209.88.22:8080/'; // Your base API URL
 
 export async function fetchAPI(
   endpoint: string,
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE',
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH',
   body?: any,
 ) {
   const token = Cookies.get('JWT');
