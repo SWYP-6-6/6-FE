@@ -220,6 +220,7 @@
   .post {
     border-bottom: 0.1rem solid $gray20;
     padding-top: 1.6rem;
+    background-color: $white;
 
     &-profile {
       @include flexbox(between, start);
