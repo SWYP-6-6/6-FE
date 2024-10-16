@@ -107,3 +107,10 @@ export type DatePickerValue = {
   month: string;
   day: string;
 };
+
+// 여행생성
+export interface PostCreateTravel {
+  name: string;
+  startDate: string;
+  endDate: string;
+}
