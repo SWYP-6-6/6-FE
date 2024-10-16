@@ -101,3 +101,9 @@ export interface Member {
   nickName: string;
   familyId: number;
 }
+
+export type DatePickerValue = {
+  year: string;
+  month: string;
+  day: string;
+};
