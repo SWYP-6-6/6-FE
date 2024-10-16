@@ -8,8 +8,9 @@ import DatePicker from '@/components/common/DatePicker';
 import CommonButton from '@/components/common/CommonButton';
 import Header from '@/components/common/Header';
 // import { patchTravels, postTravels } from '@/app/api/api';
-import { DatePickerValue } from '@/types/types';
-import styles from './ChecklistAdd.module.scss'; // 컴포넌트에 맞는 SCSS 모듈을 가져옴
+import { DatePickerValue, PostCreateTravel } from '@/types/types';
+import { postTravels } from '@/app/api/api';
+import styles from './ChecklistAdd.module.scss';
 
 const cx = classNames.bind(styles);
 
@@ -129,8 +130,25 @@ export default function ChecklistAdd() {
     };
   }, []);
 
-  const handleCompleteClick = () => {
-    router.push('/myfamily/checklist');
+  const handleCompleteClick = async () => {
+    // 날짜를 'YYYY-MM-DD' 형식으로 변환
+    const formattedStartDate = `${startPickerValue.year}-${startPickerValue.month}-${startPickerValue.day}`;
+    const formattedEndDate = `${endPickerValue.year}-${endPickerValue.month}-${endPickerValue.day}`;
+
+    // 여행 데이터를 객체로 정의
+    const travelData: PostCreateTravel = {
+      name: destination,
+      startDate: formattedStartDate,
+      endDate: formattedEndDate,
+    };
+
+    // API 요청 보내기
+    try {
+      await postTravels(travelData); // 정의한 객체를 전달
+      router.push('/myfamily/checklist'); // 성공 시 페이지 이동
+    } catch (error) {
+      console.error('Error creating travel', error);
+    }
   };
 
   return (
