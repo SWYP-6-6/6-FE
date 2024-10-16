@@ -105,6 +105,7 @@ export default function SwipeableListItem({
           {item.startDate} - {item.endDate}
         </p>
       </button>
+      <div className={cx('draggableContent-noticeButton')} />
       <div className={cx('Buttons', { showButton: showDelete[item.id] })}>
         <button
           onClick={(e) => {
