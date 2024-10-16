@@ -98,7 +98,10 @@ export default function ChecklistPage() {
       <GroupHeader groupImage={groupImage} isShowButton isShowProfile>
         MY FAMILY
       </GroupHeader>
-      <div className={cx('title')}>여행기록 저장소</div>
+      <div className={cx('title')}>
+        여행 할 장소의 <br />
+        체크리스트를 작성해보아요!
+      </div>
       <div className={cx('swipeableLists')}>
         <div className={cx('swipeableList')}>
           {travelData.length > 0 ? (
