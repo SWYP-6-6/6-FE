@@ -75,7 +75,7 @@ export default async function FeedDetailPage({
   };
   // 토큰이 없으면 /signin 페이지로 리다이렉트
   if (!token) {
-    redirect('/splash');
+    redirect('/signin');
   }
 
   try {
@@ -204,6 +204,7 @@ export default async function FeedDetailPage({
                   className={cx('avatar')}
                 />
               </div>
+              {/* <input className={cx('add-comment')} placeholder="댓글추가" /> */}
               <CommentSection
                 submitComment={submitComment} // submitComment 함수 전달
               />

@@ -13,7 +13,7 @@ export default async function Home() {
 
   // 토큰이 없으면 /signin 페이지로 리다이렉트
   if (!token) {
-    return redirect('/splash');
+    return redirect('/signin');
   }
 
   // 사용자 정보와 피드 데이터를 가져오기
@@ -26,7 +26,7 @@ export default async function Home() {
 
   // 사용자 정보가 없거나 유효하지 않으면 /signin 페이지로 리다이렉트
   if (!userData) {
-    return redirect('/splash');
+    return redirect('/signin');
   }
 
   // 닉네임이 없으면 /nicknamesetting 페이지로 리다이렉트
@@ -36,7 +36,7 @@ export default async function Home() {
 
   // initialFeedData가 없거나 content 배열이 비어 있으면 /signin 페이지로 리다이렉트
   if (!initialFeedData) {
-    return redirect('/splash');
+    return redirect('/signin');
   }
 
   // JSX 반환
