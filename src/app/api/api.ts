@@ -10,6 +10,7 @@ import {
   FamilyDetailParams,
   CheckListsContent,
   TravelReviewBody,
+  PostCreateTravel,
 } from '@/types/types';
 import { fetchAPI } from '@/app/api/fetchInstance';
 
@@ -738,9 +739,9 @@ export const putCheckListItem = async (
 };
 
 // 체크리스트 여행생성 api
-export const postTravels = async () => {
+export const postTravels = async (createTravelData: PostCreateTravel) => {
   try {
-    const response = await fetchAPI('api/travels', 'POST');
+    const response = await fetchAPI('api/travels', 'POST', createTravelData);
     return response;
   } catch (error) {
     console.error('Error fetching travel data:', error);
@@ -749,9 +750,27 @@ export const postTravels = async () => {
 };
 
 // 체크리스트 여행수정 api
-export const patchTravels = async (id: number) => {
+export const patchTravels = async (
+  id: number,
+  travelEditData: PostCreateTravel,
+) => {
   try {
-    const response = await fetchAPI(`api/travels/${id}`, 'PATCH');
+    const response = await fetchAPI(
+      `api/travels/${id}`,
+      'PATCH',
+      travelEditData,
+    );
+    return response;
+  } catch (error) {
+    console.error('Error fetching travel data:', error);
+    throw error;
+  }
+};
+
+// 여행정보 api
+export const getTravels = async (id: number) => {
+  try {
+    const response = await fetchAPI(`api/travels/${id}`, 'GET');
     return response;
   } catch (error) {
     console.error('Error fetching travel data:', error);

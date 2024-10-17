@@ -7,6 +7,18 @@
   border-radius: 0.6rem;
   position: relative;
   user-select: none;
+  transition: transform 0.3s ease;
+
+  &-noticeButton {
+    position: absolute;
+    width: 0.3rem;
+    height: auto;
+    background-color: $gray20;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    right: 1rem;
+    border-radius: 1rem;
+  }
 
   &-button {
     width: 100%;

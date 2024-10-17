@@ -3,7 +3,7 @@ import { useSwipeable } from 'react-swipeable';
 import classNames from 'classnames/bind';
 import { FaTrashAlt } from 'react-icons/fa';
 import Image from 'next/image';
-// import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import styles from './SwipeableListItem.module.scss';
 
 const cx = classNames.bind(styles);
@@ -40,7 +40,7 @@ export default function SwipeableListItem({
 }: SwipeableListItemProps) {
   const [isSwipeComplete, setIsSwipeComplete] = useState(false); // 스와이프 완료 상태
 
-  // const router = useRouter();
+  const router = useRouter();
 
   // 스와이프 핸들러 설정
   const handlers = useSwipeable({
@@ -75,9 +75,9 @@ export default function SwipeableListItem({
     trackMouse: true, // 마우스 스와이프 감지
   });
 
-  // const handleEditor = () => {
-  //   router.push('/myfamily/checkllist/add');
-  // };
+  const handleTravelEdit = (id: number) => {
+    router.push(`/myfamily/checklist/${id}/edit`);
+  };
 
   return (
     <div
@@ -105,11 +105,12 @@ export default function SwipeableListItem({
           {item.startDate} - {item.endDate}
         </p>
       </button>
+      <div className={cx('draggableContent-noticeButton')} />
       <div className={cx('Buttons', { showButton: showDelete[item.id] })}>
         <button
           onClick={(e) => {
             e.stopPropagation();
-            // handleEditor();
+            handleTravelEdit(item.id);
           }}
           type="button"
           className={cx('button-cover')}

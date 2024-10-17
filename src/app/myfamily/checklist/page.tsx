@@ -10,7 +10,6 @@ import {
   travelDestinationDelete,
   userData,
 } from '@/app/api/api';
-import Image from 'next/image';
 import SwipeableListItem from '@/components/checklist/SwipeableListItem';
 import GroupHeader from '@/components/common/GroupHeader';
 import styles from './checklist.module.scss';
@@ -99,7 +98,10 @@ export default function ChecklistPage() {
       <GroupHeader groupImage={groupImage} isShowButton isShowProfile>
         MY FAMILY
       </GroupHeader>
-      <div className={cx('title')}>여행기록 저장소</div>
+      <div className={cx('title')}>
+        여행 할 장소의 <br />
+        체크리스트를 작성해보아요!
+      </div>
       <div className={cx('swipeableLists')}>
         <div className={cx('swipeableList')}>
           {travelData.length > 0 ? (
@@ -120,20 +122,6 @@ export default function ChecklistPage() {
           )}
         </div>
       </div>
-      <button
-        onClick={() => router.push('/myfamily/checklist/add')}
-        className={cx('addButton')}
-        type="button"
-      >
-        <Image
-          src="/svgs/add-icon.svg"
-          alt="Add Icon"
-          width={48}
-          height={48}
-          priority
-          className={cx('button')}
-        />
-      </button>
     </div>
   );
 }
