@@ -34,9 +34,6 @@ export default function Header({
 
   const handleBackClick = () => {
     router.back();
-    setTimeout(() => {
-      window.location.reload();
-    }, 100);
   };
 
   const handleProfileClick = () => {
