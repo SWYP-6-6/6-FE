@@ -3,8 +3,7 @@
 import React, { useState } from 'react';
 import classNames from 'classnames/bind';
 import validateTitle from '@/utils/validate';
-import DateBetween from '@/utils/dateBetween';
-import { addAnniversary, userData } from '@/app/api/api';
+import { addAnniversary } from '@/app/api/api';
 import { useRouter } from 'next/navigation';
 import styles from './SettingForm.module.scss';
 import DataPick from './DataPick';
@@ -17,10 +16,9 @@ export default function SettingForm() {
   const [errorMessage, setErrorMessage] = useState(''); // 에러 상태 추가
   const [isButtonEnabled, setIsButtonEnabled] = useState<boolean>(false);
   const [pickerDate, setPickerDate] = useState<{
-    year: string;
     month: string;
     day: string;
-  }>({ year: '', month: '', day: '' });
+  }>({ month: '', day: '' });
   const [isDateTouched, setIsDateTouched] = useState<boolean>(false);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,11 +33,7 @@ export default function SettingForm() {
     }
   };
 
-  const handleDateChange = (selectedDate: {
-    year: string;
-    month: string;
-    day: string;
-  }) => {
+  const handleDateChange = (selectedDate: { month: string; day: string }) => {
     setPickerDate(selectedDate);
 
     if (!isDateTouched) {
@@ -50,15 +44,11 @@ export default function SettingForm() {
   };
 
   const handleSubmitForm = async () => {
-    const startDate = DateBetween(
-      pickerDate.year,
-      pickerDate.month,
-      pickerDate.day,
-    );
+    const startDate = `2024-${pickerDate.month}-${pickerDate.day}`;
+
+    // console.log(`startDate-${startDate}`);
     try {
-      const user = await userData();
-      const { familyId } = user;
-      await addAnniversary(title, startDate, familyId);
+      await addAnniversary(title, startDate);
       router.push('/group/anniversary');
     } catch (err) {
       console.error('Error fetching group image:', err);

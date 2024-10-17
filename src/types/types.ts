@@ -90,7 +90,8 @@ export interface FamilyAllItemParams {
 
 export interface AnniversaryItem {
   id: string;
-  name: string;
+  content: string;
+  date: string;
 }
 
 export interface Member {

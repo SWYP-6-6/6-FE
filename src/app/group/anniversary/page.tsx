@@ -7,12 +7,13 @@ import CommonButton from '@/components/common/CommonButton';
 import AnniversaySwipeableListItem from '@/components/group/anniversary/AnniversaySwipeableListItem';
 import { familyData, userData } from '@/app/api/api';
 import { useRouter } from 'next/navigation';
+import { AnniversaryItem } from '@/types/types';
 import styles from './AnniversarySettingPage.module.scss';
 
 const cx = classNames.bind(styles);
 
 export default function AnniversarySettingPage() {
-  const [anniversaries, setAnniversaries] = useState([]);
+  const [anniversaries, setAnniversaries] = useState<AnniversaryItem[]>([]);
   const [showDelete, setShowDelete] = useState<{ [key: string]: boolean }>({});
   const router = useRouter();
 
@@ -42,12 +43,12 @@ export default function AnniversarySettingPage() {
       </Header>
       <div className={cx('swipeableLists')}>
         <div className={cx('swipeableList')}>
-          {Object.keys(anniversaries).length > 0 ? (
-            Object.entries(anniversaries).map(([date, event]) => (
+          {anniversaries.length > 0 ? (
+            anniversaries.map((item) => (
               <AnniversaySwipeableListItem
-                key={date}
-                item={{ id: date, name: event }}
-                showDelete={showDelete[date]}
+                key={item.id}
+                item={item}
+                showDelete={showDelete[item.id]}
                 setShowDelete={setShowDelete}
                 fetchAnniversaries={fetchAnniversaries}
               />
