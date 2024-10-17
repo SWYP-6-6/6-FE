@@ -4,7 +4,6 @@ import classNames from 'classnames/bind';
 import Image from 'next/image';
 import { FaTrashAlt } from 'react-icons/fa';
 import { deleteTravel } from '@/app/api/api';
-import { useRouter } from 'next/navigation';
 import styles from './StoragePage.module.scss';
 
 const cx = classNames.bind(styles);
@@ -35,8 +34,6 @@ export default function SwipeableListItem({
   fetchTravelData,
 }: SwipeableListItemProps) {
   const [isSwiping, setIsSwiping] = useState(false); // 스와이프 상태를 추적하는 상태 변수
-
-  const router = useRouter();
 
   // useSwipeable hook 설정
   const handlers = useSwipeable({
@@ -75,14 +72,11 @@ export default function SwipeableListItem({
 
       if (response) {
         fetchTravelData();
+        console.log(response);
       }
     } catch (error) {
       console.error('리뷰를 삭제하는 중 오류가 발생했습니다:', error);
     }
-  };
-
-  const handleTravelEdit = (id: number) => {
-    router.push(`/myfamily/storage/${id}/edit`);
   };
 
   return (
@@ -115,10 +109,7 @@ export default function SwipeableListItem({
         })}
       >
         <button
-          onClick={(e) => {
-            e.stopPropagation();
-            handleTravelEdit(item.id);
-          }}
+          onClick={(e) => e.stopPropagation()}
           type="button"
           className={cx('button-cover')}
         >
