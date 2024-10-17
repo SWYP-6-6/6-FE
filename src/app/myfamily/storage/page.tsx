@@ -74,7 +74,7 @@ export default function StoragePage() {
     router.push(`/myfamily/storage/${id}/travel-review`);
   };
 
-  console.log(items);
+  // console.log(items);
 
   return (
     <div className={cx('container')}>

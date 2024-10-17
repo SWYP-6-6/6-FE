@@ -16,7 +16,7 @@ export default function MemberPage() {
   const [members, setMembers] = useState<Member[]>([]);
   const router = useRouter();
 
-  console.log(members);
+  // console.log(members);
 
   useEffect(() => {
     const fetchMembers = async () => {

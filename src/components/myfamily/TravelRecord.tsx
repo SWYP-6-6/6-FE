@@ -36,7 +36,7 @@ export default function TravelRecord() {
     fetchTravelData();
   }, []);
 
-  console.log(events);
+  // console.log(events);
 
   // 여행 기록 저장소로 이동
   const handleRecordClick = () => {

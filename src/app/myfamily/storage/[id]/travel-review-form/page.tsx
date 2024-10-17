@@ -54,14 +54,14 @@ export default function TravelReviewFormPage() {
       content: description,
     };
 
-    console.log(reviewData);
+    // console.log(reviewData);
 
     try {
       const response = await postTravelReviewData(travelId, reviewData);
 
       if (response) {
         router.push(`/myfamily/storage/${travelId}/travel-review`);
-        console.log(response);
+        // console.log(response);
       }
     } catch (error) {
       console.error('리뷰 데이터를 제출하는 중 오류가 발생했습니다:', error);

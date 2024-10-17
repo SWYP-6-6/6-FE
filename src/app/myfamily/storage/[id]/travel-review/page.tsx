@@ -108,7 +108,7 @@ export default function TravelReviewPage() {
 
       if (response) {
         fetchTravelReviewData();
-        console.log(response);
+        // console.log(response);
       }
     } catch (error) {
       console.error('리뷰를 삭제하는 중 오류가 발생했습니다:', error);
