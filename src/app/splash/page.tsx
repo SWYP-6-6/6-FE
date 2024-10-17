@@ -1,12 +1,9 @@
 'use client';
 
-import classNames from 'classnames/bind';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
-import styles from './Splash.module.scss';
 
-const cx = classNames.bind(styles);
 export default function Page() {
   const router = useRouter();
 
@@ -18,7 +15,7 @@ export default function Page() {
   }, [router]);
 
   return (
-    <div className={cx('image-container')}>
+    <div>
       <Image
         src="/svgs/splash.svg"
         alt="splash"
