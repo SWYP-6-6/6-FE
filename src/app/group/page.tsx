@@ -55,7 +55,7 @@ export default function GroupPage() {
         if (response) {
           // router.push(`/myfamily/storage/${travelId}/travel-review`);
           fetchGroupData();
-          console.log(response);
+          // console.log(response);
         }
       } catch (error) {
         console.error('가족 프로필 사진을 변경 중 오류가 발생했습니다:', error);
