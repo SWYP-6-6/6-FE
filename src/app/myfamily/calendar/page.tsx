@@ -60,6 +60,7 @@ export default function CalendarPage() {
   const [errorMessage, setErrorMessage] = useState(''); // 오류 메시지 상태 관리
   const [touched, setTouched] = useState(false); // 입력 값이 변경되었는지 여부 상태 관리
   const [groupImage, setGroupImage] = useState(''); // 입력 값이 변경되었는지 여부 상태 관리
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const startPickerRef = useRef<HTMLDivElement>(null); // 시작 날짜 선택기 참조
   const endPickerRef = useRef<HTMLDivElement>(null); // 종료 날짜 선택기 참조
@@ -208,6 +209,9 @@ export default function CalendarPage() {
 
   // 일정생성 완료 api
   const handleCreateSchedule = async () => {
+    if (isSubmitting) return; // Prevent multiple submissions
+    setIsSubmitting(true); // Start submitting
+
     const myCookie = Cookies.get('JWT');
 
     const startDate = DateBetween(
@@ -223,17 +227,21 @@ export default function CalendarPage() {
 
     if (touched) {
       try {
-        // 일정 생성 API 호출
+        // Schedule creation API call
         await travelSchedulePost(destination, startDate, endDate, myCookie);
 
-        // 일정 생성 후 fetchTravelData 다시 실행
+        // Fetch travel data again after creating schedule
         await fetchTravelData();
 
-        // 모달 닫기
+        // Close the modal
         setIsAddScheduleVisible(false);
       } catch (error) {
         console.error('Error creating schedule:', error);
+      } finally {
+        setIsSubmitting(false); // Reset submitting state
       }
+    } else {
+      setIsSubmitting(false); // Reset submitting state if not touched
     }
   };
 
@@ -375,17 +383,9 @@ export default function CalendarPage() {
             </div>
           </div>
           <CommonButton
-            isEnabled={isButtonEnabled}
-            onClick={
-              // console.log(
-              //   '시작 날짜:',
-              //   startPickerValue,
-              //   '끝나는 날짜:',
-              //   endPickerValue,
-              // );
-              handleCreateSchedule
-            }
-            text="완료"
+            isEnabled={isButtonEnabled && !isSubmitting}
+            onClick={handleCreateSchedule}
+            text={isSubmitting ? '등록 중...' : '완료'}
           />
           {touched && errorMessage && (
             <p className={cx('error-message')}>{errorMessage}</p>

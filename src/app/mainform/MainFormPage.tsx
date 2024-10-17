@@ -255,7 +255,7 @@ export default function MainFormPage({ submitForm }: MainFormPageProps) {
         <div className={cx('submitButton')}>
           <CommonButton
             isEnabled={!isSubmitting}
-            text="다음 단계로"
+            text={isSubmitting ? '작성 중...' : '작성 완료'}
             type="submit" // 'submit' 타입으로 설정
           />
         </div>
