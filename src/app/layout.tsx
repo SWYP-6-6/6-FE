@@ -63,8 +63,8 @@ import styles from './layout.module.scss';
 
 const cx = classNames.bind(styles);
 
-// const domain = process.env.NEXT_PUBLIC_DOMAIN || 'http://localhost:3000';
-// const ogImageUrl = `${domain}/preview.png`;
+const domain = process.env.NEXT_PUBLIC_DOMAIN || 'http://localhost:3000';
+const ogImage = `${domain}/preview.png`;
 
 export const metadata: Metadata = {
   title: META.title,
@@ -77,7 +77,7 @@ export const metadata: Metadata = {
     description: META.description,
     url: META.url,
     images: {
-      url: META.ogImage,
+      url: ogImage,
     },
     siteName: META.siteName,
     type: 'website',
@@ -87,7 +87,7 @@ export const metadata: Metadata = {
     title: META.title,
     description: META.description,
     images: {
-      url: META.ogImage,
+      url: ogImage,
     },
   },
 };
