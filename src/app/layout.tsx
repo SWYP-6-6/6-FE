@@ -62,7 +62,6 @@ import React from 'react';
 import styles from './layout.module.scss';
 
 const cx = classNames.bind(styles);
-
 export const metadata: Metadata = {
   title: META.title,
   description: META.description,
@@ -73,7 +72,14 @@ export const metadata: Metadata = {
     title: META.title,
     description: META.description,
     url: META.url,
-    images: META.ogImage,
+    images: [
+      {
+        url: META.ogImage, // 절대 경로로 설정해야 함
+        width: 1200, // 적절한 이미지 크기 설정
+        height: 630,
+        alt: 'Tripterior Open Graph Image',
+      },
+    ],
     siteName: META.siteName,
     type: 'website',
   },
@@ -81,9 +87,15 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: META.title,
     description: META.description,
-    images: META.ogImage,
+    images: [
+      {
+        url: META.ogImage, // 절대 경로로 설정해야 함
+        alt: 'Tripterior Twitter Image',
+      },
+    ],
   },
 };
+
 export default function RootLayout({
   children,
 }: Readonly<{
