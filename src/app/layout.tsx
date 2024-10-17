@@ -72,6 +72,7 @@ export const metadata: Metadata = {
     title: META.title,
     description: META.description,
     url: META.url,
+    locale: 'ko_KR',
     images: [
       {
         url: META.ogImage, // 절대 경로로 설정해야 함
