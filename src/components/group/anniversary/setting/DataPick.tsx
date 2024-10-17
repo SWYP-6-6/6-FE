@@ -6,14 +6,16 @@ import styles from './DataPick.module.scss';
 const cx = classNames.bind(styles);
 
 interface DataPickProps {
-  onChange: (newDate: { year: string; month: string; day: string }) => void; // onChange 함수 타입 설정
+  onChange: (newDate: { month: string; day: string }) => void; // onChange 함수 타입 설정
 }
 
 const isLeapYear = (year: number): boolean => {
   return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
 };
 
-const getMaxDays = (year: number, month: number): number => {
+const getMaxDays = (month: number): number => {
+  // 2023년 기준으로 최대 일 수 반환
+  const year = new Date().getFullYear();
   if (month === 2) {
     return isLeapYear(year) ? 29 : 28;
   }
@@ -21,63 +23,52 @@ const getMaxDays = (year: number, month: number): number => {
 };
 
 export default function DataPick({ onChange }: DataPickProps) {
-  const today = new Date();
-  const currentYear = today.getFullYear().toString();
-  const currentMonth = (today.getMonth() + 1).toString().padStart(2, '0'); // 월은 0부터 시작하므로 +1
-  const currentDay = today.getDate().toString().padStart(2, '0');
-
   const [pickerValue, setPickerValue] = useState({
-    year: currentYear,
-    month: currentMonth,
-    day: currentDay,
+    month: '01',
+    day: '01',
   });
 
-  const yearOptions = Array.from({ length: 24 }, (v, i) =>
-    (i + Number(currentYear) - 12).toString(),
-  );
+  const monthOptions = [
+    '01',
+    '02',
+    '03',
+    '04',
+    '05',
+    '06',
+    '07',
+    '08',
+    '09',
+    '10',
+    '11',
+    '12',
+  ];
 
   const [days, setDays] = useState<string[]>([]);
 
   const selections = {
-    year: yearOptions,
-    month: [
-      '01',
-      '02',
-      '03',
-      '04',
-      '05',
-      '06',
-      '07',
-      '08',
-      '09',
-      '10',
-      '11',
-      '12',
-    ],
+    month: monthOptions,
     day: days,
   };
 
   useEffect(() => {
-    const maxDays = getMaxDays(
-      parseInt(pickerValue.year, 10),
-      parseInt(pickerValue.month, 10),
-    );
+    const maxDays = getMaxDays(parseInt(pickerValue.month, 10));
     const newDays = Array.from({ length: maxDays }, (_, i) =>
       (i + 1).toString().padStart(2, '0'),
     );
     setDays(newDays);
 
+    // 선택한 일이 최대 일수보다 크면 최대 일로 설정
     if (parseInt(pickerValue.day, 10) > maxDays) {
       setPickerValue((prev) => ({
         ...prev,
-        day: newDays[newDays.length - 1], // 최대 일수로 설정
+        day: newDays[newDays.length - 1],
       }));
     }
 
     if (onChange) {
       onChange(pickerValue); // 부모 컴포넌트로 선택한 값 전달
     }
-  }, [pickerValue.year, pickerValue.month]);
+  }, [pickerValue.month]);
 
   return (
     <div className={cx('picker')}>
@@ -90,32 +81,13 @@ export default function DataPick({ onChange }: DataPickProps) {
         height={140}
         itemHeight={48}
       >
-        <Picker.Column name="year">
-          {selections.year.map((option) => (
+        <Picker.Column name="month">
+          {selections.month.map((option) => (
             <Picker.Item key={option} value={option}>
               {({ selected }) => (
                 <div
                   className={cx({
-                    'picker-item-selected': selected, // 선택된 항목에 클래스 추가
-                  })}
-                >
-                  {option}
-                </div>
-              )}
-            </Picker.Item>
-          ))}
-        </Picker.Column>
-        <Picker.Column name="month">
-          {selections.month.map((option) => (
-            <Picker.Item
-              key={option}
-              value={option}
-              className={cx('picker-item')}
-            >
-              {({ selected }) => (
-                <div
-                  className={cx({
-                    'picker-item-selected': selected, // 선택된 항목에 클래스 추가
+                    'picker-item-selected': selected,
                   })}
                 >
                   {option}
@@ -126,15 +98,11 @@ export default function DataPick({ onChange }: DataPickProps) {
         </Picker.Column>
         <Picker.Column name="day">
           {selections.day.map((option) => (
-            <Picker.Item
-              key={option}
-              value={option}
-              className={cx('picker-item')}
-            >
+            <Picker.Item key={option} value={option}>
               {({ selected }) => (
                 <div
                   className={cx({
-                    'picker-item-selected': selected, // 선택된 항목에 클래스 추가
+                    'picker-item-selected': selected,
                   })}
                 >
                   {option}

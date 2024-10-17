@@ -10,7 +10,8 @@ const cx = classNames.bind(styles);
 // 아이템 타입 정의
 interface Item {
   id: string;
-  name: string;
+  content: string;
+  date: string;
 }
 
 interface SwipeableListItemProps {
@@ -71,8 +72,8 @@ export default function AnniversaySwipeableListItem({
       }}
     >
       <button className={cx('draggableContent-button')} type="button">
-        <p className={cx('draggableContent-button-title')}>{item.name}</p>
-        <p className={cx('draggableContent-button-duration')}>{item.id}</p>
+        <p className={cx('draggableContent-button-title')}>{item.content}</p>
+        <p className={cx('draggableContent-button-duration')}>{item.date}</p>
       </button>
       <div className={cx('draggableContent-noticeButton')} />
       <div

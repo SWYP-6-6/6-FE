@@ -759,15 +759,11 @@ export const patchTravels = async (id: number) => {
   }
 };
 
-export const addAnniversary = async (
-  anniversaryContent: string,
-  anniversaryDate: string,
-  id: string,
-) => {
+export const addAnniversary = async (content: string, date: string) => {
   try {
-    const response = await fetchAPI(`api/v1/family/${id}/anniversary`, 'POST', {
-      anniversaryDate,
-      anniversaryContent,
+    const response = await fetchAPI('api/v1/anniversary', 'POST', {
+      date,
+      content,
     });
     console.log('addAnniversary 응답:', response);
     return response;
