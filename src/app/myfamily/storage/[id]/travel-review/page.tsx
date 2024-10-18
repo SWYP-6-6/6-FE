@@ -11,7 +11,7 @@ import {
   familyData,
   travelData,
   travelReviewData,
-  userData,
+  getUserData,
 } from '@/app/api/api';
 import GroupHeader from '@/components/common/GroupHeader';
 import styles from './TravelReviewPage.module.scss';
@@ -82,7 +82,7 @@ export default function TravelReviewPage() {
   useEffect(() => {
     const fetchGroupImage = async () => {
       try {
-        const user = await userData();
+        const user = await getUserData();
         const { familyId } = user;
         const family = await familyData(familyId);
         const { profileImage } = family;

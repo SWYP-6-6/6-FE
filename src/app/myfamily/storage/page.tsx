@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import { useRouter } from 'next/navigation';
 // import Image from 'next/image';
-import { familyData, travelAllData, userData } from '@/app/api/api';
+import { familyData, travelAllData, getUserData } from '@/app/api/api';
 import GroupHeader from '@/components/common/GroupHeader';
 import styles from './StoragePage.module.scss';
 import SwipeableListItem from './SwipeableListItem';
@@ -49,7 +49,7 @@ export default function StoragePage() {
     const fetchGroupImage = async () => {
       try {
         // userData를 실행하여 familyId 추출
-        const user = await userData();
+        const user = await getUserData();
         const { familyId } = user;
 
         // familyId로 familyData 호출하여 profileImage 가져오기

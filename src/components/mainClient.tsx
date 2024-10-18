@@ -5,57 +5,53 @@ import classNames from 'classnames/bind';
 import Image from 'next/image';
 import { FaPlus } from 'react-icons/fa6';
 import Link from 'next/link';
-import { getFetchFeedList, likeFeed, removeLikeFromFeed } from '@/app/api/api';
+import {
+  getFeedList,
+  getGroupFeedList,
+  likeFeed,
+  removeLikeFromFeed,
+} from '@/app/api/api';
 import MainContent from '@/components/common/MainComment';
+import { FeedItemProps } from '@/types/types';
 import styles from './main.module.scss';
 
 const cx = classNames.bind(styles);
 
-interface FeedItem {
-  id: number;
-  title: string;
-  content: string;
-  place: string;
-  nickname: string;
-  profileImage: string;
-  likeCnt: number;
-  createDate: string;
-  imageList: string[];
-  commentList: any[];
-  commentCount: number;
-  isLiked: boolean;
-}
-
-interface User {
-  id: number;
-  username: string;
-  email: string;
-  profileImage: string;
-  nickName: string | null;
-  familyId: number | null;
-}
-
-interface InfiniteScrollClientProps {
-  initialFeedData: FeedItem[];
-  token: string;
-  user: User;
-}
-
 export default function MainClient({
-  initialFeedData,
-  token,
-  user,
-}: InfiniteScrollClientProps) {
-  const [feedList, setFeedList] = useState<FeedItem[]>(initialFeedData);
+  userNIckName,
+  activeTab,
+}: {
+  userNIckName: string;
+  activeTab: string;
+}) {
+  const [feedList, setFeedList] = useState<FeedItemProps[]>([]);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const observer = useRef<IntersectionObserver | null>(null);
   const [animateLike, setAnimateLike] = useState<number | null>(null);
 
+  useEffect(() => {
+    const fetchFeedListData = async () => {
+      try {
+        let data;
+        if (activeTab === 'public') {
+          data = await getFeedList(0, 10); // 전체 공개 피드 리스트
+        } else {
+          data = await getGroupFeedList(0, 10); // 그룹 공개 피드 리스트
+        }
+        setFeedList(data.content);
+      } catch (err) {
+        console.error('Error fetching feedList data:', err);
+      }
+    };
+
+    fetchFeedListData();
+  }, [activeTab]); // activeTab이 변경될 때마다 호출
+
   const handleLike = async (feedId: number) => {
     try {
-      await likeFeed({ feedId, token });
+      await likeFeed(feedId);
       setFeedList((prevFeedList) =>
         prevFeedList.map((feed) =>
           feed.id === feedId
@@ -72,7 +68,7 @@ export default function MainClient({
 
   const handleRemoveLike = async (feedId: number) => {
     try {
-      await removeLikeFromFeed({ feedId, token });
+      await removeLikeFromFeed(feedId);
       setFeedList((prevFeedList) =>
         prevFeedList.map((feed) =>
           feed.id === feedId
@@ -88,26 +84,33 @@ export default function MainClient({
   };
 
   const fetchFeedData = useCallback(async () => {
-    if (!token || loading || !hasMore) return;
+    if (loading || !hasMore) return;
 
     setLoading(true);
 
     try {
-      const data = await getFetchFeedList({ page, size: 10, token });
+      let data;
+      if (activeTab === 'public') {
+        data = await getFeedList(page, 10); // 전체 공개
+      } else {
+        data = await getGroupFeedList(page, 10); // 그룹 공개
+      }
+
       setFeedList((prev) => {
         const newFeeds = data.content.filter(
-          (newFeed: FeedItem) => !prev.some((feed) => feed.id === newFeed.id),
+          (newFeed: FeedItemProps) =>
+            !prev.some((feed) => feed.id === newFeed.id),
         );
         return [...prev, ...newFeeds];
       });
 
       setHasMore(page + 1 < data.page.totalPages);
     } catch (error) {
-      // handle error
+      console.error('Error fetching feed data:', error);
     } finally {
       setLoading(false);
     }
-  }, [page]);
+  }, [page, activeTab]);
 
   const lastFeedElementRef = useCallback(
     (node: HTMLElement | null) => {
@@ -131,7 +134,7 @@ export default function MainClient({
   return (
     <>
       <div className={cx('card')}>
-        {feedList.map((content, index) => (
+        {feedList?.map((content, index) => (
           <Link href={`/main/${content.id}`} key={content.id}>
             <div
               className={cx('post')}
@@ -183,7 +186,7 @@ export default function MainClient({
                     })} // 애니메이션 클래스 적용
                     onClick={(e) => {
                       e.preventDefault();
-                      if (user.nickName === content.nickname) {
+                      if (userNIckName === content.nickname) {
                         return;
                       }
                       if (content.isLiked) {

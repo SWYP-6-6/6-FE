@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import Header from '@/components/common/Header';
-import { familyData, userData } from '@/app/api/api';
+import { familyData, getUserData } from '@/app/api/api';
 import CommonButton from '@/components/common/CommonButton';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -21,7 +21,7 @@ export default function MemberPage() {
   useEffect(() => {
     const fetchMembers = async () => {
       try {
-        const user = await userData();
+        const user = await getUserData();
         const { familyId } = user;
         const { userList } = await familyData(familyId);
         setMembers(userList);
