@@ -1,0 +1,24 @@
+.ContentStyled {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 1.4rem;
+  @include text-style($size: 14, $color: $black, $weight: light);
+
+  &.toggle-open {
+    overflow: visible; // 텍스트가 확장되었을 때 숨기지 않음
+  }
+}
+
+.toggle {
+  @include text-style(12, $gray, light);
+  cursor: pointer; // 클릭할 수 있도록 포인터 스타일 추가
+}
+
+.buttonContainer {
+  border: none;
+  background: none;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+  display: inline-block;
+}

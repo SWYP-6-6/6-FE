@@ -1,0 +1,58 @@
+.container {
+  @include column-flexbox(center, center);
+  width: 100%;
+
+  &-content {
+    @include column-flexbox(center, center, 2rem);
+
+    margin-top: 10.2rem;
+    width: 100%;
+
+    &-title {
+      @include text-style(30, $black, bolder);
+
+      line-height: 4rem;
+    }
+    &-text {
+      @include text-style(16, $gray, bolder);
+
+      line-height: 2.5rem;
+      padding-bottom: 5.8rem;
+    }
+
+    .image {
+      padding-bottom: 1rem;
+    }
+
+    .buttons {
+      @include flexbox(center, center, 0.8rem);
+
+      padding: 0 3.2rem 0 2.3rem;
+      width: 100%;
+
+      .button {
+        @include flexbox(center, center);
+
+        width: 100%;
+        padding: 1.5rem 0 1.4rem 0;
+        border-radius: 0.6rem;
+        transition: all 0.3s ease;
+
+        &:hover {
+          filter: brightness(0.8); // filter에 값 추가
+        }
+      }
+
+      .yes {
+        @include text-style(16, $white, light);
+
+        background-color: $primary;
+      }
+      .no {
+        @include text-style(16, $gray, light);
+
+        background-color: $gray20;
+      }
+    }
+  }
+}

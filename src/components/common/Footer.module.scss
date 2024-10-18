@@ -1,0 +1,43 @@
+.footer-container {
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  margin-top: auto;
+  border-radius: 0.5rem 0.5rem 0 0;
+  background: $white;
+  box-shadow: 0 -0.5rem 0.4rem 0 rgba(0, 0, 0, 0.25);
+  z-index: 10;
+}
+
+.emoticon-box {
+  @include flexbox(between, center);
+  padding: 1.8rem 3.6rem 3.4rem 2.9rem;
+
+  &-button {
+    @include column-flexbox(center, center, 0.5rem);
+    @include text-style(14, $gray, light);
+    transition: $base-transition;
+    cursor: pointer;
+
+    .image {
+      transition: $base-transition;
+      filter: invert(30%) sepia(0%) saturate(0%) hue-rotate(0deg)
+        brightness(95%) contrast(80%);
+    }
+
+    &:hover,
+    &.active {
+      .image {
+        filter: none;
+      }
+
+      @include text-style(14, $primary, light);
+    }
+
+    &.active {
+      pointer-events: none; // active 상태일 때 클릭 비활성화
+      opacity: 0.5; // 비활성화된 것처럼 보이도록 투명도 조절
+      cursor: default; // 클릭 불가능할 때 커서 기본으로 변경
+    }
+  }
+}

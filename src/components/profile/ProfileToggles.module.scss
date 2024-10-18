@@ -1,0 +1,46 @@
+.alarm {
+  @include column-flexbox(center, start, 1.4rem);
+
+  padding-left: 0.9rem;
+  width: 100%;
+
+  &-toggle-container {
+    @include flexbox(between);
+    width: 100%;
+    padding-right: 2.5rem;
+  }
+
+  &-labels {
+    @include text-style(16, $black, light);
+  }
+}
+
+.toggle {
+  width: 3.5rem;
+  height: 1.75rem;
+  background-color: #ddd;
+  border-radius: 1.75rem;
+  border: 0.02rem solid #ccc;
+  position: relative;
+  cursor: pointer;
+  transition: $base-transition;
+}
+
+.circle {
+  width: 1.5rem;
+  height: 1.5rem;
+  background-color: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(0.05rem, -50%);
+  transition: $base-transition;
+}
+
+.on {
+  background-color: $primary;
+}
+
+.on .circle {
+  transform: translate(1.75rem, -50%);
+}

@@ -1,0 +1,4 @@
+.container {
+  @include column-flexbox(start, start, 1.2rem);
+  width: 100%;
+}
