@@ -5,7 +5,7 @@ export async function GET(request: Request) {
   const jwt = searchParams.get('jwt');
 
   if (jwt) {
-    const response = NextResponse.redirect('/');
+    const response = NextResponse.redirect('https://tripterrior.vercel.app/');
     response.cookies.set('JWT', jwt, { maxAge: 60 * 60 * 24, httpOnly: false });
     return response;
   }
