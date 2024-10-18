@@ -821,3 +821,14 @@ export const removeLikeFromFeed = async (feedId: number) => {
     throw error;
   }
 };
+
+export const getAlarmList = async () => {
+  try {
+    const response = await fetchAPI('/users/get', 'GET');
+    console.log('getAlarmList 응답:', response);
+    return response;
+  } catch (error) {
+    console.error('Error Removing like from feed:', error);
+    throw error;
+  }
+};
