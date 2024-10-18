@@ -108,18 +108,3 @@ export type DatePickerValue = {
   month: string;
   day: string;
 };
-
-export interface FeedItemProps {
-  id: number;
-  title: string;
-  content: string;
-  place: string;
-  nickname: string;
-  profileImage: string;
-  likeCnt: number;
-  createDate: string;
-  imageList: string[];
-  commentList: any[];
-  commentCount: number;
-  isLiked: boolean;
-}

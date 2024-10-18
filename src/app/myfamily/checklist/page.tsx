@@ -8,7 +8,7 @@ import {
   familyData,
   travelAllData,
   travelDestinationDelete,
-  getUserData,
+  userData,
 } from '@/app/api/api';
 import Image from 'next/image';
 import SwipeableListItem from '@/components/checklist/SwipeableListItem';
@@ -30,7 +30,7 @@ export default function ChecklistPage() {
     const fetchGroupImage = async () => {
       try {
         // userData를 실행하여 familyId 추출
-        const user = await getUserData();
+        const user = await userData();
         const { familyId } = user;
 
         // familyId로 familyData 호출하여 profileImage 가져오기
