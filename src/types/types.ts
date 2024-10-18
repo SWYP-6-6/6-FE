@@ -123,3 +123,5 @@ export interface FeedItemProps {
   commentCount: number;
   isLiked: boolean;
 }
+
+// 자동배포가 될것인가??
