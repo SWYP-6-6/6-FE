@@ -2,7 +2,6 @@ import {
   FetchFeedParamsType,
   FetchFeedsParamsType,
   FetchGroupParamsType,
-  LikeRequestParams,
   CommentLikeRequestParams,
   FetchUserParamsType,
   FamilyImageParams,
@@ -170,58 +169,58 @@ export async function getFetchGroup({ token, groupId }: FetchGroupParamsType) {
   }
 }
 
-// Like feed
-export const likeFeed = async ({ feedId, token }: LikeRequestParams) => {
-  try {
-    const response = await fetch(`${BASE_URL}api/v1/feed/${feedId}/like`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        accept: '*/*',
-      },
-    });
+// // Like feed
+// export const likeFeed = async ({ feedId, token }: LikeRequestParams) => {
+//   try {
+//     const response = await fetch(`${BASE_URL}api/v1/feed/${feedId}/like`, {
+//       method: 'POST',
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//         accept: '*/*',
+//       },
+//     });
 
-    if (response.ok) {
-      return await response.json();
-    }
+//     if (response.ok) {
+//       return await response.json();
+//     }
 
-    const errorText = await response.text();
-    throw new Error(errorText || 'Failed to like the feed.');
-  } catch (error) {
-    console.error('Error liking feed:', error);
-    throw error;
-  }
-};
+//     const errorText = await response.text();
+//     throw new Error(errorText || 'Failed to like the feed.');
+//   } catch (error) {
+//     console.error('Error liking feed:', error);
+//     throw error;
+//   }
+// };
 
 // Remove like from feed
-export const removeLikeFromFeed = async ({
-  feedId,
-  token,
-}: LikeRequestParams) => {
-  try {
-    const response = await fetch(
-      `${BASE_URL}api/v1/feed/${feedId}/removeLike`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          accept: '*/*',
-        },
-      },
-    );
+// export const removeLikeFromFeed = async ({
+//   feedId,
+//   token,
+// }: LikeRequestParams) => {
+//   try {
+//     const response = await fetch(
+//       `${BASE_URL}api/v1/feed/${feedId}/removeLike`,
+//       {
+//         method: 'POST',
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//           accept: '*/*',
+//         },
+//       },
+//     );
 
-    if (response.ok) {
-      return await response.json();
-    }
+//     if (response.ok) {
+//       return await response.json();
+//     }
 
-    // Handle error as plain text if JSON parsing fails
-    const errorText = await response.text();
-    throw new Error(errorText || 'Failed to remove like from the feed.');
-  } catch (error) {
-    console.error('Error removing like from feed:', error);
-    throw error;
-  }
-};
+//     // Handle error as plain text if JSON parsing fails
+//     const errorText = await response.text();
+//     throw new Error(errorText || 'Failed to remove like from the feed.');
+//   } catch (error) {
+//     console.error('Error removing like from feed:', error);
+//     throw error;
+//   }
+// };
 
 export const likeComment = async ({
   commentId,
@@ -542,7 +541,7 @@ export const DdayData = async () => {
   }
 };
 
-export const userData = async () => {
+export const getUserData = async () => {
   try {
     const response = await fetchAPI('users/get', 'GET');
     console.log('API 응답:', response);
@@ -769,6 +768,56 @@ export const addAnniversary = async (content: string, date: string) => {
     return response;
   } catch (error) {
     console.error('Error adding addAnniversary:', error);
+    throw error;
+  }
+};
+
+export const getFeedList = async (page: number, size: number) => {
+  try {
+    const response = await fetchAPI(
+      `api/v1/feed/recommend/feedList?page=${page}&size=${size}&sort=string`,
+      'GET',
+    );
+    console.log('getFeedList 응답:', response);
+    return response;
+  } catch (error) {
+    console.error('Error fetching feedList data:', error);
+    throw error;
+  }
+};
+
+export const getGroupFeedList = async (page: number, size: number) => {
+  try {
+    const response = await fetchAPI(
+      `api/v1/feed/family/feedList?page=${page}&size=${size}&sort=string`,
+      'GET',
+    );
+    console.log('getGroupFeedList 응답:', response);
+    return response;
+  } catch (error) {
+    console.error('Error fetching group feedList data:', error);
+    throw error;
+  }
+};
+
+export const likeFeed = async (feedId: number) => {
+  try {
+    const response = await fetchAPI(`api/v1/feed/${feedId}/like`, 'POST');
+    console.log('likeFeed 응답:', response);
+    return response;
+  } catch (error) {
+    console.error('Error liking feed:', error);
+    throw error;
+  }
+};
+
+export const removeLikeFromFeed = async (feedId: number) => {
+  try {
+    const response = await fetchAPI(`api/v1/feed/${feedId}/removelike`, 'POST');
+    console.log('removeLikeFromFeed 응답:', response);
+    return response;
+  } catch (error) {
+    console.error('Error Removing like from feed:', error);
     throw error;
   }
 };

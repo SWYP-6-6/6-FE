@@ -13,7 +13,7 @@ import {
   familyData,
   travelAllData,
   travelSchedulePost,
-  userData,
+  getUserData,
 } from '@/app/api/api';
 import DateBetween from '@/utils/dateBetween';
 import Cookies from 'js-cookie';
@@ -101,7 +101,7 @@ export default function CalendarPage() {
     const fetchGroupImage = async () => {
       try {
         // userData를 실행하여 familyId 추출
-        const user = await userData();
+        const user = await getUserData();
         const { familyId } = user;
 
         // familyId로 familyData 호출하여 profileImage 가져오기
