@@ -4,6 +4,7 @@
   min-height: 100vh;
   margin: 0 auto;
   width: 45.4rem;
+  // ovrflow: hidden;
 
   @include responsive(M) {
     width: 100%;
