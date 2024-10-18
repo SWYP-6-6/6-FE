@@ -1,0 +1,153 @@
+.container {
+  width: 100%;
+}
+
+.group-name {
+  @include column-flexbox(center, start, 4rem);
+
+  width: 100%;
+  padding: 0 2.4rem 0;
+  transition: $base-transition;
+
+  .introduction {
+    @include text-style(24);
+
+    margin-bottom: 1.2rem;
+
+    .bold {
+      @include text-style(24, $black, bolder);
+    }
+  }
+
+  .input-group {
+    @include column-flexbox(center, start, 0.6rem);
+
+    transition: $base-transition;
+    width: 100%;
+
+    .title {
+      @include text-style(18, $black, bolder);
+    }
+
+    .description {
+      @include text-style(12, $black, light);
+
+      margin-bottom: 0.4rem;
+    }
+
+    .input {
+      @include text-style(14);
+
+      transition: $base-transition;
+      width: 100%;
+      border-radius: 0.6rem;
+      border: 0.05rem solid $gray;
+      padding: 1.4rem 1.5rem;
+      &::placeholder {
+        @include text-style(14, $gray, light);
+      }
+
+      &:focus {
+        border-color: $primary;
+        outline: none;
+      }
+    }
+  }
+
+  .error-message {
+    @include text-style(14, red);
+    margin-top: 0.3rem;
+
+    animation: slideIn 0.3s ease-out;
+  }
+}
+
+.group-profilePicture {
+  @include column-flexbox(center, center, 3.5rem);
+
+  .title {
+    @include text-style(16, $black, bolder);
+
+    margin-top: 0.8rem;
+  }
+
+  .image-container {
+    @include flexbox;
+
+    position: relative;
+    margin-bottom: 1.6rem;
+
+    &-example {
+      background-color: $gray20;
+      width: 27.7rem;
+      height: 27.7rem;
+      border-radius: 50%;
+    }
+    &-camera {
+      z-index: 10;
+      position: absolute;
+      right: 0;
+      bottom: 1.73rem;
+      transition: $base-transition;
+
+      &:hover {
+        filter: brightness(90%);
+      }
+    }
+  }
+
+  .buttons {
+    @include column-flexbox(center, center, 0.9rem);
+    width: 100%;
+    padding: 0 2.4rem 0;
+
+    &-skip {
+      @include text-style(15, $gray, light);
+
+      width: 100%;
+      padding: 1.5rem 0;
+      border-radius: 0.6rem;
+      background: $gray20;
+    }
+  }
+}
+
+.group-complete {
+  @include column-flexbox(center, center, 11rem);
+
+  background-color: $gray30;
+  flex: 1;
+  min-height: 100vh;
+  padding: 0 2.4rem 0 2.3rem;
+
+  &-body {
+    @include column-flexbox(center, center, 9.3rem);
+
+    &-description {
+      @include column-flexbox(center, center, 2rem);
+      @include text-style(30, $black, bolder);
+
+      line-height: 4rem;
+
+      &-sub {
+        @include text-style(16, $gray, light);
+        line-height: 2.5rem;
+      }
+    }
+  }
+
+  &-button {
+    width: 100%;
+  }
+}
+
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-1rem);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

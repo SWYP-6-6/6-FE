@@ -1,0 +1,48 @@
+.form {
+  padding: 0 2.3rem;
+  margin-top: 4.6rem;
+}
+
+.title-label {
+  @include text-style(18, $black, bolder);
+  input {
+    @include text-style(14, $gray, light);
+    display: block;
+    width: 100%;
+    border: 0.05rem solid $gray;
+    border-radius: 0.6rem;
+    padding: 1.5rem 0 1.5rem 2.1rem;
+    margin-top: 1rem;
+    &:focus {
+      border-color: $primary-10;
+    }
+  }
+}
+
+.date {
+  @include text-style(18, $black, bolder);
+  margin-top: 2.1rem;
+  margin-bottom: 2rem;
+}
+
+.complete-button {
+  @include text-style(16, $white, light);
+  width: 100%;
+  margin-top: 4rem;
+  background-color: $gray;
+  border-radius: 0.6rem;
+  padding: 1.5rem 0;
+  background-color: $primary;
+}
+
+.not-allow {
+  background-color: $gray;
+  color: $white;
+  cursor: not-allowed;
+}
+
+.error-message {
+  text-align: center;
+  @include text-style(14, red);
+  margin-top: 3rem;
+}

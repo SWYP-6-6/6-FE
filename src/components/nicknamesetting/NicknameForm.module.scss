@@ -1,0 +1,58 @@
+.inputs {
+  @include column-flexbox(center, start, 4rem);
+
+  width: 100%;
+}
+
+.input-group {
+  @include column-flexbox(center, start, 0.6rem);
+
+  transition: $base-transition;
+  width: 100%;
+
+  .title {
+    @include text-style(18, $black, bolder);
+  }
+
+  .description {
+    @include text-style(14, $black, light);
+
+    margin-bottom: 0.4rem;
+  }
+
+  .input {
+    @include text-style(14);
+
+    transition: $base-transition;
+    width: 100%;
+    border-radius: 0.6rem;
+    border: 0.05rem solid $gray;
+    padding: 1.4rem 1.5rem;
+    &::placeholder {
+      @include text-style(14, $gray, light);
+    }
+
+    &:focus {
+      border-color: $primary;
+      outline: none;
+    }
+  }
+}
+
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-1rem);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.error-message {
+  @include text-style(14, red);
+  margin-top: 0.3rem;
+
+  animation: slideIn 0.3s ease-out;
+}
