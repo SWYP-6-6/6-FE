@@ -136,7 +136,6 @@ export default async function FeedDetailPage({
                 feedId={FeedData.id}
                 initialIsLiked={FeedData.isLiked}
                 initialLikeCnt={FeedData.likeCnt}
-                token={token}
                 userNickName={UserData.nickName}
                 FeedNickName={FeedData.nickname}
               />

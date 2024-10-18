@@ -12,7 +12,6 @@ interface LikeButtonProps {
   feedId: number;
   initialIsLiked: boolean;
   initialLikeCnt: number;
-  token: string;
   userNickName: string;
   FeedNickName: string;
 }
@@ -21,7 +20,6 @@ export default function LikeButton({
   feedId,
   initialIsLiked,
   initialLikeCnt,
-  token,
   userNickName,
   FeedNickName,
 }: LikeButtonProps) {
@@ -31,7 +29,7 @@ export default function LikeButton({
 
   const handleLike = async () => {
     try {
-      await likeFeed({ feedId, token });
+      await likeFeed(feedId);
       setIsLiked(true);
       setLikeCnt((prevCnt) => prevCnt + 1);
       setAnimateLike(feedId);
@@ -43,7 +41,7 @@ export default function LikeButton({
 
   const handleRemoveLike = async () => {
     try {
-      await removeLikeFromFeed({ feedId, token });
+      await removeLikeFromFeed(feedId);
       setIsLiked(false);
       setLikeCnt((prevCnt) => prevCnt - 1);
       setAnimateLike(feedId);
