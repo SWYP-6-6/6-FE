@@ -10,7 +10,7 @@ export async function GET(request: Request) {
     cookieStore.set('JWT', jwt, { maxAge: 60 * 60 * 24, httpOnly: false });
 
     // After setting the cookie, redirect to the homepage or another destination
-    return NextResponse.redirect('https://tripterrior.vercel.app/');
+    return NextResponse.redirect('http://13.209.88.22:3000/');
   }
 
   return NextResponse.json({ error: 'JWT token is missing' }, { status: 400 });
