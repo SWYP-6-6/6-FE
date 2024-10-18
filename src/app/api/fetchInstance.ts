@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie';
 
-const BASE_URL = 'http://13.209.88.22:8080/'; // Your base API URL
+const BASE_URL = process.env.NEXT_PUBLIC_DOMAIN;
 
 export async function fetchAPI(
   endpoint: string,

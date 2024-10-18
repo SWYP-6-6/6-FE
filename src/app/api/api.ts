@@ -12,7 +12,7 @@ import {
 } from '@/types/types';
 import { fetchAPI } from '@/app/api/fetchInstance';
 
-const BASE_URL = 'http://13.209.88.22:8080/';
+const BASE_URL = process.env.NEXT_PUBLIC_DOMAIN;
 
 export async function getFetchFeedList({
   page,
