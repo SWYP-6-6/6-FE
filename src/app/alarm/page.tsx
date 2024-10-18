@@ -1,4 +1,4 @@
-// import AlarmList from '@/components/alarm/AlarmList';
+import AlarmList from '@/components/alarm/AlarmList';
 import Header from '@/components/common/Header';
 import React from 'react';
 
@@ -8,7 +8,7 @@ export default function page() {
       <Header isShowProfile={false} isShowButton>
         알림
       </Header>
-      {/* <AlarmList /> */}
+      <AlarmList />
     </div>
   );
 }
