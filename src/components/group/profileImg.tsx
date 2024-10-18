@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import classNames from 'classnames/bind';
-import { familyData, familyImg, getUserData } from '@/app/api/api';
+import { familyData, familyImg, userData } from '@/app/api/api';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import styles from './GroupPage.module.scss';
@@ -32,7 +32,7 @@ export default function GroupPage() {
   useEffect(() => {
     const fetchGroupData = async () => {
       try {
-        const user = await getUserData();
+        const user = await userData();
         const { familyId } = user;
 
         const family = await familyData(familyId);

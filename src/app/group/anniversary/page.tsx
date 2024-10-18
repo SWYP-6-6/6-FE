@@ -5,7 +5,7 @@ import classNames from 'classnames/bind';
 import Header from '@/components/common/Header';
 import CommonButton from '@/components/common/CommonButton';
 import AnniversaySwipeableListItem from '@/components/group/anniversary/AnniversaySwipeableListItem';
-import { familyData, getUserData } from '@/app/api/api';
+import { familyData, userData } from '@/app/api/api';
 import { useRouter } from 'next/navigation';
 import { AnniversaryItem } from '@/types/types';
 import styles from './AnniversarySettingPage.module.scss';
@@ -19,7 +19,7 @@ export default function AnniversarySettingPage() {
 
   const fetchAnniversaries = async () => {
     try {
-      const user = await getUserData();
+      const user = await userData();
       const { familyId } = user;
       const family = await familyData(familyId);
       const { anniversary } = family;

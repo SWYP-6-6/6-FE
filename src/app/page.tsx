@@ -1,75 +1,58 @@
-'use client';
-
-import React, { useEffect, useState } from 'react';
-import classNames from 'classnames/bind';
-import { useRouter } from 'next/navigation';
-import { getUserData } from '@/app/api/api';
+import React from 'react';
+import { cookies } from 'next/headers';
+import { getFetchFeedList, getFetchUser } from '@/app/api/api';
+import { redirect } from 'next/navigation'; // 리다이렉트를 위한 모듈
 import Header from '@/components/common/Header';
 import MainClient from '@/components/mainClient';
 import Footer from '@/components/common/Footer';
-import { UserProfile } from '@/types/types';
-import styles from './Home.module.scss';
 
-const cx = classNames.bind(styles);
+export default async function Home() {
+  // 쿠키에서 JWT 토큰 가져오기
+  const cookieStore = cookies();
+  const token = cookieStore.get('JWT')?.value;
 
-export default function Home() {
-  const [activeTab, setActiveTab] = useState('public');
-  const [userData, setUserData] = useState<UserProfile | undefined>(undefined);
-  const router = useRouter();
+  // 토큰이 없으면 /signin 페이지로 리다이렉트
+  if (!token) {
+    return redirect('/signin');
+  }
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const data = await getUserData();
+  // 사용자 정보와 피드 데이터를 가져오기
+  const userData = await getFetchUser({ token });
+  const initialFeedData = await getFetchFeedList({
+    page: 0,
+    size: 10,
+    token,
+  });
 
-        if (!data) {
-          router.push('/signin');
-          return;
-        }
+  // 사용자 정보가 없거나 유효하지 않으면 /signin 페이지로 리다이렉트
+  if (!userData) {
+    return redirect('/signin');
+  }
 
-        if (data.nickName === null) {
-          router.push('/nicknamesetting');
-          return;
-        }
+  // 닉네임이 없으면 /nicknamesetting 페이지로 리다이렉트
+  if (userData.nickName === null) {
+    return redirect('/nicknamesetting');
+  }
 
-        setUserData(data);
-      } catch (err) {
-        router.push('/signin');
-        console.error('Error fetching user data:', err);
-      }
-    };
+  // initialFeedData가 없거나 content 배열이 비어 있으면 /signin 페이지로 리다이렉트
+  if (!initialFeedData) {
+    return redirect('/signin');
+  }
 
-    fetchUserData();
-  }, [router]);
-
-  const handleTabChange = (tab: string) => {
-    setActiveTab(tab);
-  };
-
+  // JSX 반환
   return (
     <>
-      <Header user={userData} isShowButton={false} isShowProfile>
+      <Header
+        user={userData} // 사용자 정보도 전달
+        isShowButton={false}
+        isShowProfile
+      >
         트립테리어
       </Header>
-      <div className={cx('tabs')}>
-        <button
-          type="button"
-          className={cx({ active: activeTab === 'public' }, 'tab')}
-          onClick={() => handleTabChange('public')}
-        >
-          전체공개
-        </button>
-        <button
-          type="button"
-          className={cx({ active: activeTab === 'group' }, 'tab')}
-          onClick={() => handleTabChange('group')}
-        >
-          그룹공개
-        </button>
-      </div>
       <MainClient
-        userNIckName={userData?.nickName || ''}
-        activeTab={activeTab}
+        initialFeedData={initialFeedData.content}
+        token={token}
+        user={userData} // 사용자 정보도 전달
       />
       <Footer pathname="/" />
     </>
