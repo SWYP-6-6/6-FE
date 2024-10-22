@@ -12,7 +12,6 @@ interface LikeButtonProps {
   commentId: number;
   initialIsLiked: boolean;
   initialLikeCnt: number;
-  token: string;
   userNickName: string;
   CommentNickName: string;
 }
@@ -21,7 +20,6 @@ export default function CommentLikeButton({
   commentId,
   initialIsLiked,
   initialLikeCnt,
-  token,
   userNickName,
   CommentNickName,
 }: LikeButtonProps) {
@@ -29,9 +27,10 @@ export default function CommentLikeButton({
   const [likeCnt, setLikeCnt] = useState(initialLikeCnt);
   const [animateLike, setAnimateLike] = useState<number | null>(null);
 
-  const handleLike = async () => {
+  const handleLike = async (e: React.MouseEvent) => {
+    e.stopPropagation();
     try {
-      await likeComment({ commentId, token });
+      await likeComment(commentId);
       setIsLiked(true);
       setLikeCnt((prevCnt) => prevCnt + 1);
       setAnimateLike(commentId);
@@ -41,9 +40,10 @@ export default function CommentLikeButton({
     }
   };
 
-  const handleRemoveLike = async () => {
+  const handleRemoveLike = async (e: React.MouseEvent) => {
+    e.stopPropagation();
     try {
-      await removeLikeFromComment({ commentId, token });
+      await removeLikeFromComment(commentId);
       setIsLiked(false);
       setLikeCnt((prevCnt) => prevCnt - 1);
       setAnimateLike(commentId);
@@ -57,20 +57,26 @@ export default function CommentLikeButton({
     <div className={cx('actions')}>
       {likeCnt}
       <Image
-        src={isLiked ? '/svgs/liked-heart.svg' : '/svgs/main-like.svg'}
+        src={
+          userNickName === CommentNickName
+            ? '/svgs/heart-gray.svg'
+            : isLiked
+              ? '/svgs/liked-heart.svg'
+              : '/svgs/main-like.svg'
+        }
         alt="좋아요"
         width={15}
         height={15}
         className={cx('heart-icon', { liked: animateLike === commentId })}
-        onClick={() => {
+        onClick={(e) => {
           if (userNickName === CommentNickName) {
             return;
           }
 
           if (isLiked) {
-            handleRemoveLike();
+            handleRemoveLike(e);
           } else {
-            handleLike();
+            handleLike(e);
           }
         }}
       />
