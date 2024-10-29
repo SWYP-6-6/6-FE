@@ -14,6 +14,7 @@ interface LikeButtonProps {
   initialLikeCnt: number;
   userNickName: string;
   FeedNickName: string;
+  isThisPostMine: boolean;
 }
 
 export default function LikeButton({
@@ -22,6 +23,7 @@ export default function LikeButton({
   initialLikeCnt,
   userNickName,
   FeedNickName,
+  isThisPostMine,
 }: LikeButtonProps) {
   const [isLiked, setIsLiked] = useState(initialIsLiked);
   const [likeCnt, setLikeCnt] = useState(initialLikeCnt);
@@ -54,7 +56,13 @@ export default function LikeButton({
   return (
     <div className={cx('actions')}>
       <Image
-        src={isLiked ? '/svgs/liked-heart.svg' : '/svgs/main-like.svg'}
+        src={
+          isThisPostMine
+            ? '/svgs/heart-gray.svg'
+            : isLiked
+              ? '/svgs/liked-heart.svg'
+              : '/svgs/main-like.svg'
+        }
         alt="좋아요"
         width={15}
         height={15}

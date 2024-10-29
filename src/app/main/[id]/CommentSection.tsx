@@ -2,25 +2,27 @@
 
 import React, { useState } from 'react';
 import classNames from 'classnames/bind';
+import { addComment } from '@/app/api/api';
 import styles from './mainId.module.scss';
 
 const cx = classNames.bind(styles);
 
 interface CommentSectionProps {
-  submitComment: (formData: FormData) => Promise<void>;
+  feedId: string;
+  fetchFeedData: () => void;
 }
 
-function CommentSection({ submitComment }: CommentSectionProps) {
+export default function CommentSection({
+  feedId,
+  fetchFeedData,
+}: CommentSectionProps) {
   const [comment, setComment] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    const formData = new FormData();
-    formData.append('comment', comment);
-
-    await submitComment(formData);
+    await addComment(comment, feedId);
     setComment(''); // 댓글 입력 후 초기화
+    fetchFeedData();
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -37,10 +39,8 @@ function CommentSection({ submitComment }: CommentSectionProps) {
         placeholder="댓글추가"
         value={comment}
         onChange={(e) => setComment(e.target.value)}
-        onKeyDown={handleKeyDown} // 엔터 키 입력 처리
+        onKeyDown={handleKeyDown}
       />
     </form>
   );
 }
-
-export default CommentSection;

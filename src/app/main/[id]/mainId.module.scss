@@ -139,4 +139,12 @@
 
 .buttons {
   @include flexbox(center, center, 0.7rem);
+
+  .delete-button {
+    transition: $base-transition;
+
+    &:hover {
+      color: red;
+    }
+  }
 }

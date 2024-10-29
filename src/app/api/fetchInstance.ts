@@ -23,10 +23,13 @@ export async function fetchAPI(
   };
 
   if (body) {
-    // FormData를 사용하면 자동으로 Content-Type이 설정됩니다.
-    options.body = body instanceof FormData ? body : JSON.stringify(body);
-    if (!(body instanceof FormData)) {
-      headers['Content-Type'] = 'application/json'; // JSON일 경우에만 설정
+    if (body instanceof FormData) {
+      options.body = body;
+    } else if (typeof body === 'string') {
+      options.body = body;
+    } else {
+      options.body = JSON.stringify(body);
+      headers['Content-Type'] = 'application/json';
     }
   }
 

@@ -13,6 +13,7 @@ import {
 } from '@/app/api/api';
 import MainContent from '@/components/common/MainComment';
 import { FeedItemProps } from '@/types/types';
+import CommentLikeButton from '@/app/main/[id]/CommentLikeButton';
 import styles from './main.module.scss';
 
 const cx = classNames.bind(styles);
@@ -174,9 +175,11 @@ export default function MainClient({
                 <div className={cx('actions')}>
                   <Image
                     src={
-                      content.isLiked
-                        ? '/svgs/liked-heart.svg'
-                        : '/svgs/main-like.svg'
+                      userNIckName === content.nickname
+                        ? '/svgs/heart-gray.svg'
+                        : content.isLiked
+                          ? '/svgs/liked-heart.svg'
+                          : '/svgs/main-like.svg'
                     }
                     alt="좋아요 버튼"
                     width={15}
@@ -209,21 +212,30 @@ export default function MainClient({
                   <div className={cx('comments')}>
                     {content.commentList.slice(0, 2).map((comment: any) => (
                       <div className={cx('comment')} key={comment.id}>
-                        <div className={cx('avatar')}>
-                          <Image
-                            src={comment.profileImage}
-                            alt={`${comment.nickname}의 아바타`}
-                            width={35}
-                            height={35}
-                            className={cx('img')}
-                          />
-                        </div>
-                        <div className={cx('content')}>
-                          <div className={cx('username')}>
-                            {comment.nickname}
+                        <div className={cx('comment-profile')}>
+                          <div className={cx('avatar')}>
+                            <Image
+                              src={comment.profileImage}
+                              alt={`${comment.nickname}의 아바타`}
+                              width={35}
+                              height={35}
+                              className={cx('img')}
+                            />
                           </div>
-                          <div className={cx('text')}>{comment.comment}</div>
+                          <div className={cx('content')}>
+                            <div className={cx('username')}>
+                              {comment.nickname}
+                            </div>
+                            <div className={cx('text')}>{comment.comment}</div>
+                          </div>
                         </div>
+                        <CommentLikeButton
+                          commentId={comment.id}
+                          initialIsLiked={comment.isLiked}
+                          initialLikeCnt={comment.likeCnt}
+                          userNickName={userNIckName}
+                          CommentNickName={comment.nickname}
+                        />
                       </div>
                     ))}
                   </div>
