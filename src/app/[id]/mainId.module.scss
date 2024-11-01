@@ -122,18 +122,6 @@
         @include text-style($size: 12, $weight: light);
       }
     }
-
-    .add-comment-form {
-      width: 100%;
-
-      .add-comment {
-        @include text-style(12, $black);
-        width: 100%;
-        &::placeholder {
-          @include text-style(12, $gray);
-        }
-      }
-    }
   }
 }
 

@@ -45,28 +45,6 @@ export interface CheckDestinationListProps {
   familyId: number;
 }
 
-export interface FetchGroupParamsType {
-  token?: string;
-  groupId: string;
-}
-
-export interface FamilyImageParams {
-  formData: FormData;
-  token?: string;
-}
-export interface FamilyDetailParams {
-  familyId: string;
-  token?: string;
-}
-
-export interface CreateFamilyRequestParams {
-  token?: string; // 인증에 사용할 JWT 토큰
-  formData: {
-    // 서버로 보낼 데이터 (nickname 등)
-    nickname: string; // 가족 이름 (닉네임)
-  };
-}
-
 export interface UserProfile {
   id: number;
   username: string;
@@ -122,4 +100,19 @@ export interface FeedItemProps {
   commentList: any[];
   commentCount: number;
   isLiked: boolean;
+}
+
+export interface Anniversary {
+  id: number;
+  content: string;
+  date: string;
+}
+
+// Family 정보를 나타내는 인터페이스
+export interface Family {
+  id: number;
+  familyName: string;
+  userList: UserProfile[];
+  profileImage: string;
+  anniversary: Anniversary[];
 }

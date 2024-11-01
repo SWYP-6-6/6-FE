@@ -8,10 +8,10 @@ import Image from 'next/image';
 import { FeedItemProps, UserProfile } from '@/types/types';
 import { getUserData, getFetchFeedDetail, deleteComment } from '@/app/api/api';
 import { FaTrashAlt } from 'react-icons/fa';
+import CommentSection from '@/components/[id]/CommentSection';
+import LikeButton from '@/components/[id]/LikeButton';
+import CommentLikeButton from '@/components/[id]/CommentLikeButton';
 import styles from './mainId.module.scss';
-import CommentSection from './CommentSection';
-import LikeButton from './LikeButton';
-import CommentLikeButton from './CommentLikeButton';
 
 const cx = classNames.bind(styles);
 

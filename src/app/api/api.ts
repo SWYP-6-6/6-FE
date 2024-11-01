@@ -1,10 +1,6 @@
 import {
   FetchFeedsParamsType,
-  FetchGroupParamsType,
   FetchUserParamsType,
-  FamilyImageParams,
-  CreateFamilyRequestParams,
-  FamilyDetailParams,
   CheckListsContent,
   TravelReviewBody,
 } from '@/types/types';
@@ -24,41 +20,6 @@ export async function getFetchFeedList({
   try {
     const res = await fetch(
       `${BASE_URL}api/v1/feed/recommend/feedList?page=${page}&size=${size}&sort=string`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-          accept: '*/*',
-        },
-      },
-    );
-
-    if (res.ok) {
-      return await res.json();
-    }
-
-    // Handle error as plain text if JSON parsing fails
-    const errorText = await res.text();
-    throw new Error(errorText || 'Failed to fetch feed list.');
-  } catch (error) {
-    console.error('Error fetching feed list:', error);
-    throw error;
-  }
-}
-
-export async function getFetchPersonalFeedList({
-  page,
-  size,
-  token,
-}: FetchFeedsParamsType) {
-  if (!token) {
-    throw new Error('Token is missing.');
-  }
-
-  try {
-    const res = await fetch(
-      `${BASE_URL}api/v1/feed/feedList?page=${page}&size=${size}&sort=string`,
       {
         method: 'GET',
         headers: {
@@ -106,276 +67,6 @@ export async function getFetchUser({ token }: FetchUserParamsType) {
     throw new Error(errorText || 'Failed to fetch user details.');
   } catch (error) {
     console.error('Error fetching user details:', error);
-    throw error;
-  }
-}
-
-// Fetch user details
-export async function getFetchGroup({ token, groupId }: FetchGroupParamsType) {
-  if (!token) {
-    throw new Error('Token is missing.');
-  }
-
-  try {
-    const res = await fetch(`${BASE_URL}api/v1/family/${groupId}`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        accept: '*/*',
-      },
-    });
-
-    if (res.ok) {
-      return await res.json();
-    }
-
-    // Handle error as plain text if JSON parsing fails
-    const errorText = await res.text();
-    throw new Error(errorText || 'Failed to fetch Group details.');
-  } catch (error) {
-    console.error('Error fetching Group details:', error);
-    throw error;
-  }
-}
-
-// // Like feed
-// export const likeFeed = async ({ feedId, token }: LikeRequestParams) => {
-//   try {
-//     const response = await fetch(`${BASE_URL}api/v1/feed/${feedId}/like`, {
-//       method: 'POST',
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//         accept: '*/*',
-//       },
-//     });
-
-//     if (response.ok) {
-//       return await response.json();
-//     }
-
-//     const errorText = await response.text();
-//     throw new Error(errorText || 'Failed to like the feed.');
-//   } catch (error) {
-//     console.error('Error liking feed:', error);
-//     throw error;
-//   }
-// };
-
-// Remove like from feed
-// export const removeLikeFromFeed = async ({
-//   feedId,
-//   token,
-// }: LikeRequestParams) => {
-//   try {
-//     const response = await fetch(
-//       `${BASE_URL}api/v1/feed/${feedId}/removeLike`,
-//       {
-//         method: 'POST',
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//           accept: '*/*',
-//         },
-//       },
-//     );
-
-//     if (response.ok) {
-//       return await response.json();
-//     }
-
-//     // Handle error as plain text if JSON parsing fails
-//     const errorText = await response.text();
-//     throw new Error(errorText || 'Failed to remove like from the feed.');
-//   } catch (error) {
-//     console.error('Error removing like from feed:', error);
-//     throw error;
-//   }
-// };
-
-// export const likeComment = async ({
-//   commentId,
-//   token,
-// }: CommentLikeRequestParams) => {
-//   try {
-//     const response = await fetch(
-//       `${BASE_URL}api/v1/comment/like/${commentId}`,
-//       {
-//         method: 'GET',
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//           accept: '*/*',
-//         },
-//       },
-//     );
-
-//     if (response.ok) {
-//       return await response.json();
-//     }
-
-//     const errorText = await response.text();
-//     throw new Error(errorText || 'Failed to like the commet.');
-//   } catch (error) {
-//     console.error('Error liking commet:', error);
-//     throw error;
-//   }
-// };
-
-// Remove like from feed
-// export const removeLikeFromComment = async ({
-//   commentId,
-//   token,
-// }: CommentLikeRequestParams) => {
-//   try {
-//     const response = await fetch(
-//       `${BASE_URL}api/v1/comment/removeLike/${commentId}`,
-//       {
-//         method: 'GET',
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//           accept: '*/*',
-//         },
-//       },
-//     );
-
-//     if (response.ok) {
-//       return await response.json();
-//     }
-
-//     // Handle error as plain text if JSON parsing fails
-//     const errorText = await response.text();
-//     throw new Error(errorText || 'Failed to remove like from the comment.');
-//   } catch (error) {
-//     console.error('Error removing like from comment:', error);
-//     throw error;
-//   }
-// };
-
-export const createFamily = async ({
-  token,
-  formData,
-}: CreateFamilyRequestParams) => {
-  try {
-    const response = await fetch(`${BASE_URL}api/v1/family`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-        accept: '*/*',
-      },
-      body: JSON.stringify({ familyName: formData.nickname }),
-    });
-
-    // 오류가 발생했을 때 (status 400 또는 500대)
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(errorText || 'Failed to create family.');
-    }
-
-    // 성공하면 JSON 데이터를 반환
-    return await response.json();
-  } catch (error) {
-    console.error('Error creating family:', error);
-    throw error; // 오류를 다시 throw해서 catch로 전달
-  }
-};
-
-export const updateFamilyProfileImage = async ({
-  token,
-  formData,
-}: FamilyImageParams) => {
-  const response = await fetch(`${BASE_URL}api/v1/family/profile/image`, {
-    method: 'PUT',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    body: formData,
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText || 'Failed to update family profile image.');
-  }
-};
-
-export async function getAllFamily({ token }: FetchUserParamsType) {
-  if (!token) {
-    throw new Error('Token is missing.');
-  }
-
-  try {
-    const res = await fetch(`${BASE_URL}api/v1/family/all`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        accept: '*/*',
-      },
-    });
-
-    if (res.ok) {
-      return await res.json();
-    }
-
-    // Handle error as plain text if JSON parsing fails
-    const errorText = await res.text();
-    throw new Error(errorText || 'Failed to fetch families.');
-  } catch (error) {
-    console.error('Error fetching families:', error);
-    throw error;
-  }
-}
-
-export async function getFamilyDetail({ token, familyId }: FamilyDetailParams) {
-  if (!token) {
-    throw new Error('Token is missing.');
-  }
-
-  try {
-    const res = await fetch(`${BASE_URL}api/v1/family/${familyId}`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        accept: '*/*',
-      },
-    });
-
-    if (res.ok) {
-      return await res.json();
-    }
-
-    // Handle error as plain text if JSON parsing fails
-    const errorText = await res.text();
-    throw new Error(errorText || 'Failed to fetch family detail.');
-  } catch (error) {
-    console.error('Error fetching family detail:', error);
-    throw error;
-  }
-}
-
-export async function joinFamilyDetail({
-  token,
-  familyId,
-}: FamilyDetailParams) {
-  if (!token) {
-    throw new Error('Token is missing.');
-  }
-
-  try {
-    const res = await fetch(`${BASE_URL}api/v1/family/${familyId}/join`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        accept: '*/*',
-      },
-    });
-
-    if (res.ok) {
-      return await res.json();
-    }
-
-    // Handle error as plain text if JSON parsing fails
-    const errorText = await res.text();
-    throw new Error(errorText || 'Failed to join family.');
-  } catch (error) {
-    console.error('Error joining family:', error);
     throw error;
   }
 }
@@ -755,6 +446,20 @@ export const getFeedList = async (page: number, size: number) => {
   }
 };
 
+export const getFetchPersonalFeedList = async (page: number, size: number) => {
+  try {
+    const response = await fetchAPI(
+      `api/v1/feed/feedList?page=${page}&size=${size}&sort=string`,
+      'GET',
+    );
+    console.log('getPersonalFeedList 응답:', response);
+    return response;
+  } catch (error) {
+    console.error('Error fetching feedList data:', error);
+    throw error;
+  }
+};
+
 export const getGroupFeedList = async (page: number, size: number) => {
   try {
     const response = await fetchAPI(
@@ -857,6 +562,87 @@ export const deleteComment = async (commentId: number) => {
     return response;
   } catch (error) {
     console.error('Error deleting comment :', error);
+    throw error;
+  }
+};
+
+export const creatFeed = async (apiFormData: any) => {
+  try {
+    const response = await fetchAPI('api/v1/feed', 'POST', apiFormData);
+    console.log('CreatFeed 응답:', response);
+    return response;
+  } catch (error) {
+    console.error('Error creating feed :', error);
+    throw error;
+  }
+};
+
+export const createFamily = async (familyName: any) => {
+  try {
+    const response = await fetchAPI('api/v1/family', 'POST', familyName);
+    console.log('createFamily 응답:', response);
+    return response;
+  } catch (error) {
+    console.error('Error creating family :', error);
+    throw error;
+  }
+};
+
+export const updateFamilyProfileImage = async (formData: FormData) => {
+  try {
+    const response = await fetchAPI(
+      'api/v1/family/profile/image',
+      'PUT',
+      formData,
+    );
+    console.log('updateFamilyProfileImage 응답:', response);
+    return response;
+  } catch (error) {
+    console.error('Error updating family image :', error);
+    throw error;
+  }
+};
+
+export const getAllFamily = async () => {
+  try {
+    const response = await fetchAPI('api/v1/family/all', 'GET');
+    console.log('getAllFamily 응답:', response);
+    return response;
+  } catch (error) {
+    console.error('Error fetching families:', error);
+    throw error;
+  }
+};
+
+export async function getFamilyDetail(familyId: string) {
+  try {
+    const response = await fetchAPI(`api/v1/family/${familyId}`, 'GET');
+    console.log('getFamilyDetail 응답:', response);
+    return response;
+  } catch (error) {
+    console.error('Error fetching familily detail:', error);
+    throw error;
+  }
+}
+
+export async function joinFamilyDetail(familyId: string) {
+  try {
+    const response = await fetchAPI(`api/v1/family/${familyId}/join`, 'POST');
+    console.log('joinFamilyDetail 응답:', response);
+    return response;
+  } catch (error) {
+    console.error('Error joining family:', error);
+    throw error;
+  }
+}
+
+export const changeNickname = async (nickname: any) => {
+  try {
+    const response = await fetchAPI('users/update', 'POST', nickname);
+    console.log('changeNickname 응답:', response);
+    return response;
+  } catch (error) {
+    console.error('Error changing name :', error);
     throw error;
   }
 };

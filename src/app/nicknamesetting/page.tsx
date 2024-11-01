@@ -1,45 +1,52 @@
-// app/components/nicknamesetting/NicknamePage.tsx
+'use client';
 
-import React from 'react';
+import React, { useState, FormEvent } from 'react';
 import classNames from 'classnames/bind';
-import NicknameForm from '@/components/nicknamesetting/NicknameForm';
-import { cookies } from 'next/headers';
-
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import CommonButton from '@/components/common/CommonButton';
 import styles from './NicknamePage.module.scss';
+import { changeNickname } from '../api/api';
 
 const cx = classNames.bind(styles);
 
 export default function NicknamePage() {
-  const cookieStore = cookies();
-  const token = cookieStore.get('JWT')?.value;
+  const [nickname, setNickname] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false); // 추가된 상태값
+  const router = useRouter();
 
-  const submitNickname = async (formData: FormData) => {
-    'use server';
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value;
 
-    const nickname = formData.get('nickname') as string;
-
-    if (!nickname) {
-      throw new Error('닉네임을 입력해주세요.');
+    if (input.trim().length === 0) {
+      setErrorMessage('닉네임을 작성해주세요!');
+    } else if (input.length > 10) {
+      setErrorMessage('닉네임은 10글자 이하로 작성해주세요!(공백 포함)');
+    } else {
+      setErrorMessage('');
     }
 
-    // 닉네임 업데이트 요청
-    const response = await fetch('http://13.209.88.22:8080/users/update', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`, // Include the Authorization header
-        accept: '*/*', // This matches the curl command's accept header
-      },
-      body: JSON.stringify({ nickname }), // nickname을 JSON으로 변환하여 전달
-    });
+    setNickname(input);
+  };
 
-    if (!response.ok) {
-      throw new Error('닉네임 업데이트에 실패했습니다.');
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+
+    // 이미 제출 중이면 요청을 중단
+    if (isSubmitting) return;
+
+    const data = { nickname };
+
+    setIsSubmitting(true); // 제출 중 상태 설정
+
+    try {
+      await changeNickname(data);
+      router.push('/');
+    } catch (error) {
+      setErrorMessage('닉네임 업데이트에 실패했습니다. 다시 시도해주세요.');
+    } finally {
+      setIsSubmitting(false); // 제출 완료 후 다시 활성화
     }
-
-    // 성공 시, /로 리다이렉트
-    redirect('/');
   };
 
   return (
@@ -48,7 +55,31 @@ export default function NicknamePage() {
         <span className={cx('bold')}>트립 테리어의 </span> <br />
         기본 정보를 입력해주세요!
       </div>
-      <NicknameForm submitNickname={submitNickname} />
+      <form className={cx('inputs')} onSubmit={handleSubmit}>
+        <label htmlFor="nickname" className={cx('input-group')}>
+          <p className={cx('title')}>닉네임</p>
+          <p className={cx('description')}>
+            닉네임은 공백을 포함해도 10글자 이하만 가능해요.
+          </p>
+          <input
+            type="text"
+            id="nickname"
+            value={nickname}
+            onChange={handleInputChange}
+            placeholder="닉네임을 입력하세요"
+            className={cx('input')}
+            disabled={isSubmitting} // 제출 중일 때 입력 필드 비활성화 (선택 사항)
+          />
+          {errorMessage && (
+            <p className={cx('error-message')}>{errorMessage}</p>
+          )}
+        </label>
+        <CommonButton
+          isEnabled={!errorMessage && nickname.length > 0 && !isSubmitting} // 제출 중일 때 버튼 비활성화
+          text={isSubmitting ? '처리 중...' : '다음 단계로'}
+          type="submit" // 'submit' 타입으로 설정
+        />
+      </form>
     </div>
   );
 }

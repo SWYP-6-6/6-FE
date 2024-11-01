@@ -3,19 +3,18 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ProfileToggles from '@/components/profile/ProfileToggles';
 import classNames from 'classnames/bind';
-import { getFetchPersonalFeedList } from '@/app/api/api';
+import { changeNickname, getFetchPersonalFeedList } from '@/app/api/api';
 import Image from 'next/image';
 import MainContent from '@/components/common/MainComment';
 import Link from 'next/link';
-import styles from './ProfilePage.module.scss';
+import styles from './ProfilePageClient.module.scss';
 
 const cx = classNames.bind(styles);
 
 interface ProfileClientProps {
   INITIAL_NICKNAME: string;
-  token: string;
-  submitNickname: (formData: FormData) => Promise<void>;
   initialFeedData: FeedItem[];
+  fetchUserData: () => void;
 }
 
 interface FeedItem {
@@ -35,9 +34,8 @@ interface FeedItem {
 
 export default function ProfilePageClient({
   INITIAL_NICKNAME,
-  token,
-  submitNickname,
   initialFeedData,
+  fetchUserData,
 }: ProfileClientProps) {
   const [activeTab, setActiveTab] = useState('profile');
   const [nickname, setNickname] = useState(INITIAL_NICKNAME); // 실제 닉네임 상태
@@ -46,12 +44,32 @@ export default function ProfilePageClient({
   const [showFirstModal, setShowFirstModal] = useState(false); // 첫 번째 모달 표시 여부
   const [showSecondModal, setShowSecondModal] = useState(false); // 두 번째 모달 표시 여부
   const [errorMessage, setErrorMessage] = useState(''); // 에러 메시지 상태
-  const [feedList, setFeedList] = useState<FeedItem[]>(initialFeedData);
+  const [feedList, setFeedList] = useState<FeedItem[]>();
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const observer = useRef<IntersectionObserver | null>(null);
 
+  useEffect(() => {
+    if (initialFeedData) {
+      setFeedList(initialFeedData);
+    }
+  }, []);
+
+  const submitNickname = async (formData: FormData) => {
+    const nicknameData = formData.get('nickname') as string;
+
+    if (!nicknameData) {
+      throw new Error('닉네임을 입력해주세요.');
+    }
+
+    try {
+      await changeNickname({ nickname: nicknameData });
+      fetchUserData();
+    } catch (error) {
+      setErrorMessage('닉네임 업데이트에 실패했습니다. 다시 시도해주세요.');
+    }
+  };
   // 탭 변경 함수
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -109,17 +127,18 @@ export default function ProfilePageClient({
   };
 
   const fetchFeedData = useCallback(async () => {
-    if (!token || loading || !hasMore) return;
+    if (loading || !hasMore) return;
 
     setLoading(true);
 
     try {
-      const data = await getFetchPersonalFeedList({ page, size: 10, token });
+      const data = await getFetchPersonalFeedList(page, 10);
       setFeedList((prev) => {
         const newFeeds = data.content.filter(
-          (newFeed: FeedItem) => !prev.some((feed) => feed.id === newFeed.id),
+          (newFeed: FeedItem) =>
+            !(prev || []).some((feed) => feed.id === newFeed.id),
         );
-        return [...prev, ...newFeeds];
+        return [...(prev || []), ...newFeeds];
       });
 
       setHasMore(page + 1 < data.page.totalPages);
@@ -128,7 +147,7 @@ export default function ProfilePageClient({
     } finally {
       setLoading(false);
     }
-  }, [page, token, hasMore]);
+  }, [page, hasMore]);
 
   const lastFeedElementRef = useCallback(
     (node: HTMLElement | null) => {
@@ -228,12 +247,12 @@ export default function ProfilePageClient({
       {activeTab === 'posts' && (
         <>
           <div className={cx('pernoanl-posts')}>
-            {feedList.map((content, index) => (
-              <Link href={`/main/${content.id}`} key={content.id}>
+            {feedList!.map((content, index) => (
+              <Link href={`/${content.id}`} key={content.id}>
                 <div
                   className={cx('post')}
                   ref={
-                    feedList.length === index + 1 ? lastFeedElementRef : null
+                    feedList!.length === index + 1 ? lastFeedElementRef : null
                   }
                 >
                   <div className={cx('post-profile')}>
@@ -278,7 +297,7 @@ export default function ProfilePageClient({
                     )}
                     <div className={cx('post-content-buttons')}>
                       <Image
-                        src="/svgs/main-like.svg"
+                        src="/svgs/heart-gray.svg"
                         alt="좋아요 버튼"
                         width={15}
                         height={15}

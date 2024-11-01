@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import classNames from 'classnames/bind';
 import { addComment } from '@/app/api/api';
-import styles from './mainId.module.scss';
+import styles from './CommentSection.module.scss';
 
 const cx = classNames.bind(styles);
 

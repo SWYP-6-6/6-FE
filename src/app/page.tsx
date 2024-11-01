@@ -14,7 +14,7 @@ const cx = classNames.bind(styles);
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('public');
-  const [userData, setUserData] = useState<UserProfile | undefined>(undefined);
+  const [userData, setUserData] = useState<UserProfile>();
   const router = useRouter();
 
   useEffect(() => {
@@ -22,10 +22,10 @@ export default function Home() {
       try {
         const data = await getUserData();
 
-        if (!data) {
-          router.push('/signin');
-          return;
-        }
+        // if (!data) {
+        //   router.push('/signin');
+        //   return;
+        // }
 
         if (data.nickName === null) {
           router.push('/nicknamesetting');
@@ -33,8 +33,15 @@ export default function Home() {
         }
 
         setUserData(data);
-      } catch (err) {
-        router.push('/signin');
+      } catch (err: any) {
+        // 서버 응답에서 에러 메시지 추출
+        const errorMessage = err.message || (await err.response?.text()) || '';
+
+        if (errorMessage.includes('가족이 존재하지 않습니다.')) {
+          router.push('/signin-group');
+        } else {
+          router.push('/signin');
+        }
         console.error('Error fetching user data:', err);
       }
     };
@@ -45,6 +52,10 @@ export default function Home() {
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
   };
+
+  if (!userData) {
+    return <div>로딩 중...</div>; // 로딩 상태 시 출력할 UI
+  }
 
   return (
     <>

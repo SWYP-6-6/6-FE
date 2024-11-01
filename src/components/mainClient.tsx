@@ -13,7 +13,7 @@ import {
 } from '@/app/api/api';
 import MainContent from '@/components/common/MainComment';
 import { FeedItemProps } from '@/types/types';
-import CommentLikeButton from '@/app/main/[id]/CommentLikeButton';
+import CommentLikeButton from '@/components/[id]/CommentLikeButton';
 import styles from './main.module.scss';
 
 const cx = classNames.bind(styles);
@@ -136,7 +136,7 @@ export default function MainClient({
     <>
       <div className={cx('card')}>
         {feedList?.map((content, index) => (
-          <Link href={`/main/${content.id}`} key={content.id}>
+          <Link href={`/${content.id}`} key={content.id}>
             <div
               className={cx('post')}
               ref={feedList.length === index + 1 ? lastFeedElementRef : null}

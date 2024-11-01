@@ -4,7 +4,7 @@ import classNames from 'classnames/bind';
 import Image from 'next/image';
 import { FaTrashAlt } from 'react-icons/fa';
 import { deleteTravel } from '@/app/api/api';
-import styles from './StoragePage.module.scss';
+import styles from './SwipeableListItem.module.scss';
 
 const cx = classNames.bind(styles);
 
