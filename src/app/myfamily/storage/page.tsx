@@ -6,8 +6,8 @@ import { useRouter } from 'next/navigation';
 // import Image from 'next/image';
 import { familyData, travelAllData, getUserData } from '@/app/api/api';
 import GroupHeader from '@/components/common/GroupHeader';
+import SwipeableListItem from '@/components/myfamily/storage/SwipeableListItem';
 import styles from './StoragePage.module.scss';
-import SwipeableListItem from './SwipeableListItem';
 
 const cx = classNames.bind(styles);
 
@@ -48,15 +48,10 @@ export default function StoragePage() {
   useEffect(() => {
     const fetchGroupImage = async () => {
       try {
-        // userData를 실행하여 familyId 추출
         const user = await getUserData();
         const { familyId } = user;
-
-        // familyId로 familyData 호출하여 profileImage 가져오기
         const family = await familyData(familyId);
         const { profileImage } = family;
-
-        // 가져온 profileImage를 state에 저장
         setGroupImage(profileImage);
       } catch (err) {
         console.error('Error fetching group image:', err);
@@ -73,8 +68,6 @@ export default function StoragePage() {
   const handleStorageClick = (id: number) => {
     router.push(`/myfamily/storage/${id}/travel-review`);
   };
-
-  // console.log(items);
 
   return (
     <div className={cx('container')}>
@@ -100,20 +93,6 @@ export default function StoragePage() {
           )}
         </div>
       </div>
-      {/* <button
-        onClick={handleAddClick}
-        className={cx('addButton')}
-        type="button"
-      >
-        <Image
-          src="/svgs/add-icon.svg"
-          alt="Add Icon"
-          width={48}
-          height={48}
-          priority
-          className={cx('button')}
-        />
-      </button> */}
     </div>
   );
 }

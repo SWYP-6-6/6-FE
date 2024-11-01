@@ -71,7 +71,7 @@ export default function ChecklistPage() {
 
   // 항목 클릭 시 상세 페이지로 이동
   const handleChecklistClick = (id: number) => {
-    router.push(`/myfamily/checklist/${id}/detail`);
+    router.push(`/myfamily/checklist/${id}`);
   };
 
   // 삭제 버튼 클릭 시 처리

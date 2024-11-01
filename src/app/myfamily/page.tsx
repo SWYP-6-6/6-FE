@@ -1,33 +1,49 @@
-import React from 'react';
-import { cookies } from 'next/headers';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
-import { getFetchUser, getFetchGroup } from '@/app/api/api';
-import { redirect } from 'next/navigation'; // 리다이렉트를 위한 모듈
+import { getUserData, getFamilyDetail } from '@/app/api/api';
 import Calendar from '@/components/myfamily/Calendar';
 import Checklist from '@/components/myfamily/Checklist';
 import TravelRecord from '@/components/myfamily/TravelRecord';
 import Upcoming from '@/components/myfamily/Upcoming';
 import Footer from '@/components/common/Footer';
 import GroupHeader from '@/components/common/GroupHeader';
+import { Family, UserProfile } from '@/types/types';
 import styles from './MyFamily.module.scss';
 
 const cx = classNames.bind(styles);
 
-export default async function MyFamily() {
-  const cookieStore = cookies();
-  const token = cookieStore.get('JWT')?.value;
-  const userData = await getFetchUser({ token });
-  // const travelData = await travelAllData();
+export default function MyFamily() {
+  const [userData, setUserData] = useState<UserProfile>();
+  const [groupData, setGroupData] = useState<Family>();
 
-  if (!userData) {
-    return redirect('/signin');
-  }
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const data = await getUserData();
 
-  if (userData.familyId === null) {
-    return redirect('/signin-group');
+        // 데이터가 있으면 userData 상태 설정
+        if (data) {
+          setUserData(data);
+
+          const secondData = await getFamilyDetail(data.familyId);
+          setGroupData(secondData);
+          console.log(groupData);
+        } else {
+          console.error('User data not found or unauthorized.');
+        }
+      } catch (err: any) {
+        console.error('Error fetching user data:', err);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  if (!userData || !groupData) {
+    return <div>로딩 중...</div>; // 로딩 상태 시 출력할 UI
   }
-  const groupId = userData.familyId;
-  const groupData = await getFetchGroup({ token, groupId });
 
   return (
     <div className={cx('container')}>

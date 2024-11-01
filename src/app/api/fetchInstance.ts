@@ -37,7 +37,8 @@ export async function fetchAPI(
     const response = await fetch(`${BASE_URL}${endpoint}`, options);
 
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      const errorMessage = await response.text(); // 응답 본문에서 에러 메시지 추출
+      throw new Error(errorMessage || 'Network response was not ok');
     }
 
     const text = await response.text();

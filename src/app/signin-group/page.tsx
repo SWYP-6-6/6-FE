@@ -1,18 +1,37 @@
-import React from 'react';
-import { cookies } from 'next/headers';
-import { getFetchUser } from '@/app/api/api';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import classNames from 'classnames/bind';
 import Header from '@/components/common/Header';
 import Link from 'next/link'; // 페이지 이동을 위해 링크 사용
+import { UserProfile } from '@/types/types';
 import styles from './SigninGroupPage.module.scss';
+import { getUserData } from '../api/api';
 
 const cx = classNames.bind(styles);
 
-export default async function SigninGroupPage() {
-  const cookieStore = cookies();
-  const token = cookieStore.get('JWT')?.value;
-  const userData = await getFetchUser({ token });
+export default function SigninGroupPage() {
+  const [userData, setUserData] = useState<UserProfile>();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const data = await getUserData();
+
+        // 데이터가 있으면 userData 상태 설정
+        if (data) {
+          setUserData(data);
+        } else {
+          console.error('User data not found or unauthorized.');
+        }
+      } catch (err: any) {
+        console.error('Error fetching user data:', err);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   return (
     <div className={cx('container')}>

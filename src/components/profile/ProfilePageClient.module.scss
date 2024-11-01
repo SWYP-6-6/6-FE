@@ -1,0 +1,290 @@
+.tabs {
+  @include flexbox(center, start);
+
+  width: 100%;
+  padding-top: 0.3rem;
+
+  position: sticky; // 스크롤 시 고정
+  top: 0; // 화면 상단에 고정
+  background-color: $white;
+
+  .tab {
+    @include text-style(20, $gray);
+
+    padding-bottom: 0.3rem;
+    width: 100%;
+    transition: $base-transition;
+    border-bottom: 0.3rem solid $gray;
+    cursor: pointer;
+
+    &.active {
+      @include text-style(20, $black);
+
+      border-bottom: 0.3rem solid $primary;
+    }
+  }
+}
+
+.profile-content {
+  @include column-flexbox(center, start, 2.8rem);
+
+  width: 100%;
+  padding: 0.4rem 2.4rem 0 2.3rem;
+
+  &-nickname {
+    @include column-flexbox(center, start, 1.8rem);
+    @include text-style(16, $black, bolder);
+
+    width: 100%;
+
+    &-input {
+      width: 100%;
+      border-radius: 0.6rem;
+      border: 0.05rem solid $gray;
+      padding: 1.5rem 0 1.4rem 1.1rem;
+
+      &:focus {
+        border: 0.05rem solid $primary;
+      }
+    }
+  }
+
+  &-alarm {
+    @include column-flexbox(center, start, 2.4rem);
+
+    width: 100%;
+
+    &-title {
+      @include text-style(16, $black, bolder);
+    }
+  }
+}
+
+.posts-content {
+  width: 100%;
+}
+
+.modal {
+  @include flexbox;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(217, 217, 217, 0.39);
+  z-index: 1000;
+
+  .modal-content {
+    @include column-flexbox(between, center, 1.8rem);
+
+    background-color: white;
+    padding: 4.1rem 2.9rem 1.9rem 2.8rem;
+    border-radius: 1.9rem;
+    text-align: center;
+    width: 38.7rem;
+    height: 18.5rem;
+    box-shadow: 0 0.4rem 0.4rem 0 rgba(0, 0, 0, 0.25);
+
+    &-description {
+      @include column-flexbox(center, center, 2rem);
+
+      &-text {
+        font-size: 1.7rem;
+      }
+      &-subtext {
+        @include text-style(14, $gray, light);
+      }
+    }
+
+    &-buttons {
+      @include flexbox(center, center, 1rem);
+
+      width: 100%;
+
+      &-cancel {
+        @include text-style(14, $white, light);
+
+        width: 100%;
+        border-radius: 0.5rem;
+        background-color: $gray20;
+        padding: 0.7rem 0 0.8rem;
+        transition: $base-transition;
+
+        &:hover {
+          background-color: $gray;
+        }
+      }
+
+      &-confirm {
+        @include text-style(14, $white, light);
+
+        width: 100%;
+        border-radius: 0.5rem;
+        background-color: $primary;
+        padding: 0.7rem 0 0.8rem;
+        transition: $base-transition;
+
+        &:hover {
+          background-color: $primary-10;
+          @include text-style(14, $gray30, light);
+        }
+      }
+    }
+  }
+
+  .second-modal-content {
+    @include column-flexbox(between, center, 2.6rem);
+    @include text-style(17, $black, light);
+
+    background-color: white;
+    padding: 3.8rem 0 2.3rem;
+    border-radius: 1.9rem;
+    text-align: center;
+    width: 38.7rem;
+    height: 13.9rem;
+    box-shadow: 0 0.4rem 0.4rem 0 rgba(0, 0, 0, 0.25);
+
+    &-button {
+      @include text-style(14, $white, light);
+
+      width: 16rem;
+      height: 3.2rem;
+      border-radius: 0.5rem;
+      background-color: $primary;
+    }
+  }
+}
+
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-1rem);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.error-message {
+  @include text-style(16, red);
+
+  animation: slideIn 0.3s ease-out;
+}
+
+.pernoanl-posts {
+  width: 100%;
+  .post {
+    border-bottom: 0.1rem solid $gray20;
+    padding-top: 1.6rem;
+    background-color: $white;
+
+    &-profile {
+      @include flexbox(between, start);
+
+      padding: 0 2.1rem 0 2.7rem;
+
+      &-Info {
+        @include flexbox(center, center, 1.2rem);
+        &-avatar {
+          border-radius: 50%;
+        }
+        &-texts {
+          @include column-flexbox(center, start, 0.7rem);
+          @include text-style(14, $black, bolder);
+
+          .location {
+            @include text-style(12, $black, light);
+          }
+        }
+      }
+
+      &-date {
+        @include text-style(12);
+
+        font-weight: 300;
+      }
+    }
+
+    &-content {
+      @include column-flexbox(center, start);
+
+      padding: 2.2rem 0 0 2.7rem;
+
+      &-title {
+        @include text-style(16, $black, bolder);
+      }
+
+      &-content {
+        padding-right: 2.1rem;
+        overflow: hidden;
+      }
+
+      &-images {
+        @include flexbox(start, center, 1.2rem);
+        overflow-x: scroll; /* 수평 스크롤 가능 */
+        width: 100%;
+        padding-top: 1.4rem;
+
+        /* 스크롤바 스타일 커스터마이징 */
+        &::-webkit-scrollbar {
+          height: 1.2rem; /* 스크롤바 높이 설정 */
+        }
+
+        &::-webkit-scrollbar-track {
+          background: transparent; /* 스크롤바 배경 투명 처리 */
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background-color: $gray10; /* 스크롤바 색상 */
+          border-radius: 0.8rem; /* 스크롤바에 border-radius 추가 */
+          border: 0.2rem solid transparent; /* 스크롤바에 투명한 테두리 추가 */
+          background-clip: padding-box; /* 테두리와 thumb 사이에 공간 생성 */
+        }
+
+        &::-webkit-scrollbar-thumb:hover {
+          background-color: $gray; /* 호버 시 스크롤바 색상 변경 */
+          transition: $base-transition;
+        }
+      }
+
+      &-buttons {
+        @include flexbox(start, center, 0.5rem);
+        @include text-style(12);
+
+        font-weight: 300;
+        padding-bottom: 1.3rem;
+      }
+    }
+
+    &-comments {
+      @include column-flexbox(center, start, 1.2rem);
+
+      padding: 0.9rem 0 1.9rem 2.7rem;
+
+      .comment {
+        @include flexbox(start, center, 1.2rem);
+
+        .avatar {
+          width: 3.5rem;
+          height: 3.5rem;
+          border-radius: 50%;
+
+          .img {
+            border-radius: 50%;
+          }
+        }
+
+        &-content {
+          @include text-style(12);
+
+          .text {
+            font-weight: 300;
+          }
+        }
+      }
+    }
+  }
+}
