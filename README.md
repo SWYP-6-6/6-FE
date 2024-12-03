@@ -27,24 +27,13 @@ https://github.com/user-attachments/assets/c3fc207b-cbbe-4a21-b3a9-245840e58319
 <br />
 
 # 🛠️ 기술 스택
+<img src="https://img.shields.io/badge/Spring%20Boot-6DB33F?style=flat-square&logo=Spring-Boot&logoColor=white">
+<img src="https://img.shields.io/badge/JPA-007396?style=flat-square&logo=Hibernate&logoColor=white">
+<img src="https://img.shields.io/badge/Spring%20Security-6DB33F?style=flat-square&logo=Spring-Security&logoColor=white">
+<img src="https://img.shields.io/badge/QueryDSL-4479A1?style=flat-square&logo=QueryDSL&logoColor=white">
+<img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=Docker&logoColor=white">
+<img src="https://img.shields.io/badge/GitHub%20Actions-2088FF?style=flat-square&logo=GitHub-Actions&logoColor=white">
 
-<img src="https://img.shields.io/badge/Next.js-61DAFB?style=flat-square&logo=React&logoColor=white">
-<img src="https://img.shields.io/badge/scss-yellow?style=flat-square&logo=taliwind&logoColor=white">
-<img src="https://img.shields.io/badge/typescript-green?style=flat-square&logo=StyledComponents&logoColor=white">
-<img src="https://img.shields.io/badge/tansquery-black?style=flat-square&logo=StyledComponents&logoColor=white">
-<img src="https://img.shields.io/badge/redux-purple?style=flat-square&logo=StyledComponents&logoColor=white">
-
-
-<br />
-
-
-
-
-# 📜 사용방법
-
-1. git clone https://github.com/hyun522/6-fe.git
-2. npm install
-3. npm run dev
 
 
 
